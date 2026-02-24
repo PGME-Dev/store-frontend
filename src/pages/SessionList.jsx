@@ -49,8 +49,8 @@ export default function SessionList() {
         <div className="space-y-3">
           {sessions.map((session) => (
             <Link
-              key={session._id}
-              to={`/sessions/${session._id}`}
+              key={session.session_id}
+              to={`/sessions/${session.session_id}`}
               className="block bg-surface rounded-xl border border-border p-4 hover:shadow-md transition-shadow no-underline"
             >
               <div className="flex items-start justify-between gap-3">

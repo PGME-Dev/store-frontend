@@ -41,12 +41,12 @@ export default function EbookList() {
         <div className="grid grid-cols-2 gap-3">
           {books.map((book) => (
             <ProductCard
-              key={book._id}
-              to={`/ebooks/${book._id}`}
+              key={book.book_id}
+              to={`/ebooks/${book.book_id}`}
               title={book.title}
               subtitle={book.author}
-              price={book.actual_price || book.price}
-              originalPrice={book.price}
+              price={book.effective_price || book.price}
+              originalPrice={book.original_price || book.price}
               isOnSale={book.is_on_sale}
               imageUrl={book.thumbnail_url}
             />

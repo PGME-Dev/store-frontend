@@ -47,8 +47,8 @@ export default function PackageList() {
 
             return (
               <ProductCard
-                key={pkg._id}
-                to={`/packages/${pkg._id}`}
+                key={pkg.package_id}
+                to={`/packages/${pkg.package_id}`}
                 title={pkg.name}
                 subtitle={pkg.type}
                 price={price}

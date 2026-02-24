@@ -1,7 +1,7 @@
 import client from './client';
 
 export async function getEbooks() {
-  const { data } = await client.get('/books', { params: { has_ebook: true } });
+  const { data } = await client.get('/books', { params: { ebook: true } });
   return data.data;
 }
 

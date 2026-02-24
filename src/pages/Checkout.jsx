@@ -46,7 +46,7 @@ export default function Checkout() {
       if (hasTiers) return product.tiers[tierIndex]?.effective_price || product.tiers[tierIndex]?.price;
       return product.sale_price || product.price;
     }
-    if (product._type === 'ebooks') return product.actual_price || product.price;
+    if (product._type === 'ebooks') return product.effective_price || product.price;
     return product.price;
   };
 

@@ -63,7 +63,7 @@ export default function MyPurchases() {
               </h2>
               <div className="space-y-2">
                 {packages.map((p) => (
-                  <div key={p._id} className="bg-surface rounded-xl border border-border p-4">
+                  <div key={p.purchase_id || p._id} className="bg-surface rounded-xl border border-border p-4">
                     <div className="flex items-start justify-between">
                       <div>
                         <h3 className="text-base font-semibold text-text">
@@ -97,7 +97,7 @@ export default function MyPurchases() {
               </h2>
               <div className="space-y-2">
                 {ebooks.map((e) => (
-                  <div key={e._id} className="bg-surface rounded-xl border border-border p-4">
+                  <div key={e.purchase_id || e._id} className="bg-surface rounded-xl border border-border p-4">
                     <div className="flex items-start justify-between">
                       <h3 className="text-base font-semibold text-text">
                         {e.book_id?.title || 'eBook'}
@@ -124,7 +124,7 @@ export default function MyPurchases() {
               </h2>
               <div className="space-y-2">
                 {sessions.map((s) => (
-                  <div key={s._id} className="bg-surface rounded-xl border border-border p-4">
+                  <div key={s.purchase_id || s._id} className="bg-surface rounded-xl border border-border p-4">
                     <div className="flex items-start justify-between">
                       <h3 className="text-base font-semibold text-text">
                         {s.session_id?.title || 'Session'}

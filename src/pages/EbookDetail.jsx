@@ -37,7 +37,7 @@ export default function EbookDetail() {
     return <div className="text-center py-12 text-error">{error || 'eBook not found'}</div>;
   }
 
-  const price = book.actual_price || book.price;
+  const price = book.effective_price || book.price;
 
   const handleBuy = () => {
     if (!isAuthenticated) {
@@ -70,7 +70,7 @@ export default function EbookDetail() {
       <div className="bg-surface rounded-xl border border-border p-4 mb-4">
         <h3 className="text-sm font-semibold text-text mb-2">Details</h3>
         <div className="space-y-1.5 text-sm text-text-secondary">
-          {book.page_count && <div>Pages: {book.page_count}</div>}
+          {book.pages && <div>Pages: {book.pages}</div>}
           {book.ebook_file_format && <div>Format: {book.ebook_file_format.toUpperCase()}</div>}
           <div>Instant digital delivery after purchase</div>
         </div>
@@ -81,7 +81,7 @@ export default function EbookDetail() {
         <div className="max-w-lg mx-auto flex items-center justify-between">
           <PriceDisplay
             price={price}
-            originalPrice={book.price}
+            originalPrice={book.original_price || book.price}
             isOnSale={book.is_on_sale}
             size="lg"
           />
