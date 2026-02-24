@@ -1,14 +1,46 @@
 import { useState, useEffect } from 'react';
 import { getUserProfile } from '../api/auth';
 
-const INDIAN_STATES = [
-  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
-  'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
-  'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
-  'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu',
-  'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
-  'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Chandigarh', 'Puducherry',
-];
+const STATE_MAP = {
+  'Andaman and Nicobar Islands': 'AN',
+  'Andhra Pradesh': 'AP',
+  'Arunachal Pradesh': 'AR',
+  'Assam': 'AS',
+  'Bihar': 'BR',
+  'Chandigarh': 'CH',
+  'Chhattisgarh': 'CG',
+  'Dadra and Nagar Haveli and Daman and Diu': 'DD',
+  'Delhi': 'DL',
+  'Goa': 'GA',
+  'Gujarat': 'GJ',
+  'Haryana': 'HR',
+  'Himachal Pradesh': 'HP',
+  'Jammu and Kashmir': 'JK',
+  'Jharkhand': 'JH',
+  'Karnataka': 'KA',
+  'Kerala': 'KL',
+  'Ladakh': 'LA',
+  'Lakshadweep': 'LD',
+  'Madhya Pradesh': 'MP',
+  'Maharashtra': 'MH',
+  'Manipur': 'MN',
+  'Meghalaya': 'ML',
+  'Mizoram': 'MZ',
+  'Nagaland': 'NL',
+  'Odisha': 'OD',
+  'Puducherry': 'PY',
+  'Punjab': 'PB',
+  'Rajasthan': 'RJ',
+  'Sikkim': 'SK',
+  'Tamil Nadu': 'TN',
+  'Telangana': 'TG',
+  'Tripura': 'TR',
+  'Uttar Pradesh': 'UP',
+  'Uttarakhand': 'UK',
+  'West Bengal': 'WB',
+};
+
+const STATE_NAMES = Object.keys(STATE_MAP).sort();
 
 export default function BillingAddressForm({ onSubmit, loading }) {
   const [address, setAddress] = useState({
@@ -16,6 +48,7 @@ export default function BillingAddressForm({ onSubmit, loading }) {
     street2: '',
     city: '',
     state: '',
+    state_code: '',
     pincode: '',
     country: 'India',
   });
@@ -26,11 +59,16 @@ export default function BillingAddressForm({ onSubmit, loading }) {
       try {
         const profile = await getUserProfile();
         if (profile?.billing_address) {
+          const saved = profile.billing_address;
           setAddress((prev) => ({
             ...prev,
-            ...Object.fromEntries(
-              Object.entries(profile.billing_address).filter(([_, v]) => v)
-            ),
+            street: saved.street || '',
+            street2: saved.street2 || '',
+            city: saved.city || '',
+            state: saved.state || '',
+            state_code: saved.state_code || (saved.state ? STATE_MAP[saved.state] || '' : ''),
+            pincode: saved.pincode || '',
+            country: saved.country || 'India',
           }));
         }
       } catch {
@@ -42,7 +80,12 @@ export default function BillingAddressForm({ onSubmit, loading }) {
   }, []);
 
   const handleChange = (e) => {
-    setAddress((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    if (name === 'state') {
+      setAddress((prev) => ({ ...prev, state: value, state_code: STATE_MAP[value] || '' }));
+    } else {
+      setAddress((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -50,7 +93,7 @@ export default function BillingAddressForm({ onSubmit, loading }) {
     onSubmit(address);
   };
 
-  const isValid = address.street && address.city && address.state && address.pincode;
+  const isValid = address.street && address.city && address.state && address.state_code && address.pincode;
 
   if (loadingProfile) {
     return <div className="text-center py-4 text-text-secondary">Loading address...</div>;
@@ -92,7 +135,8 @@ export default function BillingAddressForm({ onSubmit, loading }) {
           onChange={handleChange}
           placeholder="Pincode *"
           required
-          pattern="[0-9]{6}"
+          pattern="[1-9][0-9]{5}"
+          inputMode="numeric"
           maxLength={6}
           className="w-full px-3 py-3 border border-border rounded-lg text-base bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
         />
@@ -106,7 +150,7 @@ export default function BillingAddressForm({ onSubmit, loading }) {
         className="w-full px-3 py-3 border border-border rounded-lg text-base bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
       >
         <option value="">Select State *</option>
-        {INDIAN_STATES.map((s) => (
+        {STATE_NAMES.map((s) => (
           <option key={s} value={s}>{s}</option>
         ))}
       </select>
