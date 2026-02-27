@@ -71,7 +71,7 @@ export default function PackageModal({ package: listPkg, onClose }) {
     <div className="fixed inset-0 z-999">
       {/* Backdrop with blur */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-modal-backdrop"
+        className="absolute inset-0 bg-black/50 animate-modal-backdrop"
         onClick={onClose}
       />
 
@@ -134,7 +134,7 @@ export default function PackageModal({ package: listPkg, onClose }) {
             {/* Body */}
             <div className="relative px-5 sm:px-6 md:px-8 py-5 sm:py-6 space-y-4 sm:space-y-5">
               {loading && !pkg ? (
-                <div className="flex justify-center py-6">
+                <div className="flex items-center justify-center min-h-50">
                   <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                 </div>
               ) : error ? (
