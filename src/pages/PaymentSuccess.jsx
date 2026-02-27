@@ -1,8 +1,15 @@
+import { useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import { usePurchase } from '../context/PurchaseContext';
 
 export default function PaymentSuccess() {
   const location = useLocation();
+  const { refreshPurchases } = usePurchase();
   const { purchaseId, productName, type } = location.state || {};
+
+  useEffect(() => {
+    refreshPurchases();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex items-start justify-center pt-4 sm:pt-8 lg:pt-16 animate-fade-in-up">

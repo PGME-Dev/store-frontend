@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { getSessions } from '../api/sessions';
+import { usePurchase } from '../context/PurchaseContext';
 import { Link } from 'react-router-dom';
 import { formatPrice } from '../components/PriceDisplay';
 
 export default function SessionList() {
+  const { isSessionPurchased } = usePurchase();
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -11,6 +13,7 @@ export default function SessionList() {
   useEffect(() => {
     (async () => {
       try {
+        // Sessions are NOT filtered by subject (matching app behavior)
         const result = await getSessions();
         setSessions(result.sessions || result || []);
       } catch {
@@ -68,46 +71,51 @@ export default function SessionList() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5">
-          {sessions.map((session) => (
-            <Link
-              key={session.session_id}
-              to={`/sessions/${session.session_id}`}
-              className="group block bg-white rounded-xl sm:rounded-2xl border border-border p-4 sm:p-5 lg:p-6 hover:shadow-md hover:border-primary/15 transition-all duration-300 no-underline"
-            >
-              <div className="flex items-start justify-between gap-3 mb-2.5 sm:mb-3">
-                <h3 className="text-sm sm:text-base font-semibold text-text group-hover:text-primary transition-colors">{session.title}</h3>
-                <div className="shrink-0">
-                  {session.is_free ? (
-                    <span className="text-[10px] sm:text-xs font-semibold text-success bg-success/8 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full">FREE</span>
-                  ) : (
-                    <span className="text-xs sm:text-sm font-bold text-text">
-                      {formatPrice(session.price)}
-                    </span>
+          {sessions.map((session) => {
+            const purchased = isSessionPurchased(session.session_id);
+            return (
+              <Link
+                key={session.session_id}
+                to={`/sessions/${session.session_id}`}
+                className="group block bg-white rounded-xl sm:rounded-2xl border border-border p-4 sm:p-5 lg:p-6 hover:shadow-md hover:border-primary/15 transition-all duration-300 no-underline"
+              >
+                <div className="flex items-start justify-between gap-3 mb-2.5 sm:mb-3">
+                  <h3 className="text-sm sm:text-base font-semibold text-text group-hover:text-primary transition-colors">{session.title}</h3>
+                  <div className="shrink-0">
+                    {purchased ? (
+                      <span className="text-[10px] sm:text-xs font-semibold text-success bg-success/8 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full">Purchased</span>
+                    ) : session.is_free ? (
+                      <span className="text-[10px] sm:text-xs font-semibold text-success bg-success/8 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full">FREE</span>
+                    ) : (
+                      <span className="text-xs sm:text-sm font-bold text-text">
+                        {formatPrice(session.price)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-1.5 sm:space-y-2">
+                  {session.scheduled_start && (
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-text-secondary">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      <span className="truncate">{formatDate(session.scheduled_start)}</span>
+                    </div>
+                  )}
+                  {session.faculty_id?.name && (
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-text-secondary">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                      </svg>
+                      {session.faculty_id.name}
+                    </div>
                   )}
                 </div>
-              </div>
-              <div className="space-y-1.5 sm:space-y-2">
-                {session.scheduled_start && (
-                  <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-text-secondary">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                      <circle cx="12" cy="12" r="10"/>
-                      <polyline points="12 6 12 12 16 14"/>
-                    </svg>
-                    <span className="truncate">{formatDate(session.scheduled_start)}</span>
-                  </div>
-                )}
-                {session.faculty_id?.name && (
-                  <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-text-secondary">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                      <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    {session.faculty_id.name}
-                  </div>
-                )}
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>

@@ -1,7 +1,9 @@
 import client from './client';
 
-export async function getEbooks() {
-  const { data } = await client.get('/books', { params: { ebook: true } });
+export async function getEbooks(subjectId) {
+  const params = { ebook: true };
+  if (subjectId) params.subject_id = subjectId;
+  const { data } = await client.get('/books', { params });
   return data.data;
 }
 

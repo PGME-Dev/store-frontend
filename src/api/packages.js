@@ -1,7 +1,9 @@
 import client from './client';
 
-export async function getPackages() {
-  const { data } = await client.get('/packages');
+export async function getPackages(subjectId) {
+  const params = {};
+  if (subjectId) params.subject_id = subjectId;
+  const { data } = await client.get('/packages', { params });
   return data.data;
 }
 

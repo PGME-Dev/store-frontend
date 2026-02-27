@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getEbookById } from '../api/ebooks';
 import { useAuth } from '../context/AuthContext';
+import { usePurchase } from '../context/PurchaseContext';
 import PriceDisplay from '../components/PriceDisplay';
 
 export default function EbookDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { isEbookPurchased } = usePurchase();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -38,6 +40,7 @@ export default function EbookDetail() {
   }
 
   const price = book.effective_price || book.price;
+  const purchased = isEbookPurchased(book.book_id || book._id);
 
   const handleBuy = () => {
     if (!isAuthenticated) {
@@ -124,42 +127,69 @@ export default function EbookDetail() {
           {/* Sidebar - Desktop sticky CTA */}
           <div className="hidden lg:block">
             <div className="sticky top-24 bg-white rounded-2xl border border-border p-6">
-              <h3 className="text-sm font-semibold text-text mb-4">Purchase</h3>
-              <PriceDisplay
-                price={price}
-                originalPrice={book.original_price || book.price}
-                isOnSale={book.is_on_sale}
-                size="lg"
-              />
-              <button
-                onClick={handleBuy}
-                className="w-full mt-5 px-6 py-3.5 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors cursor-pointer border-0 text-base"
-              >
-                Buy Now
-              </button>
-              <p className="text-xs text-text-secondary mt-3 text-center">Instant digital delivery</p>
+              {purchased ? (
+                <>
+                  <div className="flex items-center gap-2 mb-3">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-success">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <span className="text-sm font-semibold text-success">Purchased</span>
+                  </div>
+                  <p className="text-xs text-text-secondary leading-relaxed">You already own this eBook. Open the PGME app to access it.</p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-sm font-semibold text-text mb-4">Purchase</h3>
+                  <PriceDisplay
+                    price={price}
+                    originalPrice={book.original_price || book.price}
+                    isOnSale={book.is_on_sale}
+                    size="lg"
+                  />
+                  <button
+                    onClick={handleBuy}
+                    className="w-full mt-5 px-6 py-3.5 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors cursor-pointer border-0 text-base"
+                  >
+                    Buy Now
+                  </button>
+                  <p className="text-xs text-text-secondary mt-3 text-center">Instant digital delivery</p>
+                </>
+              )}
             </div>
           </div>
         </div>
       </div>
 
       {/* Mobile sticky bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <PriceDisplay
-            price={price}
-            originalPrice={book.original_price || book.price}
-            isOnSale={book.is_on_sale}
-            size="lg"
-          />
-          <button
-            onClick={handleBuy}
-            className="px-5 sm:px-8 py-2.5 sm:py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors cursor-pointer border-0 text-sm sm:text-base shrink-0"
-          >
-            Buy Now
-          </button>
+      {purchased ? (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-success">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="text-sm font-semibold text-success">Purchased — Open the PGME app to access</span>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <PriceDisplay
+              price={price}
+              originalPrice={book.original_price || book.price}
+              isOnSale={book.is_on_sale}
+              size="lg"
+            />
+            <button
+              onClick={handleBuy}
+              className="px-5 sm:px-8 py-2.5 sm:py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors cursor-pointer border-0 text-sm sm:text-base shrink-0"
+            >
+              Buy Now
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="h-20 sm:h-24 lg:hidden" />
     </div>

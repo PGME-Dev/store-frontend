@@ -1,7 +1,9 @@
 import client from './client';
 
-export async function getSessions() {
-  const { data } = await client.get('/live-sessions');
+export async function getSessions(subjectId) {
+  const params = {};
+  if (subjectId) params.subject_id = subjectId;
+  const { data } = await client.get('/live-sessions', { params });
   return data.data;
 }
 

@@ -1,16 +1,24 @@
 import { useState, useEffect } from 'react';
 import { getEbooks } from '../api/ebooks';
+import { useSubject } from '../context/SubjectContext';
+import { usePurchase } from '../context/PurchaseContext';
+import SubjectSelector from '../components/SubjectSelector';
 import ProductCard from '../components/ProductCard';
 
 export default function EbookList() {
+  const { subjectId } = useSubject();
+  const { isEbookPurchased } = usePurchase();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (!subjectId) return;
+    setLoading(true);
+    setError('');
     (async () => {
       try {
-        const result = await getEbooks();
+        const result = await getEbooks(subjectId);
         setBooks(result.books || result || []);
       } catch {
         setError('Failed to load ebooks');
@@ -18,24 +26,12 @@ export default function EbookList() {
         setLoading(false);
       }
     })();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center py-20">
-        <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div className="text-center py-12 text-error text-sm">{error}</div>;
-  }
+  }, [subjectId]);
 
   return (
     <div className="animate-fade-in-up">
       <div className="mb-5 sm:mb-8 lg:mb-10">
-        <div className="flex items-center gap-3 mb-1">
+        <div className="flex items-center gap-3 mb-4">
           <div className="w-9 h-9 sm:w-10 sm:h-10 bg-accent/6 rounded-xl flex items-center justify-center text-accent shrink-0">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
@@ -49,8 +45,16 @@ export default function EbookList() {
             <p className="text-text-secondary text-xs sm:text-sm">Digital books for your medical preparation</p>
           </div>
         </div>
+        <SubjectSelector />
       </div>
-      {books.length === 0 ? (
+
+      {loading ? (
+        <div className="flex justify-center py-20">
+          <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : error ? (
+        <div className="text-center py-12 text-error text-sm">{error}</div>
+      ) : books.length === 0 ? (
         <div className="text-center py-12 sm:py-16">
           <div className="w-14 h-14 sm:w-16 sm:h-16 bg-surface-dim rounded-full flex items-center justify-center mx-auto mb-4">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-text-secondary">
@@ -72,6 +76,7 @@ export default function EbookList() {
               originalPrice={book.original_price || book.price}
               isOnSale={book.is_on_sale}
               imageUrl={book.thumbnail_url}
+              purchased={isEbookPurchased(book.book_id)}
             />
           ))}
         </div>
