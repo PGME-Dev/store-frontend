@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { getUserProfile } from '../api/auth';
 
 const STATE_MAP = {
@@ -42,6 +42,13 @@ const STATE_MAP = {
 
 const STATE_NAMES = Object.keys(STATE_MAP).sort();
 
+// Find the matching state name from our STATE_MAP for an API-returned state string
+function matchStateName(apiState) {
+  if (!apiState) return null;
+  const lower = apiState.toLowerCase().trim();
+  return STATE_NAMES.find((s) => s.toLowerCase() === lower) || null;
+}
+
 export default function BillingAddressForm({ onSubmit, loading }) {
   const [address, setAddress] = useState({
     street: '',
@@ -53,6 +60,11 @@ export default function BillingAddressForm({ onSubmit, loading }) {
     country: 'India',
   });
   const [loadingProfile, setLoadingProfile] = useState(true);
+  const [lookingUpPincode, setLookingUpPincode] = useState(false);
+  const [pincodeAutoFilled, setPincodeAutoFilled] = useState(false);
+  const pincodeAbortRef = useRef(null);
+  // Track whether the saved address pincode has already been loaded (skip auto-lookup for it)
+  const savedPincodeRef = useRef('');
 
   useEffect(() => {
     (async () => {
@@ -60,6 +72,7 @@ export default function BillingAddressForm({ onSubmit, loading }) {
         const profile = await getUserProfile();
         if (profile?.billing_address) {
           const saved = profile.billing_address;
+          savedPincodeRef.current = saved.pincode || '';
           setAddress((prev) => ({
             ...prev,
             street: saved.street || '',
@@ -79,10 +92,54 @@ export default function BillingAddressForm({ onSubmit, loading }) {
     })();
   }, []);
 
+  const lookupPincode = useCallback(async (pincode) => {
+    // Cancel any in-flight lookup
+    if (pincodeAbortRef.current) pincodeAbortRef.current.abort();
+    const controller = new AbortController();
+    pincodeAbortRef.current = controller;
+
+    setLookingUpPincode(true);
+    setPincodeAutoFilled(false);
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`, {
+        signal: controller.signal,
+      });
+      const data = await res.json();
+      if (data?.[0]?.Status === 'Success' && data[0].PostOffice?.length > 0) {
+        const po = data[0].PostOffice[0];
+        const district = po.District || '';
+        const apiState = po.State || '';
+        const matchedState = matchStateName(apiState);
+        setAddress((prev) => ({
+          ...prev,
+          city: prev.city || district,
+          state: matchedState || prev.state,
+          state_code: matchedState ? STATE_MAP[matchedState] : prev.state_code,
+        }));
+        setPincodeAutoFilled(true);
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        // Silently fail — user can still manually select
+      }
+    } finally {
+      setLookingUpPincode(false);
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'state') {
       setAddress((prev) => ({ ...prev, state: value, state_code: STATE_MAP[value] || '' }));
+      setPincodeAutoFilled(false);
+    } else if (name === 'pincode') {
+      const cleaned = value.replace(/\D/g, '').slice(0, 6);
+      setAddress((prev) => ({ ...prev, pincode: cleaned }));
+      setPincodeAutoFilled(false);
+      // Auto-lookup when 6 digits entered and different from saved pincode
+      if (cleaned.length === 6 && /^[1-9]\d{5}$/.test(cleaned) && cleaned !== savedPincodeRef.current) {
+        lookupPincode(cleaned);
+      }
     } else {
       setAddress((prev) => ({ ...prev, [name]: value }));
     }
@@ -134,6 +191,37 @@ export default function BillingAddressForm({ onSubmit, loading }) {
           />
         </div>
 
+        {/* Pincode first — auto-fills city & state below */}
+        <div>
+          <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">Pincode *</label>
+          <div className="relative">
+            <input
+              name="pincode"
+              value={address.pincode}
+              onChange={handleChange}
+              placeholder="6-digit pincode"
+              required
+              pattern="[1-9][0-9]{5}"
+              inputMode="numeric"
+              maxLength={6}
+              className={inputClass}
+            />
+            {lookingUpPincode && (
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
+          </div>
+          {pincodeAutoFilled && (
+            <p className="text-[10px] sm:text-xs text-success mt-1 flex items-center gap-1">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              City & state auto-filled from pincode
+            </p>
+          )}
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">City *</label>
@@ -147,35 +235,20 @@ export default function BillingAddressForm({ onSubmit, loading }) {
             />
           </div>
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">Pincode *</label>
-            <input
-              name="pincode"
-              value={address.pincode}
+            <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">State *</label>
+            <select
+              name="state"
+              value={address.state}
               onChange={handleChange}
-              placeholder="6-digit pincode"
               required
-              pattern="[1-9][0-9]{5}"
-              inputMode="numeric"
-              maxLength={6}
               className={inputClass}
-            />
+            >
+              <option value="">Select State</option>
+              {STATE_NAMES.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
           </div>
-        </div>
-
-        <div>
-          <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">State *</label>
-          <select
-            name="state"
-            value={address.state}
-            onChange={handleChange}
-            required
-            className={inputClass}
-          >
-            <option value="">Select State</option>
-            {STATE_NAMES.map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
         </div>
       </div>
 
