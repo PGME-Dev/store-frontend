@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import PackageList from './pages/PackageList';
 import PackageDetail from './pages/PackageDetail';
 import EbookList from './pages/EbookList';
@@ -30,6 +31,7 @@ export default function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="login" element={<Login />} />
+        <Route path="signup" element={<Signup />} />
         <Route path="packages" element={<PackageList />} />
         <Route path="packages/:id" element={<PackageDetail />} />
         <Route path="ebooks" element={<EbookList />} />

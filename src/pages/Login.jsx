@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { retryOTP } from '../utils/msg91';
 
 export default function Login() {
   const [phone, setPhone] = useState('');
@@ -23,10 +24,10 @@ export default function Login() {
     setLoading(true);
     setError('');
     try {
-      await sendOTP(phone);
+      sendOTP(phone);
       setStep('otp');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send OTP');
+      setError(err.message || 'Failed to send OTP');
     } finally {
       setLoading(false);
     }
@@ -41,13 +42,32 @@ export default function Login() {
     setLoading(true);
     setError('');
     try {
-      await loginWithOTP(phone, otp);
-      navigate(from, { replace: true });
+      const result = await loginWithOTP(otp);
+      if (result.isNewUser) {
+        navigate('/signup', { replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid OTP');
+      setError(err.message || 'Invalid OTP');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleResendOTP = () => {
+    setError('');
+    try {
+      retryOTP();
+    } catch (err) {
+      setError(err.message || 'Failed to resend OTP');
+    }
+  };
+
+  const handleChangePhone = () => {
+    setStep('phone');
+    setOtp('');
+    setError('');
   };
 
   return (
@@ -106,7 +126,7 @@ export default function Login() {
                 OTP sent to +91 {phone}{' '}
                 <button
                   type="button"
-                  onClick={() => { setStep('phone'); setOtp(''); setError(''); }}
+                  onClick={handleChangePhone}
                   className="text-primary font-medium bg-transparent border-0 cursor-pointer underline p-0"
                 >
                   Change
@@ -132,8 +152,28 @@ export default function Login() {
               >
                 {loading ? 'Verifying...' : 'Verify & Login'}
               </button>
+              <p className="text-center text-sm text-text-secondary">
+                Didn't receive OTP?{' '}
+                <button
+                  type="button"
+                  onClick={handleResendOTP}
+                  className="text-primary font-medium bg-transparent border-0 cursor-pointer underline p-0"
+                >
+                  Resend
+                </button>
+              </p>
             </form>
           )}
+
+          {/* Signup link */}
+          <div className="mt-6 pt-5 border-t border-border text-center">
+            <p className="text-sm text-text-secondary">
+              Don't have an account?{' '}
+              <Link to="/signup" className="text-primary font-medium underline">
+                Sign up
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -9,16 +9,10 @@ export async function verifyWebToken(token) {
   return data.data;
 }
 
-export async function sendOTP(phone_number) {
-  const { data } = await axios.post(`${API_BASE_URL}/auth/send-otp`, { phone_number });
-  return data.data;
-}
-
-export async function verifyOTP(phone_number, otp_code) {
-  const { data } = await axios.post(`${API_BASE_URL}/auth/verify-otp`, {
-    phone_number,
-    otp_code,
-    device_type: 'Web',
+export async function verifyWidget(accessToken) {
+  // No device_id / device_name / fcm_token — keeps web-store out of device session tracking
+  const { data } = await axios.post(`${API_BASE_URL}/auth/verify-widget`, {
+    access_token: accessToken,
   });
   return data.data;
 }
