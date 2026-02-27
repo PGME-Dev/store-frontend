@@ -62,7 +62,6 @@ export default function Checkout() {
     setError('');
 
     try {
-      // Step 1: Create payment session
       let sessionData;
       if (type === 'packages') {
         sessionData = await createPackagePaymentSession(id, billingAddress, tierIndex);
@@ -75,11 +74,9 @@ export default function Checkout() {
       const paymentSessionId = sessionData.payment_session_id;
       const amount = sessionData.amount;
 
-      // Step 2: Launch Zoho payment
       const paymentResult = await launchZohoPayment(paymentSessionId, amount);
 
       if (paymentResult.status === 'success') {
-        // Step 3: Verify payment
         let verification;
         if (type === 'packages') {
           verification = await verifyPackagePayment(paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature);
@@ -100,7 +97,6 @@ export default function Checkout() {
       } else if (paymentResult.status === 'failed') {
         setError(`Payment failed: ${paymentResult.error_message || 'Please try again'}`);
       }
-      // cancelled: do nothing, user stays on checkout
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Payment failed';
       setError(msg);
@@ -122,38 +118,63 @@ export default function Checkout() {
   }
 
   return (
-    <div>
-      <h1 className="text-xl font-bold text-text mb-4">Checkout</h1>
-
-      {/* Order summary */}
-      <div className="bg-surface rounded-xl border border-border p-4 mb-4">
-        <h3 className="text-sm font-semibold text-text mb-2">Order Summary</h3>
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-text-secondary">{getProductName()}</span>
-          <span className="text-base font-bold text-text">{formatPrice(getDisplayPrice())}</span>
+    <div className="animate-fade-in-up">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-2.5 sm:gap-3 mb-5 sm:mb-8">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-primary/6 rounded-xl flex items-center justify-center text-primary shrink-0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </div>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-text">Checkout</h1>
         </div>
-        <p className="text-xs text-text-secondary mt-2">
-          * GST (18%) will be added at payment
-        </p>
-      </div>
 
-      {error && (
-        <div className="bg-error/10 text-error text-sm px-4 py-3 rounded-lg mb-4">
-          {error}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8">
+          {/* Billing Address Form */}
+          <div className="lg:col-span-3">
+            {error && (
+              <div className="bg-error/8 text-error text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl mb-3 sm:mb-4 flex items-start gap-2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="15" y1="9" x2="9" y2="15"/>
+                  <line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+                {error}
+              </div>
+            )}
+            <div className="bg-white rounded-xl sm:rounded-2xl border border-border p-4 sm:p-5 lg:p-6">
+              <BillingAddressForm onSubmit={handleAddressSubmit} loading={paying} />
+            </div>
+          </div>
+
+          {/* Order summary sidebar */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl sm:rounded-2xl border border-border p-4 sm:p-5 lg:p-6 lg:sticky lg:top-24">
+              <h3 className="text-sm font-semibold text-text mb-3 sm:mb-4">Order Summary</h3>
+              <div className="flex items-center justify-between py-2.5 sm:py-3 border-b border-border">
+                <span className="text-xs sm:text-sm text-text-secondary">{getProductName()}</span>
+                <span className="text-sm sm:text-base font-bold text-text">{formatPrice(getDisplayPrice())}</span>
+              </div>
+              <p className="text-[11px] sm:text-xs text-text-secondary mt-2.5 sm:mt-3">
+                * GST (18%) will be added at payment
+              </p>
+              <div className="flex items-center gap-2 mt-3 sm:mt-4 p-2.5 sm:p-3 bg-surface-dim rounded-xl">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-success shrink-0">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span className="text-[11px] sm:text-xs text-text-secondary">Secure payment powered by Zoho</span>
+              </div>
+            </div>
+          </div>
         </div>
-      )}
-
-      {/* Billing address form */}
-      <div className="bg-surface rounded-xl border border-border p-4">
-        <BillingAddressForm onSubmit={handleAddressSubmit} loading={paying} />
       </div>
     </div>
   );
 }
 
-/**
- * Launch Zoho Payments SDK in the browser
- */
 function launchZohoPayment(paymentSessionId, amount) {
   return new Promise((resolve) => {
     try {

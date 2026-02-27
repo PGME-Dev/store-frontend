@@ -96,71 +96,102 @@ export default function BillingAddressForm({ onSubmit, loading }) {
   const isValid = address.street && address.city && address.state && address.state_code && address.pincode;
 
   if (loadingProfile) {
-    return <div className="text-center py-4 text-text-secondary">Loading address...</div>;
+    return (
+      <div className="flex items-center justify-center py-8 gap-3">
+        <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        <span className="text-sm text-text-secondary">Loading address...</span>
+      </div>
+    );
   }
 
+  const inputClass = "w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-border rounded-xl text-sm sm:text-base bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all";
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
-      <h3 className="text-lg font-semibold text-text">Billing Address</h3>
+    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+      <h3 className="text-base sm:text-lg font-semibold text-text mb-0.5 sm:mb-1">Billing Address</h3>
 
-      <input
-        name="street"
-        value={address.street}
-        onChange={handleChange}
-        placeholder="Address Line 1 *"
-        required
-        className="w-full px-3 py-3 border border-border rounded-lg text-base bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-      />
+      <div className="space-y-2.5 sm:space-y-3">
+        <div>
+          <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">Address Line 1 *</label>
+          <input
+            name="street"
+            value={address.street}
+            onChange={handleChange}
+            placeholder="Street address"
+            required
+            className={inputClass}
+          />
+        </div>
 
-      <input
-        name="street2"
-        value={address.street2}
-        onChange={handleChange}
-        placeholder="Address Line 2"
-        className="w-full px-3 py-3 border border-border rounded-lg text-base bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-      />
+        <div>
+          <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">Address Line 2</label>
+          <input
+            name="street2"
+            value={address.street2}
+            onChange={handleChange}
+            placeholder="Apartment, suite, etc. (optional)"
+            className={inputClass}
+          />
+        </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <input
-          name="city"
-          value={address.city}
-          onChange={handleChange}
-          placeholder="City *"
-          required
-          className="w-full px-3 py-3 border border-border rounded-lg text-base bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-        />
-        <input
-          name="pincode"
-          value={address.pincode}
-          onChange={handleChange}
-          placeholder="Pincode *"
-          required
-          pattern="[1-9][0-9]{5}"
-          inputMode="numeric"
-          maxLength={6}
-          className="w-full px-3 py-3 border border-border rounded-lg text-base bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">City *</label>
+            <input
+              name="city"
+              value={address.city}
+              onChange={handleChange}
+              placeholder="City"
+              required
+              className={inputClass}
+            />
+          </div>
+          <div>
+            <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">Pincode *</label>
+            <input
+              name="pincode"
+              value={address.pincode}
+              onChange={handleChange}
+              placeholder="6-digit pincode"
+              required
+              pattern="[1-9][0-9]{5}"
+              inputMode="numeric"
+              maxLength={6}
+              className={inputClass}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">State *</label>
+          <select
+            name="state"
+            value={address.state}
+            onChange={handleChange}
+            required
+            className={inputClass}
+          >
+            <option value="">Select State</option>
+            {STATE_NAMES.map((s) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
       </div>
-
-      <select
-        name="state"
-        value={address.state}
-        onChange={handleChange}
-        required
-        className="w-full px-3 py-3 border border-border rounded-lg text-base bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
-      >
-        <option value="">Select State *</option>
-        {STATE_NAMES.map((s) => (
-          <option key={s} value={s}>{s}</option>
-        ))}
-      </select>
 
       <button
         type="submit"
         disabled={!isValid || loading}
-        className="w-full py-3.5 bg-primary text-white text-base font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-dark transition-colors cursor-pointer border-0"
+        className="w-full py-3 sm:py-3.5 bg-primary text-white text-sm sm:text-base font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-dark transition-colors cursor-pointer border-0 mt-1.5 sm:mt-2"
       >
-        {loading ? 'Processing...' : 'Proceed to Payment'}
+        {loading ? (
+          <span className="flex items-center justify-center gap-2">
+            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            Processing...
+          </span>
+        ) : (
+          'Proceed to Payment'
+        )}
       </button>
     </form>
   );
