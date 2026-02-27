@@ -2,69 +2,79 @@ import { useState, useEffect } from 'react';
 import { getSessions } from '../api/sessions';
 import { usePurchase } from '../context/PurchaseContext';
 import { useAuth } from '../context/AuthContext';
-import { Link } from 'react-router-dom';
 import { formatPrice } from '../components/PriceDisplay';
+import SessionModal from '../components/SessionModal';
 
-// Subtle decorative SVG illustrations for card corners (rotate through these)
+// Subtle decorative SVG illustrations for card corners (5 medical-themed, cycling)
 const illustrations = [
   // Molecular / atoms
   (
-    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" className="text-primary/4">
-      <circle cx="36" cy="36" r="14" stroke="currentColor" strokeWidth="1.5"/>
-      <circle cx="36" cy="36" r="3" fill="currentColor"/>
-      <circle cx="36" cy="22" r="2.5" fill="currentColor"/>
-      <circle cx="48" cy="43" r="2.5" fill="currentColor"/>
-      <circle cx="24" cy="43" r="2.5" fill="currentColor"/>
-      <circle cx="50" cy="26" r="8" stroke="currentColor" strokeWidth="1"/>
-      <circle cx="22" cy="52" r="6" stroke="currentColor" strokeWidth="1"/>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <circle cx="40" cy="40" r="16" stroke="currentColor" strokeWidth="1.2"/>
+      <circle cx="40" cy="40" r="3.5" fill="currentColor"/>
+      <circle cx="40" cy="24" r="2.5" fill="currentColor"/>
+      <circle cx="54" cy="48" r="2.5" fill="currentColor"/>
+      <circle cx="26" cy="48" r="2.5" fill="currentColor"/>
+      <circle cx="56" cy="28" r="9" stroke="currentColor" strokeWidth="0.8"/>
+      <circle cx="24" cy="58" r="7" stroke="currentColor" strokeWidth="0.8"/>
     </svg>
   ),
   // Brain / neural
   (
-    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" className="text-warning/6">
-      <path d="M36 18c-6 0-12 4-14 10s0 14 6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M36 18c6 0 12 4 14 10s0 14-6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M28 46c-2 3-1 7 2 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M44 46c2 3 1 7-2 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="36" y1="18" x2="36" y2="55" stroke="currentColor" strokeWidth="1" strokeDasharray="2 3"/>
-      <circle cx="36" cy="32" r="2" fill="currentColor"/>
-      <circle cx="30" cy="38" r="1.5" fill="currentColor"/>
-      <circle cx="42" cy="38" r="1.5" fill="currentColor"/>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <path d="M40 18c-7 0-14 5-16 12s0 16 7 20" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M40 18c7 0 14 5 16 12s0 16-7 20" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M31 50c-2 3-1 8 2 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M49 50c2 3 1 8-2 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="40" y1="18" x2="40" y2="60" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2 3"/>
+      <circle cx="40" cy="35" r="2.5" fill="currentColor"/>
+      <circle cx="33" cy="42" r="2" fill="currentColor"/>
+      <circle cx="47" cy="42" r="2" fill="currentColor"/>
     </svg>
   ),
   // Stethoscope
   (
-    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" className="text-success/6">
-      <path d="M24 20v16a12 12 0 0 0 24 0V20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <circle cx="24" cy="18" r="3" stroke="currentColor" strokeWidth="1.5"/>
-      <circle cx="48" cy="18" r="3" stroke="currentColor" strokeWidth="1.5"/>
-      <path d="M48 36v4a8 8 0 0 1-8 8h0a8 8 0 0 1-8-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <circle cx="48" cy="42" r="4" stroke="currentColor" strokeWidth="1.5"/>
-      <circle cx="48" cy="42" r="1.5" fill="currentColor"/>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <path d="M28 22v18a14 14 0 0 0 28 0V22" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <circle cx="28" cy="20" r="3" stroke="currentColor" strokeWidth="1.2"/>
+      <circle cx="56" cy="20" r="3" stroke="currentColor" strokeWidth="1.2"/>
+      <path d="M56 40v5a9 9 0 0 1-9 9h0a9 9 0 0 1-9-9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <circle cx="56" cy="48" r="5" stroke="currentColor" strokeWidth="1.2"/>
+      <circle cx="56" cy="48" r="2" fill="currentColor"/>
     </svg>
   ),
   // DNA helix
   (
-    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" className="text-accent/6">
-      <path d="M28 16c0 8 16 12 16 20s-16 12-16 20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <path d="M44 16c0 8-16 12-16 20s16 12 16 20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      <line x1="30" y1="22" x2="42" y2="22" stroke="currentColor" strokeWidth="1"/>
-      <line x1="28" y1="30" x2="44" y2="30" stroke="currentColor" strokeWidth="1"/>
-      <line x1="28" y1="42" x2="44" y2="42" stroke="currentColor" strokeWidth="1"/>
-      <line x1="30" y1="50" x2="42" y2="50" stroke="currentColor" strokeWidth="1"/>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <path d="M30 12c0 10 20 15 20 25s-20 15-20 25s20 15 20 25" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <path d="M50 12c0 10-20 15-20 25s20 15 20 25s-20 15-20 25" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+      <line x1="33" y1="20" x2="47" y2="20" stroke="currentColor" strokeWidth="0.8"/>
+      <line x1="30" y1="30" x2="50" y2="30" stroke="currentColor" strokeWidth="0.8"/>
+      <line x1="30" y1="45" x2="50" y2="45" stroke="currentColor" strokeWidth="0.8"/>
+      <line x1="33" y1="55" x2="47" y2="55" stroke="currentColor" strokeWidth="0.8"/>
+      <line x1="30" y1="70" x2="50" y2="70" stroke="currentColor" strokeWidth="0.8"/>
     </svg>
   ),
   // Heartbeat / pulse
   (
-    <svg width="72" height="72" viewBox="0 0 72 72" fill="none" className="text-error/5">
-      <path d="M12 40h12l4-12 6 24 6-18 4 6h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <path d="M36 22c-3-6-12-8-16-2s-2 14 16 26c18-12 20-20 16-26s-13-4-16 2z" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <path d="M10 46h14l5-14 7 28 7-20 5 6h18" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M40 24c-4-7-14-9-18-3s-2 16 18 30c20-14 22-24 18-30s-14-4-18 3z" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round"/>
     </svg>
   ),
 ];
 
-function SessionCard({ session, purchased, illustrationIndex }) {
+const illustrationColors = [
+  'text-primary',
+  'text-warning',
+  'text-success',
+  'text-accent',
+  'text-error',
+];
+
+function SessionCard({ session, purchased, illustrationIndex, onClick }) {
   const illustration = illustrations[illustrationIndex % illustrations.length];
+  const colorClass = illustrationColors[illustrationIndex % illustrationColors.length];
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -80,13 +90,16 @@ function SessionCard({ session, purchased, illustrationIndex }) {
     });
   };
 
+  const startTime = session.scheduled_start_time || session.scheduled_start;
+
   return (
-    <Link
-      to={`/sessions/${session.session_id}`}
-      className="group relative block bg-white rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-md hover:border-primary/15 transition-all duration-300 no-underline"
+    <button
+      type="button"
+      onClick={onClick}
+      className="group relative block w-full text-left bg-white rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-md hover:border-primary/15 transition-all duration-300 cursor-pointer"
     >
       {/* Decorative illustration in bottom-right */}
-      <div className="absolute bottom-0 right-0 pointer-events-none opacity-100 group-hover:opacity-60 transition-opacity">
+      <div className={`absolute -bottom-1 -right-1 pointer-events-none opacity-[0.08] group-hover:opacity-[0.12] transition-opacity ${colorClass}`}>
         {illustration}
       </div>
 
@@ -124,7 +137,7 @@ function SessionCard({ session, purchased, illustrationIndex }) {
         )}
 
         {/* Schedule info */}
-        {(session.scheduled_start_time || session.scheduled_start) && (
+        {startTime && (
           <div className="flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs mb-3 flex-wrap">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-warning shrink-0">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -132,9 +145,9 @@ function SessionCard({ session, purchased, illustrationIndex }) {
               <line x1="8" y1="2" x2="8" y2="6"/>
               <line x1="3" y1="10" x2="21" y2="10"/>
             </svg>
-            <span className="text-text font-medium">{formatDate(session.scheduled_start_time || session.scheduled_start)}</span>
+            <span className="text-text font-medium">{formatDate(startTime)}</span>
             <span className="text-text-secondary">at</span>
-            <span className="text-text font-medium">{formatTime(session.scheduled_start_time || session.scheduled_start)}</span>
+            <span className="text-text font-medium">{formatTime(startTime)}</span>
             {session.duration_minutes && (
               <span className="text-text-secondary">· {session.duration_minutes} min</span>
             )}
@@ -170,7 +183,7 @@ function SessionCard({ session, purchased, illustrationIndex }) {
           </div>
         )}
       </div>
-    </Link>
+    </button>
   );
 }
 
@@ -180,6 +193,7 @@ export default function SessionList() {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedSession, setSelectedSession] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -208,16 +222,20 @@ export default function SessionList() {
 
   const now = new Date();
 
-  // Split sessions: purchased ones (that haven't ended) go to "Your Sessions"
+  // Client-side safety: exclude sessions past their end time
+  const activeSessions = sessions.filter((s) => {
+    const endTime = s.scheduled_end_time || s.scheduled_end;
+    if (!endTime) return true; // No end time = keep it
+    return new Date(endTime) > now;
+  });
+
+  // Split: purchased (not ended) go to "Your Sessions"
   const yourSessions = [];
   const otherSessions = [];
 
-  sessions.forEach((session) => {
+  activeSessions.forEach((session) => {
     const purchased = isSessionPurchased(session.session_id);
-    const endTime = session.scheduled_end_time || session.scheduled_end;
-    const hasEnded = endTime && new Date(endTime) < now;
-
-    if (purchased && !hasEnded) {
+    if (purchased) {
       yourSessions.push(session);
     } else {
       otherSessions.push(session);
@@ -273,6 +291,7 @@ export default function SessionList() {
                     session={session}
                     purchased={true}
                     illustrationIndex={index}
+                    onClick={() => setSelectedSession(session)}
                   />
                 ))}
               </div>
@@ -294,12 +313,21 @@ export default function SessionList() {
                     session={session}
                     purchased={isSessionPurchased(session.session_id)}
                     illustrationIndex={hasYourSessions ? index + yourSessions.length : index}
+                    onClick={() => setSelectedSession(session)}
                   />
                 ))}
               </div>
             </div>
           )}
         </div>
+      )}
+
+      {/* Session detail modal */}
+      {selectedSession && (
+        <SessionModal
+          session={selectedSession}
+          onClose={() => setSelectedSession(null)}
+        />
       )}
     </div>
   );
