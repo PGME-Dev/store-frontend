@@ -13,6 +13,8 @@ import SessionDetail from './pages/SessionDetail';
 import Checkout from './pages/Checkout';
 import PaymentSuccess from './pages/PaymentSuccess';
 import MyPurchases from './pages/MyPurchases';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import { useAuth } from './context/AuthContext';
 
 export default function App() {
@@ -40,6 +42,8 @@ export default function App() {
         <Route path="sessions/:id" element={<SessionDetail />} />
         <Route path="checkout/:type/:id" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="payment/success" element={<PaymentSuccess />} />
+        <Route path="about" element={<About />} />
+        <Route path="contact" element={<Contact />} />
         <Route path="my-purchases" element={<ProtectedRoute><MyPurchases /></ProtectedRoute>} />
       </Route>
     </Routes>

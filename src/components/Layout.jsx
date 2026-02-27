@@ -69,6 +69,8 @@ export default function Layout() {
     { to: '/packages', label: 'Packages' },
     { to: '/ebooks', label: 'eBooks' },
     { to: '/sessions', label: 'Sessions' },
+    { to: '/about', label: 'About' },
+    { to: '/contact', label: 'Contact' },
   ];
 
   const isActive = (path) => location.pathname.startsWith(path);
@@ -214,12 +216,16 @@ export default function Layout() {
               </div>
             </div>
 
-            {/* Support */}
+            {/* Company */}
             <div className="col-span-2 md:col-span-1">
-              <h4 className="text-sm font-semibold text-text mb-3">Support</h4>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                Access your purchases via the PGME mobile app.
-              </p>
+              <h4 className="text-sm font-semibold text-text mb-3">Company</h4>
+              <div className="space-y-2.5">
+                <Link to="/about" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">About Us</Link>
+                <Link to="/contact" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Contact Us</Link>
+                <p className="text-sm text-text-secondary leading-relaxed pt-1">
+                  Access your purchases via the PGME mobile app.
+                </p>
+              </div>
             </div>
           </div>
 
