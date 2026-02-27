@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { getUserProfile } from '../api/auth';
+import client from '../api/client';
 
 const STATE_MAP = {
   'Andaman and Nicobar Islands': 'AN',
@@ -101,25 +102,22 @@ export default function BillingAddressForm({ onSubmit, loading }) {
     setLookingUpPincode(true);
     setPincodeAutoFilled(false);
     try {
-      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`, {
+      const { data } = await client.get(`/pincode/${pincode}`, {
         signal: controller.signal,
       });
-      const data = await res.json();
-      if (data?.[0]?.Status === 'Success' && data[0].PostOffice?.length > 0) {
-        const po = data[0].PostOffice[0];
-        const district = po.District || '';
-        const apiState = po.State || '';
+      if (data?.success && data.data) {
+        const { city, state: apiState } = data.data;
         const matchedState = matchStateName(apiState);
         setAddress((prev) => ({
           ...prev,
-          city: prev.city || district,
+          city: prev.city || city || '',
           state: matchedState || prev.state,
           state_code: matchedState ? STATE_MAP[matchedState] : prev.state_code,
         }));
         setPincodeAutoFilled(true);
       }
     } catch (err) {
-      if (err.name !== 'AbortError') {
+      if (err.name !== 'AbortError' && err.code !== 'ERR_CANCELED') {
         // Silently fail — user can still manually select
       }
     } finally {
