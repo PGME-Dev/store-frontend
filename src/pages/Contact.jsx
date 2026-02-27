@@ -1,5 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { sendInquiry } from '../api/contact';
+
+const OFFICE_POSITION = [17.9210194, 77.4990521];
+
+// Custom SVG marker in the primary brand color
+const markerIcon = new L.DivIcon({
+  className: '',
+  iconSize: [32, 42],
+  iconAnchor: [16, 42],
+  popupAnchor: [0, -44],
+  html: `<svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 10.512 14.112 24.372 14.745 24.98a1.71 1.71 0 0 0 2.51 0C17.888 40.372 32 26.512 32 16 32 7.163 24.837 0 16 0z" fill="#1847A2"/>
+    <circle cx="16" cy="16" r="6" fill="white"/>
+  </svg>`,
+});
+
+function LocationMap() {
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    // Fix Leaflet container size detection after mount
+    const timer = setTimeout(() => {
+      mapRef.current?.invalidateSize();
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <MapContainer
+      center={OFFICE_POSITION}
+      zoom={16}
+      scrollWheelZoom={false}
+      className="w-full h-full z-0"
+      ref={mapRef}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+      />
+      <Marker position={OFFICE_POSITION} icon={markerIcon}>
+        <Popup>
+          <div style={{ fontFamily: 'Inter, sans-serif', padding: '2px 0' }}>
+            <strong style={{ fontSize: '13px', color: '#0F172A' }}>PGME Office</strong>
+            <br />
+            <span style={{ fontSize: '12px', color: '#64748B' }}>
+              19-1-27/A, New Adarsh Colony,<br />Bidar, Karnataka 585401
+            </span>
+          </div>
+        </Popup>
+      </Marker>
+    </MapContainer>
+  );
+}
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
@@ -45,44 +100,95 @@ export default function Contact() {
         {/* Contact Info Cards - Left column on desktop */}
         <div className="lg:col-span-1 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-4">
           {/* Address Card */}
-          <div className="bg-white rounded-2xl border border-border p-5 sm:p-6 hover:shadow-md hover:border-primary/15 transition-all duration-300">
-            <div className="w-10 h-10 bg-primary/8 rounded-xl flex items-center justify-center text-primary mb-3.5">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-primary/15 transition-all duration-300">
+            <div className="h-20 sm:h-24 bg-gradient-to-br from-primary/8 via-primary/4 to-accent/6 relative overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" className="text-primary/20">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <div className="absolute top-3 right-3 grid grid-cols-3 gap-1">
+                {Array.from({ length: 9 }).map((_, i) => (
+                  <div key={i} className="w-1 h-1 rounded-full bg-primary/10" />
+                ))}
+              </div>
             </div>
-            <h3 className="text-sm font-semibold text-text mb-1.5">Address</h3>
-            <p className="text-sm text-text-secondary leading-relaxed">
-              Office: 19-1-27/A, New Adarsh Colony, Bidar, Karnataka: 585401
-            </p>
+            <div className="p-4 sm:p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 bg-primary/8 rounded-lg flex items-center justify-center text-primary shrink-0">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold text-text">Address</h3>
+              </div>
+              <p className="text-sm text-text-secondary leading-relaxed">
+                Office: 19-1-27/A, New Adarsh Colony, Bidar, Karnataka: 585401
+              </p>
+            </div>
           </div>
 
           {/* Email Card */}
-          <div className="bg-white rounded-2xl border border-border p-5 sm:p-6 hover:shadow-md hover:border-accent/15 transition-all duration-300">
-            <div className="w-10 h-10 bg-accent/8 rounded-xl flex items-center justify-center text-accent mb-3.5">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <polyline points="22,6 12,13 2,6"/>
-              </svg>
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-accent/15 transition-all duration-300">
+            <div className="h-20 sm:h-24 bg-gradient-to-br from-accent/8 via-accent/4 to-primary/6 relative overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" className="text-accent/20">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <div className="absolute bottom-3 left-3 flex gap-1.5">
+                <div className="w-6 h-6 rounded-full border-2 border-accent/10" />
+                <div className="w-6 h-6 rounded-full border-2 border-accent/15 -ml-2.5" />
+                <div className="w-6 h-6 rounded-full border-2 border-accent/8 -ml-2.5" />
+              </div>
             </div>
-            <h3 className="text-sm font-semibold text-text mb-1.5">Email</h3>
-            <a href="mailto:pgmeessentials@gmail.com" className="text-sm text-primary no-underline hover:underline break-all">
-              pgmeessentials@gmail.com
-            </a>
+            <div className="p-4 sm:p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 bg-accent/8 rounded-lg flex items-center justify-center text-accent shrink-0">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                    <polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold text-text">Email</h3>
+              </div>
+              <a href="mailto:pgmeessentials@gmail.com" className="text-sm text-primary no-underline hover:underline break-all">
+                pgmeessentials@gmail.com
+              </a>
+            </div>
           </div>
 
           {/* Phone Card */}
-          <div className="bg-white rounded-2xl border border-border p-5 sm:p-6 hover:shadow-md hover:border-success/15 transition-all duration-300">
-            <div className="w-10 h-10 bg-success/8 rounded-xl flex items-center justify-center text-success mb-3.5">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-              </svg>
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-success/15 transition-all duration-300">
+            <div className="h-20 sm:h-24 bg-gradient-to-br from-success/8 via-success/4 to-accent/6 relative overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" className="text-success/20">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <div className="absolute top-3 left-3">
+                <div className="w-8 h-4 rounded-full border-2 border-success/10" />
+              </div>
+              <div className="absolute bottom-3 right-3">
+                <div className="w-4 h-4 rounded-md border-2 border-success/10 rotate-12" />
+              </div>
             </div>
-            <h3 className="text-sm font-semibold text-text mb-1.5">Phone</h3>
-            <a href="tel:8827741255" className="text-sm text-primary no-underline hover:underline">
-              8827741255
-            </a>
+            <div className="p-4 sm:p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 bg-success/8 rounded-lg flex items-center justify-center text-success shrink-0">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold text-text">Phone</h3>
+              </div>
+              <a href="tel:8827741255" className="text-sm text-primary no-underline hover:underline">
+                8827741255
+              </a>
+            </div>
           </div>
         </div>
 
@@ -211,7 +317,7 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Google Maps Section */}
+      {/* Map Section */}
       <div className="mt-4 sm:mt-5 bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden">
         <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border">
           <div className="flex items-center gap-2.5">
@@ -240,18 +346,8 @@ export default function Contact() {
             Open in Google Maps
           </a>
         </div>
-        <div className="relative w-full h-56 sm:h-72 lg:h-80">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1167.7878962949494!2d77.4985210190857!3d17.92107425261561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcec6cc0630eb39%3A0x1328e22c89004b1f!2sWFCX%2B9JR%2C%2019-1-36%2F1%2C%20New%20Adarsh%20Colony%203rd%20Phase%2C%203rd%20Phase%2C%20Adarsh%20Colony%2C%20Bidar%2C%20Karnataka%20585401!5e1!3m2!1sen!2sin!4v1772221778888!5m2!1sen!2sin"
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            allowFullScreen=""
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="PGME Office Location"
-            className="absolute inset-0"
-          />
+        <div className="h-56 sm:h-72 lg:h-80">
+          <LocationMap />
         </div>
       </div>
     </div>
