@@ -1,7 +1,7 @@
 import client from './client';
 
 export async function getSessions(subjectId) {
-  const params = {};
+  const params = { limit: 50 };
   if (subjectId) params.subject_id = subjectId;
   const { data } = await client.get('/live-sessions', { params });
   return data.data;
