@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { verifyWebToken, verifyWidget } from '../api/auth';
-import { sendOTP as msg91SendOTP, verifyOTP as msg91VerifyOTP } from '../utils/msg91';
+import { openOTPWidget } from '../utils/msg91';
 
 const AuthContext = createContext(null);
 
@@ -50,15 +50,13 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // Send OTP via MSG91 widget
-  const sendOTP = useCallback((phoneNumber) => {
-    msg91SendOTP(phoneNumber);
-  }, []);
+  // Opens MSG91 OTP popup, verifies with backend, stores tokens
+  const loginWithOTP = useCallback(async (phoneNumber) => {
+    // Pre-fill phone with country code if provided
+    const identifier = phoneNumber ? `91${phoneNumber}` : undefined;
 
-  // Verify OTP via MSG91 widget, then exchange access token with backend
-  const loginWithOTP = useCallback(async (otp) => {
-    // MSG91 widget verifies the OTP and returns an access token
-    const msg91AccessToken = await msg91VerifyOTP(otp);
+    // MSG91 popup handles OTP send + verify, returns access token
+    const msg91AccessToken = await openOTPWidget(identifier);
 
     // Exchange MSG91 access token for our JWT tokens (no device info sent)
     const result = await verifyWidget(msg91AccessToken);
@@ -88,7 +86,6 @@ export function AuthProvider({ children }) {
     user,
     isAuthenticated,
     loading,
-    sendOTP,
     loginWithOTP,
     logout,
   };
