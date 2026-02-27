@@ -1,15 +1,24 @@
 import { useSubject } from '../context/SubjectContext';
 
-export default function SubjectSelector() {
+export default function SubjectSelector({ showAll = false, value, onChange }) {
   const { subjects, selectedSubject, selectSubject, loading } = useSubject();
 
   if (loading || subjects.length === 0) return null;
 
-  const selectedId = selectedSubject?._id || selectedSubject?.subject_id;
+  // Controlled mode when value + onChange are provided
+  const isControlled = onChange !== undefined;
+  const selectedId = isControlled
+    ? (value || '')
+    : (selectedSubject?._id || selectedSubject?.subject_id);
 
   const handleChange = (e) => {
-    const subject = subjects.find((s) => (s._id || s.subject_id) === e.target.value);
-    if (subject) selectSubject(subject);
+    const val = e.target.value;
+    if (isControlled) {
+      onChange(val || null);
+    } else {
+      const subject = subjects.find((s) => (s._id || s.subject_id) === val);
+      if (subject) selectSubject(subject);
+    }
   };
 
   return (
@@ -19,6 +28,9 @@ export default function SubjectSelector() {
         onChange={handleChange}
         className="appearance-none bg-white border border-border rounded-xl px-4 py-2.5 pr-9 text-sm font-medium text-text cursor-pointer hover:border-primary/40 focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
       >
+        {showAll && (
+          <option value="">All Subjects</option>
+        )}
         {subjects.map((subject) => (
           <option key={subject._id || subject.subject_id} value={subject._id || subject.subject_id}>
             {subject.name}

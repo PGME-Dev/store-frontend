@@ -87,16 +87,16 @@ export default function SessionModal({ session: listSession, onClose }) {
     <div className="fixed inset-0 z-999">
       {/* Backdrop with blur */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-modal-backdrop"
         onClick={onClose}
       />
 
       {/* Scrollable container */}
       <div className="absolute inset-0 overflow-y-auto">
-        <div className="flex min-h-full items-start justify-center p-4 sm:p-6 pt-12 sm:pt-20 pb-12">
+        <div className="flex min-h-full items-center justify-center p-4 sm:p-6 py-8 sm:py-12">
           {/* Modal card */}
           <div
-            className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-scale-in"
+            className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-modal-content"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Background illustration (DNA helix) */}

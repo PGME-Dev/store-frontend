@@ -1,24 +1,22 @@
 import { useState, useEffect } from 'react';
 import { getEbooks } from '../api/ebooks';
-import { useSubject } from '../context/SubjectContext';
 import { usePurchase } from '../context/PurchaseContext';
 import SubjectSelector from '../components/SubjectSelector';
 import ProductCard from '../components/ProductCard';
 
 export default function EbookList() {
-  const { subjectId } = useSubject();
   const { isEbookPurchased } = usePurchase();
+  const [filterSubjectId, setFilterSubjectId] = useState(null);
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!subjectId) return;
     setLoading(true);
     setError('');
     (async () => {
       try {
-        const result = await getEbooks(subjectId);
+        const result = await getEbooks(filterSubjectId);
         setBooks(result.books || result || []);
       } catch {
         setError('Failed to load ebooks');
@@ -26,7 +24,7 @@ export default function EbookList() {
         setLoading(false);
       }
     })();
-  }, [subjectId]);
+  }, [filterSubjectId]);
 
   return (
     <div className="animate-fade-in-up">
@@ -45,7 +43,7 @@ export default function EbookList() {
             <p className="text-text-secondary text-xs sm:text-sm">Digital books for your medical preparation</p>
           </div>
         </div>
-        <SubjectSelector />
+        <SubjectSelector showAll value={filterSubjectId} onChange={setFilterSubjectId} />
       </div>
 
       {loading ? (

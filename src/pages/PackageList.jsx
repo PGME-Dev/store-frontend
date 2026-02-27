@@ -5,13 +5,43 @@ import { usePurchase } from '../context/PurchaseContext';
 import SubjectSelector from '../components/SubjectSelector';
 import ProductCard from '../components/ProductCard';
 
+function PackageGrid({ packages, isPackagePurchased }) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+      {packages.map((pkg) => {
+        const hasTiers = pkg.has_tiers && pkg.tiers?.length > 0;
+        const price = hasTiers ? pkg.tiers[0].effective_price || pkg.tiers[0].price : (pkg.sale_price || pkg.price);
+        const originalPrice = hasTiers ? pkg.tiers[0].original_price : pkg.original_price;
+        const isOnSale = hasTiers ? (pkg.tiers[0].original_price > pkg.tiers[0].effective_price) : pkg.is_on_sale;
+
+        return (
+          <ProductCard
+            key={pkg.package_id}
+            to={`/packages/${pkg.package_id}`}
+            title={pkg.name}
+            subtitle={pkg.type || pkg.package_type}
+            price={price}
+            originalPrice={originalPrice}
+            isOnSale={isOnSale}
+            badge={pkg.type || pkg.package_type}
+            purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 export default function PackageList() {
   const { subjectId } = useSubject();
   const { isPackagePurchased } = usePurchase();
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [allPackages, setAllPackages] = useState([]);
+  const [allLoading, setAllLoading] = useState(true);
 
+  // Fetch subject-filtered packages
   useEffect(() => {
     if (!subjectId) return;
     setLoading(true);
@@ -27,6 +57,25 @@ export default function PackageList() {
       }
     })();
   }, [subjectId]);
+
+  // Fetch all packages (no subject filter)
+  useEffect(() => {
+    setAllLoading(true);
+    (async () => {
+      try {
+        const result = await getPackages();
+        setAllPackages(result.packages || result || []);
+      } catch {
+        // Silently fail — the main section still works
+      } finally {
+        setAllLoading(false);
+      }
+    })();
+  }, []);
+
+  // Other packages = all packages minus the ones already shown in the subject section
+  const subjectPackageIds = new Set(packages.map((p) => p.package_id));
+  const otherPackages = allPackages.filter((p) => !subjectPackageIds.has(p.package_id));
 
   return (
     <div className="animate-fade-in-up">
@@ -60,30 +109,25 @@ export default function PackageList() {
               <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
             </svg>
           </div>
-          <p className="text-text-secondary text-sm">No packages available</p>
+          <p className="text-text-secondary text-sm">No packages available for this subject</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-          {packages.map((pkg) => {
-            const hasTiers = pkg.has_tiers && pkg.tiers?.length > 0;
-            const price = hasTiers ? pkg.tiers[0].effective_price || pkg.tiers[0].price : (pkg.sale_price || pkg.price);
-            const originalPrice = hasTiers ? pkg.tiers[0].original_price : pkg.original_price;
-            const isOnSale = hasTiers ? (pkg.tiers[0].original_price > pkg.tiers[0].effective_price) : pkg.is_on_sale;
+        <PackageGrid packages={packages} isPackagePurchased={isPackagePurchased} />
+      )}
 
-            return (
-              <ProductCard
-                key={pkg.package_id}
-                to={`/packages/${pkg.package_id}`}
-                title={pkg.name}
-                subtitle={pkg.type || pkg.package_type}
-                price={price}
-                originalPrice={originalPrice}
-                isOnSale={isOnSale}
-                badge={pkg.type || pkg.package_type}
-                purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
-              />
-            );
-          })}
+      {/* Other Packages section */}
+      {!allLoading && otherPackages.length > 0 && (
+        <div className="mt-8 sm:mt-10 lg:mt-12">
+          <h2 className="text-base sm:text-lg font-semibold text-text mb-3 sm:mb-4 flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            Other Packages
+          </h2>
+          <PackageGrid packages={otherPackages} isPackagePurchased={isPackagePurchased} />
         </div>
       )}
     </div>
