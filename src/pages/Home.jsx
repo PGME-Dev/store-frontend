@@ -6,7 +6,10 @@ import { getSessions } from '../api/sessions';
 import { useSubject } from '../context/SubjectContext';
 import { usePurchase } from '../context/PurchaseContext';
 import SubjectSelector from '../components/SubjectSelector';
-import ProductCard from '../components/ProductCard';
+import PackageCard from '../components/PackageCard';
+import PackageModal from '../components/PackageModal';
+import EbookCard from '../components/EbookCard';
+import EbookModal from '../components/EbookModal';
 import { formatPrice } from '../components/PriceDisplay';
 
 function SectionHeader({ title, viewAllTo, icon, iconBg, iconColor }) {
@@ -45,6 +48,8 @@ export default function Home() {
   const [loadingPkgs, setLoadingPkgs] = useState(true);
   const [loadingBooks, setLoadingBooks] = useState(true);
   const [loadingSessions, setLoadingSessions] = useState(true);
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [selectedBook, setSelectedBook] = useState(null);
 
   // Fetch packages and ebooks when subject changes
   useEffect(() => {
@@ -110,26 +115,16 @@ export default function Home() {
         {loadingPkgs ? <SectionSpinner /> : packages.length === 0 ? (
           <p className="text-sm text-text-secondary py-6 text-center">No packages available for {selectedSubject?.name}</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-            {packages.slice(0, 4).map((pkg) => {
-              const hasTiers = pkg.has_tiers && pkg.tiers?.length > 0;
-              const price = hasTiers ? pkg.tiers[0].effective_price || pkg.tiers[0].price : (pkg.sale_price || pkg.price);
-              const originalPrice = hasTiers ? pkg.tiers[0].original_price : pkg.original_price;
-              const isOnSale = hasTiers ? (pkg.tiers[0].original_price > pkg.tiers[0].effective_price) : pkg.is_on_sale;
-              return (
-                <ProductCard
-                  key={pkg.package_id}
-                  to={`/packages/${pkg.package_id}`}
-                  title={pkg.name}
-                  subtitle={pkg.type || pkg.package_type}
-                  price={price}
-                  originalPrice={originalPrice}
-                  isOnSale={isOnSale}
-                  badge={pkg.type || pkg.package_type}
-                  purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
-                />
-              );
-            })}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5">
+            {packages.slice(0, 6).map((pkg, index) => (
+              <PackageCard
+                key={pkg.package_id}
+                pkg={pkg}
+                purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
+                illustrationIndex={index}
+                onClick={() => setSelectedPackage(pkg)}
+              />
+            ))}
           </div>
         )}
       </section>
@@ -154,17 +149,13 @@ export default function Home() {
           <p className="text-sm text-text-secondary py-6 text-center">No ebooks available for {selectedSubject?.name}</p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 sm:gap-3 md:gap-5">
-            {ebooks.slice(0, 5).map((book) => (
-              <ProductCard
+            {ebooks.slice(0, 5).map((book, index) => (
+              <EbookCard
                 key={book.book_id}
-                to={`/ebooks/${book.book_id}`}
-                title={book.title}
-                subtitle={book.author}
-                price={book.effective_price || book.price}
-                originalPrice={book.original_price || book.price}
-                isOnSale={book.is_on_sale}
-                imageUrl={book.thumbnail_url}
+                book={book}
                 purchased={isEbookPurchased(book.book_id)}
+                illustrationIndex={index}
+                onClick={() => setSelectedBook(book)}
               />
             ))}
           </div>
@@ -235,6 +226,22 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {/* Package detail modal */}
+      {selectedPackage && (
+        <PackageModal
+          package={selectedPackage}
+          onClose={() => setSelectedPackage(null)}
+        />
+      )}
+
+      {/* Ebook detail modal */}
+      {selectedBook && (
+        <EbookModal
+          book={selectedBook}
+          onClose={() => setSelectedBook(null)}
+        />
+      )}
     </div>
   );
 }

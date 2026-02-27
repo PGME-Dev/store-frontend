@@ -3,34 +3,8 @@ import { getPackages } from '../api/packages';
 import { useSubject } from '../context/SubjectContext';
 import { usePurchase } from '../context/PurchaseContext';
 import SubjectSelector from '../components/SubjectSelector';
-import ProductCard from '../components/ProductCard';
-
-function PackageGrid({ packages, isPackagePurchased }) {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-      {packages.map((pkg) => {
-        const hasTiers = pkg.has_tiers && pkg.tiers?.length > 0;
-        const price = hasTiers ? pkg.tiers[0].effective_price || pkg.tiers[0].price : (pkg.sale_price || pkg.price);
-        const originalPrice = hasTiers ? pkg.tiers[0].original_price : pkg.original_price;
-        const isOnSale = hasTiers ? (pkg.tiers[0].original_price > pkg.tiers[0].effective_price) : pkg.is_on_sale;
-
-        return (
-          <ProductCard
-            key={pkg.package_id}
-            to={`/packages/${pkg.package_id}`}
-            title={pkg.name}
-            subtitle={pkg.type || pkg.package_type}
-            price={price}
-            originalPrice={originalPrice}
-            isOnSale={isOnSale}
-            badge={pkg.type || pkg.package_type}
-            purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
-          />
-        );
-      })}
-    </div>
-  );
-}
+import PackageCard from '../components/PackageCard';
+import PackageModal from '../components/PackageModal';
 
 export default function PackageList() {
   const { subjectId } = useSubject();
@@ -40,6 +14,7 @@ export default function PackageList() {
   const [error, setError] = useState('');
   const [allPackages, setAllPackages] = useState([]);
   const [allLoading, setAllLoading] = useState(true);
+  const [selectedPackage, setSelectedPackage] = useState(null);
 
   // Fetch subject-filtered packages
   useEffect(() => {
@@ -112,7 +87,17 @@ export default function PackageList() {
           <p className="text-text-secondary text-sm">No packages available for this subject</p>
         </div>
       ) : (
-        <PackageGrid packages={packages} isPackagePurchased={isPackagePurchased} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5">
+          {packages.map((pkg, index) => (
+            <PackageCard
+              key={pkg.package_id}
+              pkg={pkg}
+              purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
+              illustrationIndex={index}
+              onClick={() => setSelectedPackage(pkg)}
+            />
+          ))}
+        </div>
       )}
 
       {/* Other Packages section */}
@@ -127,8 +112,26 @@ export default function PackageList() {
             </svg>
             Other Packages
           </h2>
-          <PackageGrid packages={otherPackages} isPackagePurchased={isPackagePurchased} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-5">
+            {otherPackages.map((pkg, index) => (
+              <PackageCard
+                key={pkg.package_id}
+                pkg={pkg}
+                purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
+                illustrationIndex={packages.length + index}
+                onClick={() => setSelectedPackage(pkg)}
+              />
+            ))}
+          </div>
         </div>
+      )}
+
+      {/* Package detail modal */}
+      {selectedPackage && (
+        <PackageModal
+          package={selectedPackage}
+          onClose={() => setSelectedPackage(null)}
+        />
       )}
     </div>
   );

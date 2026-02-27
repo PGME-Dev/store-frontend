@@ -1,6 +1,64 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+
+function UserMenu({ user, logout }) {
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const displayName = user?.name || 'User';
+  const initials = displayName.charAt(0).toUpperCase();
+  const phone = user?.phone_number ? `+91 ${user.phone_number}` : '';
+
+  return (
+    <div className="relative" ref={menuRef}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg hover:bg-surface-dim transition-colors bg-transparent border-0 cursor-pointer"
+      >
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary/8 flex items-center justify-center shrink-0">
+          <span className="text-xs sm:text-sm font-semibold text-primary">{initials}</span>
+        </div>
+        <div className="hidden sm:block text-left">
+          <div className="text-xs sm:text-sm font-medium text-text leading-tight truncate max-w-28">{displayName}</div>
+          {phone && <div className="text-[10px] sm:text-[11px] text-text-secondary leading-tight">{phone}</div>}
+        </div>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-text-secondary hidden sm:block">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-1 w-56 bg-white rounded-xl border border-border shadow-lg py-2 animate-fade-in z-50">
+          {/* User info (visible on mobile since header hides it) */}
+          <div className="px-4 py-2.5 border-b border-border sm:hidden">
+            <div className="text-sm font-medium text-text truncate">{displayName}</div>
+            {phone && <div className="text-xs text-text-secondary">{phone}</div>}
+          </div>
+          <button
+            onClick={() => { setOpen(false); logout(); }}
+            className="w-full text-left px-4 py-2.5 text-sm text-error hover:bg-error/4 transition-colors bg-transparent border-0 cursor-pointer flex items-center gap-2.5"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Logout
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Layout() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -58,12 +116,7 @@ export default function Layout() {
                   </svg>
                   My Purchases
                 </Link>
-                <button
-                  onClick={logout}
-                  className="text-xs sm:text-sm text-text-secondary hover:text-text bg-transparent border-0 cursor-pointer transition-colors px-2 sm:px-3 py-2 rounded-lg hover:bg-surface-dim"
-                >
-                  Logout
-                </button>
+                <UserMenu user={user} logout={logout} />
               </>
             ) : (
               /* Login button commented out */

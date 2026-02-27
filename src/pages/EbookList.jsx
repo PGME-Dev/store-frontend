@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { getEbooks } from '../api/ebooks';
 import { usePurchase } from '../context/PurchaseContext';
 import SubjectSelector from '../components/SubjectSelector';
-import ProductCard from '../components/ProductCard';
+import EbookCard from '../components/EbookCard';
+import EbookModal from '../components/EbookModal';
 
 export default function EbookList() {
   const { isEbookPurchased } = usePurchase();
@@ -10,6 +11,7 @@ export default function EbookList() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedBook, setSelectedBook] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -64,20 +66,24 @@ export default function EbookList() {
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 sm:gap-3 md:gap-5">
-          {books.map((book) => (
-            <ProductCard
+          {books.map((book, index) => (
+            <EbookCard
               key={book.book_id}
-              to={`/ebooks/${book.book_id}`}
-              title={book.title}
-              subtitle={book.author}
-              price={book.effective_price || book.price}
-              originalPrice={book.original_price || book.price}
-              isOnSale={book.is_on_sale}
-              imageUrl={book.thumbnail_url}
+              book={book}
               purchased={isEbookPurchased(book.book_id)}
+              illustrationIndex={index}
+              onClick={() => setSelectedBook(book)}
             />
           ))}
         </div>
+      )}
+
+      {/* Ebook detail modal */}
+      {selectedBook && (
+        <EbookModal
+          book={selectedBook}
+          onClose={() => setSelectedBook(null)}
+        />
       )}
     </div>
   );

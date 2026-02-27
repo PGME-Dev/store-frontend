@@ -29,11 +29,12 @@ export function PurchaseProvider({ children }) {
     }
   };
 
+  // Backend already filters to payment_status: 'completed', so no need to check it here
   const purchasedPackageIds = useMemo(() => {
     const set = new Set();
     (purchaseData?.packages || []).forEach((p) => {
-      if (p.is_active && p.payment_status === 'completed') {
-        const id = p.package_id?._id || p.package_id;
+      if (p.is_active) {
+        const id = p.package_id;
         if (id) set.add(id.toString());
       }
     });
@@ -43,8 +44,8 @@ export function PurchaseProvider({ children }) {
   const purchasedEbookIds = useMemo(() => {
     const set = new Set();
     (purchaseData?.ebook_purchases || []).forEach((p) => {
-      if (p.is_active && p.payment_status === 'completed') {
-        const id = p.book_id?._id || p.book_id;
+      if (p.is_active) {
+        const id = p.book_id;
         if (id) set.add(id.toString());
       }
     });
@@ -53,10 +54,9 @@ export function PurchaseProvider({ children }) {
 
   const purchasedSessionIds = useMemo(() => {
     const set = new Set();
-    (purchaseData?.session_purchases || []).forEach((p) => {
-      if (p.is_active && p.payment_status === 'completed') {
-        const id = p.session_id?._id || p.session_id;
-        if (id) set.add(id.toString());
+    (purchaseData?.live_sessions || []).forEach((p) => {
+      if (p.is_active) {
+        if (p.purchase_id) set.add(p.purchase_id.toString());
       }
     });
     return set;
@@ -78,6 +78,7 @@ export function PurchaseProvider({ children }) {
   );
 
   const value = {
+    purchaseData,
     isPackagePurchased,
     isEbookPurchased,
     isSessionPurchased,
