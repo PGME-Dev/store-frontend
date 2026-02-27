@@ -211,26 +211,47 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Map / Location decorative section */}
+      {/* Google Maps Section */}
       <div className="mt-4 sm:mt-5 bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden">
-        <div className="h-36 sm:h-48 bg-gradient-to-br from-primary/4 via-surface-dim to-accent/4 relative">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-primary/8 rounded-2xl flex items-center justify-center text-primary mx-auto mb-2.5">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                  <circle cx="12" cy="10" r="3"/>
-                </svg>
-              </div>
-              <p className="text-sm font-semibold text-text">Bidar, Karnataka</p>
-              <p className="text-xs text-text-secondary mt-0.5">New Adarsh Colony</p>
+        <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 bg-primary/8 rounded-xl flex items-center justify-center text-primary shrink-0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-text">Our Location</h3>
+              <p className="text-xs text-text-secondary">New Adarsh Colony, Bidar, Karnataka</p>
             </div>
           </div>
-          {/* Decorative grid lines */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: 'linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-          }} />
+          <a
+            href="https://maps.app.goo.gl/u4EQgYH7pozHSsK36"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-medium text-primary bg-primary/5 rounded-lg no-underline hover:bg-primary/10 transition-colors shrink-0"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Open in Google Maps
+          </a>
+        </div>
+        <div className="relative w-full h-56 sm:h-72 lg:h-80">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1167.7878962949494!2d77.4985210190857!3d17.92107425261561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcec6cc0630eb39%3A0x1328e22c89004b1f!2sWFCX%2B9JR%2C%2019-1-36%2F1%2C%20New%20Adarsh%20Colony%203rd%20Phase%2C%203rd%20Phase%2C%20Adarsh%20Colony%2C%20Bidar%2C%20Karnataka%20585401!5e1!3m2!1sen!2sin!4v1772221778888!5m2!1sen!2sin"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="PGME Office Location"
+            className="absolute inset-0"
+          />
         </div>
       </div>
     </div>
