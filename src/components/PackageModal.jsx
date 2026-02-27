@@ -134,8 +134,33 @@ export default function PackageModal({ package: listPkg, onClose }) {
             {/* Body */}
             <div className="relative px-5 sm:px-6 md:px-8 py-5 sm:py-6 space-y-4 sm:space-y-5">
               {loading && !pkg ? (
-                <div className="flex items-center justify-center min-h-50">
-                  <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                <div className="space-y-4 sm:space-y-5">
+                  {/* Info card skeleton */}
+                  <div className="flex items-start gap-3 rounded-xl p-3.5 sm:p-4 bg-surface-dim">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 skeleton rounded-lg shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <div className="skeleton h-4 w-36" />
+                      <div className="skeleton h-3 w-44" />
+                    </div>
+                  </div>
+                  {/* Description skeleton */}
+                  <div>
+                    <div className="skeleton h-3.5 w-14 mb-2" />
+                    <div className="space-y-1.5">
+                      <div className="skeleton h-3 w-full" />
+                      <div className="skeleton h-3 w-full" />
+                      <div className="skeleton h-3 w-3/4" />
+                    </div>
+                  </div>
+                  {/* Features skeleton */}
+                  <div>
+                    <div className="skeleton h-3.5 w-28 mb-2.5" />
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2"><div className="skeleton w-3.5 h-3.5 rounded-full shrink-0" /><div className="skeleton h-3 w-3/4" /></div>
+                      <div className="flex items-center gap-2"><div className="skeleton w-3.5 h-3.5 rounded-full shrink-0" /><div className="skeleton h-3 w-1/2" /></div>
+                      <div className="flex items-center gap-2"><div className="skeleton w-3.5 h-3.5 rounded-full shrink-0" /><div className="skeleton h-3 w-2/3" /></div>
+                    </div>
+                  </div>
                 </div>
               ) : error ? (
                 <div className="text-center py-4 text-error text-sm">{error}</div>
