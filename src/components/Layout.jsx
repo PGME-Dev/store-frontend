@@ -186,7 +186,7 @@ export default function Layout() {
       {/* Footer */}
       <footer className="border-t border-border bg-white mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8">
             {/* Brand */}
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-3">
@@ -216,6 +216,16 @@ export default function Layout() {
               </div>
             </div>
 
+            {/* Legal */}
+            <div>
+              <h4 className="text-sm font-semibold text-text mb-3">Legal</h4>
+              <div className="space-y-2.5">
+                <Link to="/terms-and-conditions" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Terms and Conditions</Link>
+                <Link to="/refund-policy" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Refund Policy</Link>
+                <Link to="/privacy-policy" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Privacy Policy</Link>
+              </div>
+            </div>
+
             {/* Company */}
             <div className="col-span-2 md:col-span-1">
               <h4 className="text-sm font-semibold text-text mb-3">Company</h4>
@@ -231,7 +241,7 @@ export default function Layout() {
 
           <div className="border-t border-border mt-6 sm:mt-8 pt-5 sm:pt-6">
             <p className="text-xs sm:text-sm text-text-secondary text-center sm:text-left">
-              &copy; {new Date().getFullYear()} PGME. All rights reserved.
+              &copy; {new Date().getFullYear()} PGME Medical Education LLP. All rights reserved.
             </p>
           </div>
         </div>

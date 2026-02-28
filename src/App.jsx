@@ -15,6 +15,9 @@ import PaymentSuccess from './pages/PaymentSuccess';
 import MyPurchases from './pages/MyPurchases';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import TermsAndConditions from './pages/TermsAndConditions';
+import RefundPolicy from './pages/RefundPolicy';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import { useAuth } from './context/AuthContext';
 
 export default function App() {
@@ -44,6 +47,9 @@ export default function App() {
         <Route path="payment/success" element={<PaymentSuccess />} />
         <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path="refund-policy" element={<RefundPolicy />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
         <Route path="my-purchases" element={<ProtectedRoute><MyPurchases /></ProtectedRoute>} />
       </Route>
     </Routes>
