@@ -2,10 +2,20 @@ import { useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { usePurchase } from '../context/PurchaseContext';
 
+// Detect if the user is on a mobile device (iOS or Android)
+function isMobileDevice() {
+  return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+
+// Deep link that opens the PGME app's success screen.
+// Format: pgme://host/path — uri.path = '/success', matched by GoRouter.
+const APP_DEEP_LINK = 'pgme://app/success';
+
 export default function PaymentSuccess() {
   const location = useLocation();
   const { refreshPurchases } = usePurchase();
   const { purchaseId, productName, type } = location.state || {};
+  const onMobile = isMobileDevice();
 
   useEffect(() => {
     refreshPurchases();
@@ -41,17 +51,31 @@ export default function PaymentSuccess() {
               <div>
                 <h3 className="text-xs sm:text-sm font-semibold text-text mb-0.5 sm:mb-1">What's Next?</h3>
                 <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-                  Open the PGME app on your device to access your purchased content.
-                  Your purchase is already linked to your account.
+                  {onMobile
+                    ? 'Tap "Open in App" below to return to the PGME app and access your purchased content.'
+                    : 'Open the PGME app on your device to access your purchased content. Your purchase is already linked to your account.'}
                 </p>
               </div>
             </div>
           </div>
 
           <div className="space-y-2.5 sm:space-y-3">
+            {onMobile && (
+              <a
+                href={APP_DEEP_LINK}
+                className="flex items-center justify-center gap-2 w-full py-3 sm:py-3.5 bg-primary text-white font-semibold rounded-xl text-center no-underline hover:bg-primary-dark transition-colors text-sm sm:text-base"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                  <polyline points="10 17 15 12 10 7"/>
+                  <line x1="15" y1="12" x2="3" y2="12"/>
+                </svg>
+                Open in App
+              </a>
+            )}
             <Link
               to="/my-purchases"
-              className="block w-full py-3 sm:py-3.5 bg-primary text-white font-semibold rounded-xl text-center no-underline hover:bg-primary-dark transition-colors text-sm sm:text-base"
+              className="block w-full py-3 sm:py-3.5 bg-surface-dim border border-border text-text font-medium rounded-xl text-center no-underline hover:bg-border/30 transition-colors text-sm sm:text-base"
             >
               View My Purchases
             </Link>
