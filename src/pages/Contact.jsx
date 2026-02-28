@@ -4,7 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { sendInquiry } from '../api/contact';
 
-const OFFICE_POSITION = [17.9210194, 77.4990521];
+const OFFICE_POSITION = [31.3636, 75.5609];
 
 // Custom SVG marker in the primary brand color
 const markerIcon = new L.DivIcon({
@@ -47,7 +47,7 @@ function LocationMap() {
             <strong style={{ fontSize: '13px', color: '#0F172A' }}>PGME Office</strong>
             <br />
             <span style={{ fontSize: '12px', color: '#64748B' }}>
-              19-1-27/A, New Adarsh Colony,<br />Bidar, Karnataka 585401
+              H.No. 59, Guru Ram Dass Nagar, Phase 2,<br />Near Verka Milk Plant, Jalandhar, Punjab 144008
             </span>
           </div>
         </Popup>
@@ -125,7 +125,7 @@ export default function Contact() {
                 <h3 className="text-sm font-semibold text-text">Address</h3>
               </div>
               <p className="text-sm text-text-secondary leading-relaxed">
-                Office: 19-1-27/A, New Adarsh Colony, Bidar, Karnataka: 585401
+                H.No. 59, Guru Ram Dass Nagar, Phase 2, Near Verka Milk Plant, Jalandhar, Punjab-144008
               </p>
             </div>
           </div>
@@ -155,8 +155,8 @@ export default function Contact() {
                 </div>
                 <h3 className="text-sm font-semibold text-text">Email</h3>
               </div>
-              <a href="mailto:pgmeessentials@gmail.com" className="text-sm text-primary no-underline hover:underline break-all">
-                pgmeessentials@gmail.com
+              <a href="mailto:support@pgmemedicalteaching.com" className="text-sm text-primary no-underline hover:underline break-all">
+                support@pgmemedicalteaching.com
               </a>
             </div>
           </div>
@@ -329,11 +329,11 @@ export default function Contact() {
             </div>
             <div>
               <h3 className="text-sm font-semibold text-text">Our Location</h3>
-              <p className="text-xs text-text-secondary">New Adarsh Colony, Bidar, Karnataka</p>
+              <p className="text-xs text-text-secondary">Guru Ram Dass Nagar, Jalandhar, Punjab</p>
             </div>
           </div>
           <a
-            href="https://maps.app.goo.gl/u4EQgYH7pozHSsK36"
+            href="https://maps.app.goo.gl/BY4DLXepUboN22h18"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-medium text-primary bg-primary/5 rounded-lg no-underline hover:bg-primary/10 transition-colors shrink-0"
