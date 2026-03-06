@@ -124,6 +124,11 @@ export default function EbookModal({ book: listBook, onClose }) {
               {b?.author && (
                 <p className="text-white/70 text-xs sm:text-sm mt-1">By {b.author}</p>
               )}
+              {b?.subject && (
+                <span className="inline-block text-[10px] sm:text-xs font-medium text-white/50 bg-white/10 px-2 py-0.5 rounded-full mt-1.5">
+                  {b.subject.name}
+                </span>
+              )}
             </div>
 
             {/* Body */}

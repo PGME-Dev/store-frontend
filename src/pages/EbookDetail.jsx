@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getEbookById } from '../api/ebooks';
 import { useAuth } from '../context/AuthContext';
-import { usePurchase } from '../context/PurchaseContext';
-import PriceDisplay from '../components/PriceDisplay';
+// import { usePurchase } from '../context/PurchaseContext';
+// import PriceDisplay from '../components/PriceDisplay';
 
 export default function EbookDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { isEbookPurchased } = usePurchase();
+  // const { isEbookPurchased } = usePurchase();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -39,16 +39,16 @@ export default function EbookDetail() {
     return <div className="text-center py-12 text-error text-sm">{error || 'eBook not found'}</div>;
   }
 
-  const price = book.effective_price || book.price;
-  const purchased = isEbookPurchased(book.book_id || book._id);
+  // const price = book.effective_price || book.price;
+  // const purchased = isEbookPurchased(book.book_id || book._id);
 
-  const handleBuy = () => {
-    if (!isAuthenticated) {
-      navigate('/login', { state: { from: { pathname: `/ebooks/${id}` } } });
-      return;
-    }
-    navigate(`/checkout/ebooks/${id}`);
-  };
+  // const handleBuy = () => {
+  //   if (!isAuthenticated) {
+  //     navigate('/login', { state: { from: { pathname: `/ebooks/${id}` } } });
+  //     return;
+  //   }
+  //   navigate(`/checkout/ebooks/${id}`);
+  // };
 
   return (
     <div className="animate-fade-in-up">
@@ -124,8 +124,8 @@ export default function EbookDetail() {
             </div>
           </div>
 
-          {/* Sidebar - Desktop sticky CTA */}
-          <div className="hidden lg:block">
+          {/* Sidebar - Desktop sticky CTA - commented out (payment/purchase related) */}
+          {/* <div className="hidden lg:block">
             <div className="sticky top-24 bg-white rounded-2xl border border-border p-6">
               {purchased ? (
                 <>
@@ -157,12 +157,12 @@ export default function EbookDetail() {
                 </>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
-      {/* Mobile sticky bottom CTA */}
-      {purchased ? (
+      {/* Mobile sticky bottom CTA - commented out (payment/purchase related) */}
+      {/* {purchased ? (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
           <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-success">
@@ -189,9 +189,9 @@ export default function EbookDetail() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
-      <div className="h-20 sm:h-24 lg:hidden" />
+      {/* <div className="h-20 sm:h-24 lg:hidden" /> */}
     </div>
   );
 }

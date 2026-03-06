@@ -2,16 +2,16 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getPackageById } from '../api/packages';
 import { useAuth } from '../context/AuthContext';
-import { usePurchase } from '../context/PurchaseContext';
-import PriceDisplay from '../components/PriceDisplay';
+// import { usePurchase } from '../context/PurchaseContext';
+// import PriceDisplay from '../components/PriceDisplay';
 
 export default function PackageDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { isPackagePurchased } = usePurchase();
+  // const { isPackagePurchased } = usePurchase();
   const [pkg, setPkg] = useState(null);
-  const [selectedTier, setSelectedTier] = useState(0);
+  // const [selectedTier, setSelectedTier] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -40,21 +40,21 @@ export default function PackageDetail() {
     return <div className="text-center py-12 text-error text-sm">{error || 'Package not found'}</div>;
   }
 
-  const hasTiers = pkg.has_tiers && pkg.tiers?.length > 0;
-  const currentTier = hasTiers ? pkg.tiers[selectedTier] : null;
-  const price = currentTier ? (currentTier.effective_price || currentTier.price) : (pkg.sale_price || pkg.price);
-  const originalPrice = currentTier ? currentTier.original_price : pkg.original_price;
-  const isOnSale = currentTier ? (currentTier.original_price > (currentTier.effective_price || currentTier.price)) : pkg.is_on_sale;
-  const durationDays = currentTier ? currentTier.duration_days : pkg.duration_days;
-  const purchased = pkg.is_purchased || isPackagePurchased(pkg.package_id || pkg._id);
+  // const hasTiers = pkg.has_tiers && pkg.tiers?.length > 0;
+  // const currentTier = hasTiers ? pkg.tiers[selectedTier] : null;
+  // const price = currentTier ? (currentTier.effective_price || currentTier.price) : (pkg.sale_price || pkg.price);
+  // const originalPrice = currentTier ? currentTier.original_price : pkg.original_price;
+  // const isOnSale = currentTier ? (currentTier.original_price > (currentTier.effective_price || currentTier.price)) : pkg.is_on_sale;
+  // const durationDays = currentTier ? currentTier.duration_days : pkg.duration_days;
+  // const purchased = pkg.is_purchased || isPackagePurchased(pkg.package_id || pkg._id);
 
-  const handleBuy = () => {
-    if (!isAuthenticated) {
-      navigate('/login', { state: { from: { pathname: `/packages/${id}` } } });
-      return;
-    }
-    navigate(`/checkout/packages/${id}`, { state: { tierIndex: selectedTier } });
-  };
+  // const handleBuy = () => {
+  //   if (!isAuthenticated) {
+  //     navigate('/login', { state: { from: { pathname: `/packages/${id}` } } });
+  //     return;
+  //   }
+  //   navigate(`/checkout/packages/${id}`, { state: { tierIndex: selectedTier } });
+  // };
 
   return (
     <div className="animate-fade-in-up">
@@ -65,16 +65,16 @@ export default function PackageDetail() {
             {pkg.type}
           </span>
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mt-2.5 sm:mt-3 mb-1">{pkg.name}</h1>
-          {durationDays && (
-            <p className="text-white/80 text-xs sm:text-sm">{durationDays} days access</p>
+          {pkg.duration_days && (
+            <p className="text-white/80 text-xs sm:text-sm">{pkg.duration_days} days access</p>
           )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Main content */}
           <div className="lg:col-span-2 space-y-4 sm:space-y-5">
-            {/* Tier selection */}
-            {hasTiers && (
+            {/* Tier selection - commented out (payment/pricing related) */}
+            {/* {hasTiers && (
               <div className="bg-white rounded-xl sm:rounded-2xl border border-border p-4 sm:p-5 lg:p-6">
                 <h3 className="text-sm font-semibold text-text mb-3 sm:mb-4">Select Duration</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3">
@@ -97,7 +97,7 @@ export default function PackageDetail() {
                   ))}
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Description */}
             {pkg.description && (
@@ -126,8 +126,8 @@ export default function PackageDetail() {
             )}
           </div>
 
-          {/* Sidebar - Desktop sticky CTA */}
-          <div className="hidden lg:block">
+          {/* Sidebar - Desktop sticky CTA - commented out (payment/purchase related) */}
+          {/* <div className="hidden lg:block">
             <div className="sticky top-24 bg-white rounded-2xl border border-border p-6">
               {purchased ? (
                 <>
@@ -157,12 +157,12 @@ export default function PackageDetail() {
                 </>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
-      {/* Mobile sticky bottom CTA */}
-      {purchased ? (
+      {/* Mobile sticky bottom CTA - commented out (payment/purchase related) */}
+      {/* {purchased ? (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
           <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-success">
@@ -184,10 +184,10 @@ export default function PackageDetail() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
-      {/* Spacer for mobile fixed bottom bar */}
-      <div className="h-20 sm:h-24 lg:hidden" />
+      {/* Spacer for mobile fixed bottom bar - commented out (related to purchase CTA) */}
+      {/* <div className="h-20 sm:h-24 lg:hidden" /> */}
     </div>
   );
 }

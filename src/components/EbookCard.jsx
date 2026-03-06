@@ -114,9 +114,16 @@ export default function EbookCard({ book, purchased, illustrationIndex = 0, onCl
 
         {/* Author */}
         {book.author && (
-          <p className="text-[10px] sm:text-xs text-text-secondary line-clamp-1 mb-2">
+          <p className="text-[10px] sm:text-xs text-text-secondary line-clamp-1 mb-1.5">
             {book.author}
           </p>
+        )}
+
+        {/* Subject */}
+        {book.subject && (
+          <span className="inline-block text-[9px] sm:text-[10px] font-medium text-primary/70 bg-primary/5 px-1.5 py-0.5 rounded-full mb-1.5">
+            {book.subject.name}
+          </span>
         )}
 
         {/* Price / Status */}

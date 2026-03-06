@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getSessionById } from '../api/sessions';
 import { useAuth } from '../context/AuthContext';
-import { usePurchase } from '../context/PurchaseContext';
-import PriceDisplay from '../components/PriceDisplay';
+// import { usePurchase } from '../context/PurchaseContext';
+// import PriceDisplay from '../components/PriceDisplay';
 
 export default function SessionDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { isSessionPurchased } = usePurchase();
+  // const { isSessionPurchased } = usePurchase();
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -47,16 +47,16 @@ export default function SessionDetail() {
     });
   };
 
-  const purchased = isSessionPurchased(session.session_id || session._id);
+  // const purchased = isSessionPurchased(session.session_id || session._id);
 
-  const handleBuy = () => {
-    if (session.is_free || purchased) return;
-    if (!isAuthenticated) {
-      navigate('/login', { state: { from: { pathname: `/sessions/${id}` } } });
-      return;
-    }
-    navigate(`/checkout/sessions/${id}`);
-  };
+  // const handleBuy = () => {
+  //   if (session.is_free || purchased) return;
+  //   if (!isAuthenticated) {
+  //     navigate('/login', { state: { from: { pathname: `/sessions/${id}` } } });
+  //     return;
+  //   }
+  //   navigate(`/checkout/sessions/${id}`);
+  // };
 
   return (
     <div className="animate-fade-in-up">
@@ -126,8 +126,8 @@ export default function SessionDetail() {
             )}
           </div>
 
-          {/* Sidebar - Desktop sticky CTA */}
-          {!session.is_free && (
+          {/* Sidebar - Desktop sticky CTA - commented out (payment/purchase related) */}
+          {/* {!session.is_free && (
             <div className="hidden lg:block">
               <div className="sticky top-24 bg-white rounded-2xl border border-border p-6">
                 {purchased ? (
@@ -156,12 +156,12 @@ export default function SessionDetail() {
                 )}
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
-      {/* Mobile sticky bottom CTA */}
-      {!session.is_free && (
+      {/* Mobile sticky bottom CTA - commented out (payment/purchase related) */}
+      {/* {!session.is_free && (
         <>
           {purchased ? (
             <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
@@ -188,7 +188,7 @@ export default function SessionDetail() {
           )}
           <div className="h-20 sm:h-24 lg:hidden" />
         </>
-      )}
+      )} */}
     </div>
   );
 }
