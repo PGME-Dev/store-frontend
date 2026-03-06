@@ -2,7 +2,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState, useRef, useEffect } from 'react';
 
-function UserMenu({ user, logout }) {
+/* function UserMenu({ user, logout }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -38,7 +38,6 @@ function UserMenu({ user, logout }) {
 
       {open && (
         <div className="absolute right-0 top-full mt-1 w-56 bg-white rounded-xl border border-border shadow-lg py-2 animate-fade-in z-50">
-          {/* User info (visible on mobile since header hides it) */}
           <div className="px-4 py-2.5 border-b border-border sm:hidden">
             <div className="text-sm font-medium text-text truncate">{displayName}</div>
             {phone && <div className="text-xs text-text-secondary">{phone}</div>}
@@ -58,30 +57,27 @@ function UserMenu({ user, logout }) {
       )}
     </div>
   );
-}
+} */
 
 export default function Layout() {
-  const { isAuthenticated, user, logout } = useAuth();
-  const location = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // const { isAuthenticated, user, logout } = useAuth();
+  // const location = useLocation();
+  // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navLinks = [
-    { to: '/packages', label: 'Packages' },
-    { to: '/ebooks', label: 'eBooks' },
-    { to: '/sessions', label: 'Sessions' },
-    { to: '/about', label: 'About' },
-    { to: '/contact', label: 'Contact' },
-  ];
+  // const navLinks = [
+  //   { to: '/packages', label: 'Packages' },
+  //   { to: '/ebooks', label: 'eBooks' },
+  //   { to: '/sessions', label: 'Sessions' },
+  //   { to: '/about', label: 'About' },
+  //   { to: '/contact', label: 'Contact' },
+  // ];
 
-  const isActive = (path) => location.pathname.startsWith(path);
-
-  // Hide header on product detail pages (where iOS app redirects users)
-  const isDetailPage = /^\/(packages|ebooks|sessions|books)\/[^/]+$/.test(location.pathname);
+  // const isActive = (path) => location.pathname.startsWith(path);
 
   return (
     <div className="min-h-screen bg-surface-dim flex flex-col">
-      {/* Header - hidden on product detail pages */}
-      <header className={`bg-white border-b border-border sticky top-0 z-50${isDetailPage ? ' hidden' : ''}`}>
+      {/* Header - commented out */}
+      {/* <header className="bg-white border-b border-border sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
           <div className="flex items-center gap-4 sm:gap-6 md:gap-10">
             <Link to="/" className="flex items-center gap-2 no-underline shrink-0">
@@ -89,7 +85,6 @@ export default function Layout() {
               <span className="text-base sm:text-lg font-bold text-text tracking-tight">PGME Store</span>
             </Link>
 
-            {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-1">
               {navLinks.map((link) => (
                 <Link
@@ -124,11 +119,9 @@ export default function Layout() {
                 <UserMenu user={user} logout={logout} />
               </>
             ) : (
-              /* Login button commented out */
               null
             )}
 
-            {/* Mobile menu toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-lg text-text-secondary hover:bg-surface-dim transition-colors bg-transparent border-0 cursor-pointer"
@@ -151,7 +144,6 @@ export default function Layout() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-border bg-white px-4 py-3 space-y-1 animate-fade-in">
             {navLinks.map((link) => (
@@ -179,18 +171,17 @@ export default function Layout() {
             )}
           </div>
         )}
-      </header>
+      </header> */}
 
       {/* Main content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 md:py-12">
         <Outlet />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-white mt-auto">
+      {/* Footer - commented out */}
+      {/* <footer className="border-t border-border bg-white mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8">
-            {/* Brand */}
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2 mb-3">
                 <img src="/logo.png" alt="PGME" className="w-7 h-7 object-contain" />
@@ -201,7 +192,6 @@ export default function Layout() {
               </p>
             </div>
 
-            {/* Browse */}
             <div>
               <h4 className="text-sm font-semibold text-text mb-3">Browse</h4>
               <div className="space-y-2.5">
@@ -211,7 +201,6 @@ export default function Layout() {
               </div>
             </div>
 
-            {/* Account */}
             <div>
               <h4 className="text-sm font-semibold text-text mb-3">Account</h4>
               <div className="space-y-2.5">
@@ -219,7 +208,6 @@ export default function Layout() {
               </div>
             </div>
 
-            {/* Legal */}
             <div>
               <h4 className="text-sm font-semibold text-text mb-3">Legal</h4>
               <div className="space-y-2.5">
@@ -229,7 +217,6 @@ export default function Layout() {
               </div>
             </div>
 
-            {/* Company */}
             <div className="col-span-2 md:col-span-1">
               <h4 className="text-sm font-semibold text-text mb-3">Company</h4>
               <div className="space-y-2.5">
@@ -248,7 +235,7 @@ export default function Layout() {
             </p>
           </div>
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 }
