@@ -172,8 +172,8 @@ export default function About() {
         </div>
       </div>
 
-      {/* CTA */}
-      <div className="bg-gradient-to-r from-primary to-primary-dark rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
+      {/* CTA - commented out */}
+      {/* <div className="bg-gradient-to-r from-primary to-primary-dark rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
         <h2 className="text-lg sm:text-xl font-bold text-white mb-2">Ready to elevate your preparation?</h2>
         <p className="text-sm text-white/70 mb-5 max-w-lg mx-auto">Browse our course packages, eBooks, and live sessions to start your journey.</p>
         <div className="flex flex-wrap justify-center gap-3">
@@ -184,7 +184,7 @@ export default function About() {
             Contact Us
           </Link>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
