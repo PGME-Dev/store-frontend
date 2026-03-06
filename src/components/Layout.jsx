@@ -75,10 +75,13 @@ export default function Layout() {
 
   const isActive = (path) => location.pathname.startsWith(path);
 
+  // Hide header on product detail pages (where iOS app redirects users)
+  const isDetailPage = /^\/(packages|ebooks|sessions|books)\/[^/]+$/.test(location.pathname);
+
   return (
     <div className="min-h-screen bg-surface-dim flex flex-col">
-      {/* Header */}
-      <header className="bg-white border-b border-border sticky top-0 z-50">
+      {/* Header - hidden on product detail pages */}
+      <header className={`bg-white border-b border-border sticky top-0 z-50${isDetailPage ? ' hidden' : ''}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
           <div className="flex items-center gap-4 sm:gap-6 md:gap-10">
             <Link to="/" className="flex items-center gap-2 no-underline shrink-0">
