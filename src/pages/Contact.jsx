@@ -13,7 +13,7 @@ const markerIcon = new L.DivIcon({
   iconAnchor: [16, 42],
   popupAnchor: [0, -44],
   html: `<svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M16 0C7.163 0 0 7.163 0 16c0 10.512 14.112 24.372 14.745 24.98a1.71 1.71 0 0 0 2.51 0C17.888 40.372 32 26.512 32 16 32 7.163 24.837 0 16 0z" fill="#1847A2"/>
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 10.512 14.112 24.372 14.745 24.98a1.71 1.71 0 0 0 2.51 0C17.888 40.372 32 26.512 32 16 32 7.163 24.837 0 16 0z" fill="#0000C8"/>
     <circle cx="16" cy="16" r="6" fill="white"/>
   </svg>`,
 });
@@ -89,199 +89,155 @@ export default function Contact() {
   return (
     <div className="animate-fade-in-up">
       {/* Header */}
-      <div className="mb-5 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-text mb-1.5">Contact Us</h1>
-        <p className="text-sm sm:text-base text-text-secondary">Please fill out the form to help us assist you better</p>
+      <div className="mb-8 sm:mb-10">
+        <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Get In Touch</p>
+        <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text mb-3 tracking-tight">Contact Us</h1>
+        <p className="text-sm sm:text-base text-text-secondary max-w-lg">Have a question or need help? Fill out the form and we'll get back to you as soon as possible.</p>
       </div>
 
       {/* Bento Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
 
         {/* Contact Info Cards - Left column on desktop */}
-        <div className="lg:col-span-1 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-4">
+        <div className="lg:col-span-1 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 sm:gap-5 lg:gap-5">
           {/* Address Card */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-primary/15 transition-all duration-300">
-            <div className="h-20 sm:h-24 bg-gradient-to-br from-primary/8 via-primary/4 to-accent/6 relative overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" className="text-primary/20">
+          <div className="bg-white rounded-xl shadow-sm p-5 sm:p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 bg-primary/8 rounded-xl flex items-center justify-center text-primary shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                   <circle cx="12" cy="10" r="3"/>
                 </svg>
               </div>
-              <div className="absolute top-3 right-3 grid grid-cols-3 gap-1">
-                {Array.from({ length: 9 }).map((_, i) => (
-                  <div key={i} className="w-1 h-1 rounded-full bg-primary/10" />
-                ))}
-              </div>
+              <h3 className="text-sm font-semibold text-text">Address</h3>
             </div>
-            <div className="p-4 sm:p-5">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-7 h-7 bg-primary/8 rounded-lg flex items-center justify-center text-primary shrink-0">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                    <circle cx="12" cy="10" r="3"/>
-                  </svg>
-                </div>
-                <h3 className="text-sm font-semibold text-text">Address</h3>
-              </div>
-              <p className="text-sm text-text-secondary leading-relaxed">
-                H.No. 59, Guru Ram Dass Nagar, Phase 2, Near Verka Milk Plant, Jalandhar, Punjab-144008
-              </p>
-            </div>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              H.No. 59, Guru Ram Dass Nagar, Phase 2, Near Verka Milk Plant, Jalandhar, Punjab-144008
+            </p>
           </div>
 
           {/* Email Card */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-accent/15 transition-all duration-300">
-            <div className="h-20 sm:h-24 bg-gradient-to-br from-accent/8 via-accent/4 to-primary/6 relative overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" className="text-accent/20">
+          <div className="bg-white rounded-xl shadow-sm p-5 sm:p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 bg-accent/8 rounded-xl flex items-center justify-center text-accent shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                   <polyline points="22,6 12,13 2,6"/>
                 </svg>
               </div>
-              <div className="absolute bottom-3 left-3 flex gap-1.5">
-                <div className="w-6 h-6 rounded-full border-2 border-accent/10" />
-                <div className="w-6 h-6 rounded-full border-2 border-accent/15 -ml-2.5" />
-                <div className="w-6 h-6 rounded-full border-2 border-accent/8 -ml-2.5" />
-              </div>
+              <h3 className="text-sm font-semibold text-text">Email</h3>
             </div>
-            <div className="p-4 sm:p-5">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-7 h-7 bg-accent/8 rounded-lg flex items-center justify-center text-accent shrink-0">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                  </svg>
-                </div>
-                <h3 className="text-sm font-semibold text-text">Email</h3>
-              </div>
-              <a href="mailto:support@pgmemedicalteaching.com" className="text-sm text-primary no-underline hover:underline break-all">
-                support@pgmemedicalteaching.com
-              </a>
-            </div>
+            <a href="mailto:support@pgmemedicalteaching.com" className="text-sm text-primary no-underline hover:underline break-all">
+              support@pgmemedicalteaching.com
+            </a>
           </div>
 
           {/* Phone Card */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-success/15 transition-all duration-300">
-            <div className="h-20 sm:h-24 bg-gradient-to-br from-success/8 via-success/4 to-accent/6 relative overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" className="text-success/20">
+          <div className="bg-white rounded-xl shadow-sm p-5 sm:p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 bg-success/8 rounded-xl flex items-center justify-center text-success shrink-0">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                 </svg>
               </div>
-              <div className="absolute top-3 left-3">
-                <div className="w-8 h-4 rounded-full border-2 border-success/10" />
-              </div>
-              <div className="absolute bottom-3 right-3">
-                <div className="w-4 h-4 rounded-md border-2 border-success/10 rotate-12" />
-              </div>
+              <h3 className="text-sm font-semibold text-text">Phone</h3>
             </div>
-            <div className="p-4 sm:p-5">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-7 h-7 bg-success/8 rounded-lg flex items-center justify-center text-success shrink-0">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                  </svg>
-                </div>
-                <h3 className="text-sm font-semibold text-text">Phone</h3>
-              </div>
-              <a href="tel:8827741255" className="text-sm text-primary no-underline hover:underline">
-                8827741255
-              </a>
-            </div>
+            <a href="tel:8827741255" className="text-sm text-primary no-underline hover:underline">
+              8827741255
+            </a>
           </div>
         </div>
 
         {/* Inquiry Form - Right side, spans 2 cols on desktop */}
-        <div className="lg:col-span-2 bg-white rounded-2xl sm:rounded-3xl border border-border p-5 sm:p-6 lg:p-8">
+        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 sm:p-8 lg:p-10">
           {success ? (
-            <div className="flex flex-col items-center justify-center py-10 sm:py-16 text-center">
+            <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
               <div className="w-14 h-14 bg-success/8 rounded-2xl flex items-center justify-center text-success mb-4">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
               </div>
               <h3 className="text-lg font-bold text-text mb-1.5">Message Sent!</h3>
-              <p className="text-sm text-text-secondary mb-5 max-w-sm">Thank you for reaching out. We'll get back to you as soon as possible.</p>
+              <p className="text-sm text-text-secondary mb-6 max-w-sm">Thank you for reaching out. We'll get back to you as soon as possible.</p>
               <button
                 onClick={() => setSuccess(false)}
-                className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl border-0 cursor-pointer hover:bg-primary-dark transition-colors"
+                className="btn-primary"
               >
                 Send Another Message
               </button>
             </div>
           ) : (
             <>
-              <div className="mb-5 sm:mb-6">
-                <h2 className="text-base sm:text-lg font-bold text-text mb-1">Send us a message</h2>
+              <div className="mb-6 sm:mb-8">
+                <h2 className="text-base sm:text-lg font-bold text-text mb-1.5">Send us a message</h2>
                 <p className="text-xs sm:text-sm text-text-secondary">We'll respond to your inquiry as soon as possible.</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-medium text-text mb-1.5">Name <span className="text-error">*</span></label>
+                    <label className="block text-sm font-medium text-text mb-2">Name <span className="text-error">*</span></label>
                     <input
                       type="text"
                       name="name"
                       value={form.name}
                       onChange={handleChange}
                       placeholder="Your full name"
-                      className="w-full px-4 py-2.5 text-sm border border-border rounded-xl bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-text-secondary/50"
+                      className="w-full px-4 py-2.5 text-sm border border-border rounded-lg bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-text-secondary/50"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-text mb-1.5">Email <span className="text-error">*</span></label>
+                    <label className="block text-sm font-medium text-text mb-2">Email <span className="text-error">*</span></label>
                     <input
                       type="email"
                       name="email"
                       value={form.email}
                       onChange={handleChange}
                       placeholder="you@example.com"
-                      className="w-full px-4 py-2.5 text-sm border border-border rounded-xl bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-text-secondary/50"
+                      className="w-full px-4 py-2.5 text-sm border border-border rounded-lg bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-text-secondary/50"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-medium text-text mb-1.5">Phone</label>
+                    <label className="block text-sm font-medium text-text mb-2">Phone</label>
                     <input
                       type="tel"
                       name="phone"
                       value={form.phone}
                       onChange={handleChange}
                       placeholder="Your phone number"
-                      className="w-full px-4 py-2.5 text-sm border border-border rounded-xl bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-text-secondary/50"
+                      className="w-full px-4 py-2.5 text-sm border border-border rounded-lg bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-text-secondary/50"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-text mb-1.5">Subject</label>
+                    <label className="block text-sm font-medium text-text mb-2">Subject</label>
                     <input
                       type="text"
                       name="subject"
                       value={form.subject}
                       onChange={handleChange}
                       placeholder="What is this about?"
-                      className="w-full px-4 py-2.5 text-sm border border-border rounded-xl bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-text-secondary/50"
+                      className="w-full px-4 py-2.5 text-sm border border-border rounded-lg bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-text-secondary/50"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-text mb-1.5">Message <span className="text-error">*</span></label>
+                  <label className="block text-sm font-medium text-text mb-2">Message <span className="text-error">*</span></label>
                   <textarea
                     name="message"
                     value={form.message}
                     onChange={handleChange}
                     rows={5}
                     placeholder="How can we help you?"
-                    className="w-full px-4 py-2.5 text-sm border border-border rounded-xl bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-y min-h-[120px] placeholder:text-text-secondary/50"
+                    className="w-full px-4 py-2.5 text-sm border border-border rounded-lg bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-y min-h-[120px] placeholder:text-text-secondary/50"
                   />
                 </div>
 
                 {error && (
-                  <div className="flex items-center gap-2 text-sm text-error bg-error/5 px-4 py-2.5 rounded-xl">
+                  <div className="flex items-center gap-2 text-sm text-error bg-error/5 px-4 py-2.5 rounded-lg">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
                       <circle cx="12" cy="12" r="10"/>
                       <line x1="15" y1="9" x2="9" y2="15"/>
@@ -294,7 +250,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl border-0 cursor-pointer hover:bg-primary-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="btn-primary w-full sm:w-auto disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {submitting ? (
                     <>
@@ -318,19 +274,11 @@ export default function Contact() {
       </div>
 
       {/* Map Section */}
-      <div className="mt-4 sm:mt-5 bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden">
-        <div className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-primary/8 rounded-xl flex items-center justify-center text-primary shrink-0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-text">Our Location</h3>
-              <p className="text-xs text-text-secondary">Guru Ram Dass Nagar, Jalandhar, Punjab</p>
-            </div>
+      <div className="mt-5 sm:mt-6 bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border">
+          <div>
+            <h3 className="text-sm font-semibold text-text mb-0.5">Our Location</h3>
+            <p className="text-xs text-text-secondary">Guru Ram Dass Nagar, Jalandhar, Punjab</p>
           </div>
           <a
             href="https://maps.app.goo.gl/BY4DLXepUboN22h18"

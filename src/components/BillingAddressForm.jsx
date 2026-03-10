@@ -159,15 +159,15 @@ export default function BillingAddressForm({ onSubmit, loading }) {
     );
   }
 
-  const inputClass = "w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-border rounded-xl text-sm sm:text-base bg-surface text-text focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all";
+  const inputClass = "w-full px-3.5 sm:px-4 py-2.5 sm:py-3 border border-border rounded-lg text-sm sm:text-base bg-surface text-text placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-      <h3 className="text-base sm:text-lg font-semibold text-text mb-0.5 sm:mb-1">Billing Address</h3>
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+      <h3 className="text-base sm:text-lg font-bold text-text mb-1 sm:mb-2">Billing Address</h3>
 
-      <div className="space-y-2.5 sm:space-y-3">
+      <div className="space-y-3 sm:space-y-4">
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">Address Line 1 *</label>
+          <label className="block text-xs sm:text-sm font-semibold text-text mb-1.5 sm:mb-2">Address Line 1 *</label>
           <input
             name="street"
             value={address.street}
@@ -179,7 +179,7 @@ export default function BillingAddressForm({ onSubmit, loading }) {
         </div>
 
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">Address Line 2</label>
+          <label className="block text-xs sm:text-sm font-semibold text-text mb-1.5 sm:mb-2">Address Line 2</label>
           <input
             name="street2"
             value={address.street2}
@@ -191,7 +191,7 @@ export default function BillingAddressForm({ onSubmit, loading }) {
 
         {/* Pincode first — auto-fills city & state below */}
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">Pincode *</label>
+          <label className="block text-xs sm:text-sm font-semibold text-text mb-1.5 sm:mb-2">Pincode *</label>
           <div className="relative">
             <input
               name="pincode"
@@ -205,13 +205,13 @@ export default function BillingAddressForm({ onSubmit, loading }) {
               className={inputClass}
             />
             {lookingUpPincode && (
-              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
                 <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
               </div>
             )}
           </div>
           {pincodeAutoFilled && (
-            <p className="text-[10px] sm:text-xs text-success mt-1 flex items-center gap-1">
+            <p className="text-[10px] sm:text-xs text-success mt-1.5 flex items-center gap-1">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
@@ -220,9 +220,9 @@ export default function BillingAddressForm({ onSubmit, loading }) {
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">City *</label>
+            <label className="block text-xs sm:text-sm font-semibold text-text mb-1.5 sm:mb-2">City *</label>
             <input
               name="city"
               value={address.city}
@@ -233,7 +233,7 @@ export default function BillingAddressForm({ onSubmit, loading }) {
             />
           </div>
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-text mb-1 sm:mb-1.5">State *</label>
+            <label className="block text-xs sm:text-sm font-semibold text-text mb-1.5 sm:mb-2">State *</label>
             <select
               name="state"
               value={address.state}
@@ -253,7 +253,7 @@ export default function BillingAddressForm({ onSubmit, loading }) {
       <button
         type="submit"
         disabled={!isValid || loading}
-        className="w-full py-3 sm:py-3.5 bg-primary text-white text-sm sm:text-base font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-dark transition-colors cursor-pointer border-0 mt-1.5 sm:mt-2"
+        className="btn-primary w-full !py-3.5 sm:!py-4 disabled:opacity-50 disabled:cursor-not-allowed mt-3 sm:mt-4 text-sm sm:text-base font-semibold"
       >
         {loading ? (
           <span className="flex items-center justify-center gap-2">

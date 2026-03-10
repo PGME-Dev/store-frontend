@@ -11,38 +11,48 @@ export default function SubjectSelector({ showAll = false, value, onChange }) {
     ? (value || '')
     : (selectedSubject?._id || selectedSubject?.subject_id);
 
-  const handleChange = (e) => {
-    const val = e.target.value;
+  const handleSelect = (id) => {
     if (isControlled) {
-      onChange(val || null);
+      onChange(id || null);
     } else {
-      const subject = subjects.find((s) => (s._id || s.subject_id) === val);
+      const subject = subjects.find((s) => (s._id || s.subject_id) === id);
       if (subject) selectSubject(subject);
     }
   };
 
   return (
-    <div className="relative inline-block">
-      <select
-        value={selectedId || ''}
-        onChange={handleChange}
-        className="appearance-none bg-white border border-border rounded-xl px-4 py-2.5 pr-9 text-sm font-medium text-text cursor-pointer hover:border-primary/40 focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
-      >
-        {showAll && (
-          <option value="">All Subjects</option>
-        )}
-        {subjects.map((subject) => (
-          <option key={subject._id || subject.subject_id} value={subject._id || subject.subject_id}>
+    <div className="flex gap-2.5 sm:gap-3 overflow-x-auto sm:flex-wrap scrollbar-hide pb-1">
+      {showAll && (
+        <button
+          type="button"
+          onClick={() => handleSelect('')}
+          className={`py-2.5 px-5 sm:px-6 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ease-in-out cursor-pointer border whitespace-nowrap shrink-0 ${
+            !selectedId
+              ? 'bg-primary text-white border-primary shadow-sm'
+              : 'bg-white text-text-secondary border-border hover:border-primary/30 hover:text-primary hover:bg-primary/3'
+          }`}
+        >
+          All Subjects
+        </button>
+      )}
+      {subjects.map((subject) => {
+        const id = subject._id || subject.subject_id;
+        const isActive = selectedId === id;
+        return (
+          <button
+            key={id}
+            type="button"
+            onClick={() => handleSelect(id)}
+            className={`py-2.5 px-5 sm:px-6 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ease-in-out cursor-pointer border whitespace-nowrap shrink-0 ${
+              isActive
+                ? 'bg-primary text-white border-primary shadow-sm'
+                : 'bg-white text-text-secondary border-border hover:border-primary/30 hover:text-primary hover:bg-primary/3'
+            }`}
+          >
             {subject.name}
-          </option>
-        ))}
-      </select>
-      <svg
-        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-        className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-text-secondary"
-      >
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
+          </button>
+        );
+      })}
     </div>
   );
 }

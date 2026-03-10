@@ -69,9 +69,9 @@ export default function PackageModal({ package: listPkg, onClose }) {
 
   const modal = (
     <div className="fixed inset-0 z-999">
-      {/* Backdrop with blur */}
+      {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 animate-modal-backdrop"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-modal-backdrop"
         onClick={onClose}
       />
 
@@ -83,35 +83,18 @@ export default function PackageModal({ package: listPkg, onClose }) {
             className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-modal-content"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Background illustration (Microscope) */}
-            <svg
-              width="240" height="320" viewBox="0 0 240 320"
-              fill="none"
-              className="absolute -right-4 bottom-12 pointer-events-none text-primary opacity-[0.025]"
-            >
-              <path d="M96 30l32 120" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              <path d="M80 24l24 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              <circle cx="128" cy="150" r="40" stroke="currentColor" strokeWidth="2"/>
-              <circle cx="128" cy="150" r="12" fill="currentColor"/>
-              <path d="M168 150h24" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-              <line x1="80" y1="210" x2="176" y2="210" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="128" y1="190" x2="128" y2="210" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              <path d="M108 190h40" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors cursor-pointer border-0"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-sm flex items-center justify-center transition-colors cursor-pointer border-0"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12" />
               </svg>
             </button>
 
             {/* Header */}
-            <div className="relative bg-linear-to-br from-primary to-primary-light px-5 sm:px-6 md:px-8 pt-5 sm:pt-6 pb-5 sm:pb-6">
+            <div className="relative gradient-hero px-5 sm:px-6 md:px-8 pt-5 sm:pt-6 pb-5 sm:pb-6">
               <div className="flex items-center gap-2 mb-2">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
                   <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
@@ -132,33 +115,33 @@ export default function PackageModal({ package: listPkg, onClose }) {
             </div>
 
             {/* Body */}
-            <div className="relative px-5 sm:px-6 md:px-8 py-5 sm:py-6 space-y-4 sm:space-y-5">
+            <div className="relative px-5 sm:px-6 md:px-8 py-5 sm:py-6 space-y-5">
               {loading && !pkg ? (
-                <div className="space-y-4 sm:space-y-5">
+                <div className="space-y-5">
                   {/* Info card skeleton */}
-                  <div className="flex items-start gap-3 rounded-xl p-3.5 sm:p-4 bg-surface-dim">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 skeleton rounded-lg shrink-0" />
+                  <div className="flex items-start gap-3 rounded-2xl p-3.5 sm:p-4 bg-surface-dim border border-border">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 skeleton rounded-xl shrink-0" />
                     <div className="flex-1 space-y-2">
-                      <div className="skeleton h-4 w-36" />
-                      <div className="skeleton h-3 w-44" />
+                      <div className="skeleton h-4 w-36 rounded-lg" />
+                      <div className="skeleton h-3 w-44 rounded-lg" />
                     </div>
                   </div>
                   {/* Description skeleton */}
                   <div>
-                    <div className="skeleton h-3.5 w-14 mb-2" />
+                    <div className="skeleton h-3.5 w-14 mb-2 rounded-lg" />
                     <div className="space-y-1.5">
-                      <div className="skeleton h-3 w-full" />
-                      <div className="skeleton h-3 w-full" />
-                      <div className="skeleton h-3 w-3/4" />
+                      <div className="skeleton h-3 w-full rounded-lg" />
+                      <div className="skeleton h-3 w-full rounded-lg" />
+                      <div className="skeleton h-3 w-3/4 rounded-lg" />
                     </div>
                   </div>
                   {/* Features skeleton */}
                   <div>
-                    <div className="skeleton h-3.5 w-28 mb-2.5" />
+                    <div className="skeleton h-3.5 w-28 mb-2.5 rounded-lg" />
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2"><div className="skeleton w-3.5 h-3.5 rounded-full shrink-0" /><div className="skeleton h-3 w-3/4" /></div>
-                      <div className="flex items-center gap-2"><div className="skeleton w-3.5 h-3.5 rounded-full shrink-0" /><div className="skeleton h-3 w-1/2" /></div>
-                      <div className="flex items-center gap-2"><div className="skeleton w-3.5 h-3.5 rounded-full shrink-0" /><div className="skeleton h-3 w-2/3" /></div>
+                      <div className="flex items-center gap-2"><div className="skeleton w-5 h-5 rounded-full shrink-0" /><div className="skeleton h-3 w-3/4 rounded-lg" /></div>
+                      <div className="flex items-center gap-2"><div className="skeleton w-5 h-5 rounded-full shrink-0" /><div className="skeleton h-3 w-1/2 rounded-lg" /></div>
+                      <div className="flex items-center gap-2"><div className="skeleton w-5 h-5 rounded-full shrink-0" /><div className="skeleton h-3 w-2/3 rounded-lg" /></div>
                     </div>
                   </div>
                 </div>
@@ -166,6 +149,17 @@ export default function PackageModal({ package: listPkg, onClose }) {
                 <div className="text-center py-4 text-error text-sm">{error}</div>
               ) : (
                 <>
+                  {/* Thumbnail */}
+                  {p.thumbnail_url && (
+                    <div className="rounded-xl overflow-hidden">
+                      <img
+                        src={p.thumbnail_url}
+                        alt={p.name}
+                        className="w-full h-auto max-h-56 object-cover"
+                      />
+                    </div>
+                  )}
+
                   {/* Tier Selector */}
                   {hasTiers && p.tiers.length > 1 && (
                     <div>
@@ -177,13 +171,13 @@ export default function PackageModal({ package: listPkg, onClose }) {
                             onClick={() => setSelectedTier(idx)}
                             className={`p-2.5 sm:p-3 rounded-xl border-2 text-left transition-all cursor-pointer ${
                               selectedTier === idx
-                                ? 'border-primary bg-primary/4 shadow-sm'
+                                ? 'border-primary bg-primary text-white shadow-sm'
                                 : 'border-border bg-white hover:border-primary/30'
                             }`}
                           >
-                            <div className="text-xs sm:text-sm font-semibold text-text">{tier.name}</div>
-                            <div className="text-[10px] sm:text-xs text-text-secondary mt-0.5">{tier.duration_days} days</div>
-                            <div className="text-xs sm:text-sm font-bold text-primary mt-1">
+                            <div className={`text-xs sm:text-sm font-semibold ${selectedTier === idx ? 'text-white' : 'text-text'}`}>{tier.name}</div>
+                            <div className={`text-[10px] sm:text-xs mt-0.5 ${selectedTier === idx ? 'text-white/70' : 'text-text-secondary'}`}>{tier.duration_days} days</div>
+                            <div className={`text-xs sm:text-sm font-bold mt-1 ${selectedTier === idx ? 'text-white' : 'text-primary'}`}>
                               {formatPrice(tier.effective_price || tier.price)}
                             </div>
                           </button>
@@ -194,7 +188,7 @@ export default function PackageModal({ package: listPkg, onClose }) {
 
                   {/* Package Info */}
                   {(durationDays || p.series_count) && (
-                    <div className="flex items-start gap-3 bg-primary/3 border border-primary/10 rounded-xl p-3.5 sm:p-4">
+                    <div className="flex items-start gap-3 bg-surface-dim border border-border rounded-xl p-3.5 sm:p-4">
                       <div className="w-9 h-9 sm:w-10 sm:h-10 bg-primary/8 rounded-lg flex items-center justify-center shrink-0">
                         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
                           <circle cx="12" cy="12" r="10"/>
@@ -227,10 +221,11 @@ export default function PackageModal({ package: listPkg, onClose }) {
                       <ul className="space-y-1.5">
                         {p.features.map((feature, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-text-secondary">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-success mt-0.5 shrink-0">
-                              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                              <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
+                            <span className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0 mt-0.5">
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            </span>
                             {feature}
                           </li>
                         ))}
@@ -242,7 +237,7 @@ export default function PackageModal({ package: listPkg, onClose }) {
             </div>
 
             {/* Footer CTA */}
-            <div className="relative border-t border-border px-5 sm:px-6 md:px-8 py-4 sm:py-5 bg-white">
+            <div className="relative border-t border-border px-5 sm:px-6 md:px-8 py-5 sm:py-6 bg-white">
               {purchased ? (
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 bg-success/8 rounded-lg flex items-center justify-center shrink-0">
@@ -266,7 +261,7 @@ export default function PackageModal({ package: listPkg, onClose }) {
                   </div>
                   <button
                     onClick={handleBuy}
-                    className="px-6 sm:px-8 py-2.5 sm:py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors cursor-pointer border-0 text-sm sm:text-base"
+                    className="btn-primary py-2.5! sm:py-3! min-w-35 sm:min-w-40"
                   >
                     Buy Now
                   </button>

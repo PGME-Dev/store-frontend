@@ -1,6 +1,6 @@
 export function formatPrice(price) {
   if (price == null) return '';
-  return `₹${Number(price).toLocaleString('en-IN')}`;
+  return `\u20B9${Number(price).toLocaleString('en-IN')}`;
 }
 
 export default function PriceDisplay({ price, originalPrice, isOnSale, size = 'md' }) {
@@ -9,15 +9,15 @@ export default function PriceDisplay({ price, originalPrice, isOnSale, size = 'm
 
   return (
     <div className="flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
-      <span className={`${textSize} font-bold text-text`}>
+      <span className={`${textSize} font-bold text-primary`}>
         {formatPrice(price)}
       </span>
       {isOnSale && originalPrice && originalPrice > price && (
         <>
-          <span className={`${strikeSize} text-text-secondary line-through`}>
+          <span className={`${strikeSize} text-text-tertiary line-through`}>
             {formatPrice(originalPrice)}
           </span>
-          <span className="text-[10px] sm:text-xs font-medium text-success bg-success/10 px-1.5 py-0.5 rounded">
+          <span className="text-[10px] sm:text-xs font-semibold text-accent-dark bg-accent/15 px-1.5 sm:px-2 py-0.5 rounded-md">
             {Math.round(((originalPrice - price) / originalPrice) * 100)}% off
           </span>
         </>
