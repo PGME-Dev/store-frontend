@@ -31,7 +31,7 @@ export default function PaymentSuccess() {
             </svg>
           </div>
 
-          <h1 className="text-xl sm:text-2xl font-bold text-text mb-1.5 sm:mb-2">Purchase Successful</h1>
+          <h1 className="font-display text-xl sm:text-2xl font-bold text-text mb-1.5 sm:mb-2">Purchase Successful</h1>
           <p className="text-xs sm:text-sm text-text-secondary mb-1">
             {productName ? `You now have access to "${productName}"` : 'Your purchase is complete'}
           </p>
@@ -63,7 +63,7 @@ export default function PaymentSuccess() {
             {onMobile && (
               <a
                 href={APP_DEEP_LINK}
-                className="flex items-center justify-center gap-2 w-full py-3 sm:py-3.5 bg-primary text-white font-semibold rounded-xl text-center no-underline hover:bg-primary-dark transition-colors text-sm sm:text-base"
+                className="btn-primary w-full !py-3 sm:!py-3.5 justify-center no-underline text-sm sm:text-base"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
@@ -75,13 +75,13 @@ export default function PaymentSuccess() {
             )}
             <Link
               to="/my-purchases"
-              className="block w-full py-3 sm:py-3.5 bg-surface-dim border border-border text-text font-medium rounded-xl text-center no-underline hover:bg-border/30 transition-colors text-sm sm:text-base"
+              className="btn-secondary w-full !py-3 sm:!py-3.5 justify-center no-underline text-sm sm:text-base"
             >
               View My Purchases
             </Link>
             <Link
               to="/"
-              className="block w-full py-3 sm:py-3.5 bg-surface-dim border border-border text-text font-medium rounded-xl text-center no-underline hover:bg-border/30 transition-colors text-sm sm:text-base"
+              className="btn-outline w-full !py-3 sm:!py-3.5 justify-center no-underline text-sm sm:text-base"
             >
               Continue Shopping
             </Link>

@@ -63,7 +63,7 @@ export default function PackageList() {
             </svg>
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-text">Course Packages</h1>
+            <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-text">Course Packages</h1>
             <p className="text-text-secondary text-xs sm:text-sm">Browse our collection of medical course packages</p>
           </div>
         </div>

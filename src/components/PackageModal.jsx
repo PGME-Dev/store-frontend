@@ -111,7 +111,7 @@ export default function PackageModal({ package: listPkg, onClose }) {
             </button>
 
             {/* Header */}
-            <div className="relative bg-linear-to-br from-primary to-primary-light px-5 sm:px-6 md:px-8 pt-5 sm:pt-6 pb-5 sm:pb-6">
+            <div className="relative gradient-hero px-5 sm:px-6 md:px-8 pt-5 sm:pt-6 pb-5 sm:pb-6">
               <div className="flex items-center gap-2 mb-2">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
                   <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
@@ -166,6 +166,17 @@ export default function PackageModal({ package: listPkg, onClose }) {
                 <div className="text-center py-4 text-error text-sm">{error}</div>
               ) : (
                 <>
+                  {/* Thumbnail */}
+                  {p.thumbnail_url && (
+                    <div className="rounded-xl overflow-hidden">
+                      <img
+                        src={p.thumbnail_url}
+                        alt={p.name}
+                        className="w-full h-auto max-h-56 object-cover"
+                      />
+                    </div>
+                  )}
+
                   {/* Tier Selector */}
                   {hasTiers && p.tiers.length > 1 && (
                     <div>
@@ -266,7 +277,7 @@ export default function PackageModal({ package: listPkg, onClose }) {
                   </div>
                   <button
                     onClick={handleBuy}
-                    className="px-6 sm:px-8 py-2.5 sm:py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors cursor-pointer border-0 text-sm sm:text-base"
+                    className="btn-primary !py-2.5 sm:!py-3"
                   >
                     Buy Now
                   </button>

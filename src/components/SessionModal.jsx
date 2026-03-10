@@ -129,7 +129,7 @@ export default function SessionModal({ session: listSession, onClose }) {
             </button>
 
             {/* Header — site primary blue */}
-            <div className="relative bg-linear-to-br from-primary to-primary-light px-5 sm:px-6 md:px-8 pt-5 sm:pt-6 pb-5 sm:pb-6">
+            <div className="relative gradient-hero px-5 sm:px-6 md:px-8 pt-5 sm:pt-6 pb-5 sm:pb-6">
               <div className="flex items-center gap-2 mb-2">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
                   <polygon points="23 7 16 12 23 17 23 7"/>
@@ -184,6 +184,17 @@ export default function SessionModal({ session: listSession, onClose }) {
                 <div className="text-center py-4 text-error text-sm">{error}</div>
               ) : (
                 <>
+                  {/* Thumbnail */}
+                  {s.thumbnail_url && (
+                    <div className="rounded-xl overflow-hidden">
+                      <img
+                        src={s.thumbnail_url}
+                        alt={s.title}
+                        className="w-full h-auto max-h-56 object-cover"
+                      />
+                    </div>
+                  )}
+
                   {/* Schedule */}
                   {startTime && (
                     <div className="flex items-start gap-3 bg-primary/3 border border-primary/10 rounded-xl p-3.5 sm:p-4">
@@ -302,7 +313,7 @@ export default function SessionModal({ session: listSession, onClose }) {
                   </div>
                   <button
                     onClick={handleBuy}
-                    className="px-6 sm:px-8 py-2.5 sm:py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors cursor-pointer border-0 text-sm sm:text-base"
+                    className="btn-primary !py-2.5 sm:!py-3"
                   >
                     Buy Now
                   </button>

@@ -19,7 +19,7 @@ export default function About() {
             <img src="/logo.png" alt="PGME" className="w-7 h-7 sm:w-9 sm:h-9 object-contain" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-text">About PGME</h1>
+            <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-extrabold text-text">About PGME</h1>
             <p className="text-xs sm:text-sm text-text-secondary">Post Graduate Medical Essentials</p>
           </div>
         </div>
@@ -31,7 +31,7 @@ export default function About() {
       {/* Bento Grid - Services */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 mb-4 sm:mb-5">
         {/* PGME Exams */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-primary/15 transition-all duration-300">
+        <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden card-hover">
           {/* Decorative header */}
           <div className="h-32 sm:h-40 bg-gradient-to-br from-primary/8 via-primary/4 to-accent/6 relative overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center">
@@ -69,7 +69,7 @@ export default function About() {
         </div>
 
         {/* PGME Revision Series */}
-        <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-accent/15 transition-all duration-300">
+        <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden card-hover">
           {/* Decorative header */}
           <div className="h-32 sm:h-40 bg-gradient-to-br from-accent/8 via-accent/4 to-primary/6 relative overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center">
@@ -172,19 +172,23 @@ export default function About() {
         </div>
       </div>
 
-      {/* CTA - commented out */}
-      {/* <div className="bg-gradient-to-r from-primary to-primary-dark rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center">
-        <h2 className="text-lg sm:text-xl font-bold text-white mb-2">Ready to elevate your preparation?</h2>
-        <p className="text-sm text-white/70 mb-5 max-w-lg mx-auto">Browse our course packages, eBooks, and live sessions to start your journey.</p>
-        <div className="flex flex-wrap justify-center gap-3">
-          <Link to="/packages" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-primary text-sm font-semibold rounded-xl no-underline hover:bg-white/90 transition-colors">
-            Browse Packages
-          </Link>
-          <Link to="/contact" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 text-white text-sm font-semibold rounded-xl no-underline hover:bg-white/20 transition-colors border border-white/20">
-            Contact Us
-          </Link>
+      {/* CTA */}
+      <div className="gradient-primary rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 text-center relative overflow-hidden">
+        <div className="absolute top-6 left-8 w-20 h-20 bg-white/5 rounded-full" />
+        <div className="absolute bottom-4 right-12 w-32 h-32 bg-white/5 rounded-full" />
+        <div className="relative">
+          <h2 className="font-display text-lg sm:text-xl lg:text-2xl font-bold text-white mb-2">Ready to elevate your preparation?</h2>
+          <p className="text-sm text-white/70 mb-6 max-w-lg mx-auto">Browse our course packages, eBooks, and live sessions to start your journey.</p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link to="/packages" className="btn-primary !bg-white !text-primary hover:!bg-white/90">
+              Browse Packages
+            </Link>
+            <Link to="/ebooks" className="btn-outline !border-white/30 !text-white hover:!bg-white/10">
+              Browse eBooks
+            </Link>
+          </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }

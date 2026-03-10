@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getSessionById } from '../api/sessions';
 import { useAuth } from '../context/AuthContext';
-// import { usePurchase } from '../context/PurchaseContext';
-// import PriceDisplay from '../components/PriceDisplay';
+import { usePurchase } from '../context/PurchaseContext';
+import PriceDisplay from '../components/PriceDisplay';
 
 export default function SessionDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  // const { isSessionPurchased } = usePurchase();
+  const { isSessionPurchased } = usePurchase();
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -47,49 +47,64 @@ export default function SessionDetail() {
     });
   };
 
-  // const purchased = isSessionPurchased(session.session_id || session._id);
+  const purchased = isSessionPurchased(session.session_id || session._id);
 
-  // const handleBuy = () => {
-  //   if (session.is_free || purchased) return;
-  //   if (!isAuthenticated) {
-  //     navigate('/login', { state: { from: { pathname: `/sessions/${id}` } } });
-  //     return;
-  //   }
-  //   navigate(`/checkout/sessions/${id}`);
-  // };
+  const handleBuy = () => {
+    if (session.is_free || purchased) return;
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: { pathname: `/sessions/${id}` } } });
+      return;
+    }
+    navigate(`/checkout/sessions/${id}`);
+  };
 
   return (
     <div className="animate-fade-in-up">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="bg-linear-to-br from-warning to-orange-400 rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 lg:p-10 text-white mb-5 sm:mb-8">
-          <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="23 7 16 12 23 17 23 7"/>
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-            </svg>
-            <span className="text-xs sm:text-sm font-medium text-white/80">Live Session</span>
+        <div className="bg-gradient-to-br from-warning to-orange-400 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 text-white mb-6 sm:mb-8 relative overflow-hidden">
+          <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/5" />
+          <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/3 -translate-x-1/3 translate-y-1/3" />
+          <div className="relative">
+            <div className="flex items-center gap-2 mb-3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="23 7 16 12 23 17 23 7"/>
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+              </svg>
+              <span className="text-sm font-medium text-white/80">Live Session</span>
+            </div>
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-display mb-1">{session.title}</h1>
+            {session.faculty_id?.name && (
+              <p className="text-white/80 text-sm">By {session.faculty_id.name}</p>
+            )}
           </div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1">{session.title}</h1>
-          {session.faculty_id?.name && (
-            <p className="text-white/80 text-xs sm:text-sm">By {session.faculty_id.name}</p>
-          )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+        {/* Thumbnail Banner */}
+        {session.thumbnail_url && (
+          <div className="rounded-2xl overflow-hidden mb-6 sm:mb-8">
+            <img
+              src={session.thumbnail_url}
+              alt={session.title}
+              className="w-full h-auto max-h-80 object-cover"
+            />
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
           {/* Main content */}
-          <div className="lg:col-span-2 space-y-4 sm:space-y-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="lg:col-span-2 space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Schedule */}
-              <div className="bg-white rounded-xl sm:rounded-2xl border border-border p-4 sm:p-5 lg:p-6">
-                <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
+              <div className="bg-white rounded-2xl border border-border p-5 sm:p-6">
+                <div className="flex items-center gap-2 mb-3">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary shrink-0">
                     <circle cx="12" cy="12" r="10"/>
                     <polyline points="12 6 12 12 16 14"/>
                   </svg>
                   <h3 className="text-sm font-semibold text-text">Schedule</h3>
                 </div>
-                <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-text-secondary">
+                <div className="space-y-2 text-sm text-text-secondary">
                   {session.scheduled_start && (
                     <div>Starts: {formatDate(session.scheduled_start)}</div>
                   )}
@@ -101,22 +116,22 @@ export default function SessionDetail() {
 
               {/* Description */}
               {session.description && (
-                <div className="bg-white rounded-xl sm:rounded-2xl border border-border p-4 sm:p-5 lg:p-6">
-                  <h3 className="text-sm font-semibold text-text mb-2.5 sm:mb-3">About this Session</h3>
-                  <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">{session.description}</p>
+                <div className="bg-white rounded-2xl border border-border p-5 sm:p-6">
+                  <h3 className="text-sm font-semibold text-text mb-3">About this Session</h3>
+                  <p className="text-sm text-text-secondary leading-relaxed">{session.description}</p>
                 </div>
               )}
             </div>
 
             {/* Topics */}
             {session.topics?.length > 0 && (
-              <div className="bg-white rounded-xl sm:rounded-2xl border border-border p-4 sm:p-5 lg:p-6">
-                <h3 className="text-sm font-semibold text-text mb-3 sm:mb-4">Topics Covered</h3>
-                <ul className="space-y-2.5 sm:space-y-3">
+              <div className="bg-white rounded-2xl border border-border p-5 sm:p-6">
+                <h3 className="text-sm font-semibold text-text mb-4">Topics Covered</h3>
+                <ul className="space-y-3">
                   {session.topics.map((topic, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm text-text-secondary">
-                      <div className="w-4 h-4 sm:w-5 sm:h-5 bg-primary/6 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                        <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-primary rounded-full" />
+                    <li key={idx} className="flex items-start gap-3 text-sm text-text-secondary">
+                      <div className="w-5 h-5 bg-primary/6 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full" />
                       </div>
                       {topic}
                     </li>
@@ -126,17 +141,19 @@ export default function SessionDetail() {
             )}
           </div>
 
-          {/* Sidebar - Desktop sticky CTA - commented out (payment/purchase related) */}
-          {/* {!session.is_free && (
+          {/* Sidebar - Desktop sticky CTA */}
+          {!session.is_free && (
             <div className="hidden lg:block">
-              <div className="sticky top-24 bg-white rounded-2xl border border-border p-6">
+              <div className="sticky top-24 bg-white rounded-2xl border border-border p-6 shadow-sm">
                 {purchased ? (
                   <>
                     <div className="flex items-center gap-2 mb-3">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-success">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                      <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-success">
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
                       <span className="text-sm font-semibold text-success">Purchased</span>
                     </div>
                     <p className="text-xs text-text-secondary leading-relaxed">You already own this session. Open the PGME app to access it.</p>
@@ -145,42 +162,36 @@ export default function SessionDetail() {
                   <>
                     <h3 className="text-sm font-semibold text-text mb-4">Purchase Session</h3>
                     <PriceDisplay price={session.price} size="lg" />
-                    <button
-                      onClick={handleBuy}
-                      className="w-full mt-5 px-6 py-3.5 bg-warning text-white font-semibold rounded-xl hover:bg-orange-600 transition-colors cursor-pointer border-0 text-base"
-                    >
+                    <button onClick={handleBuy} className="btn-primary w-full mt-5 !py-3.5">
                       Buy Now
                     </button>
-                    <p className="text-xs text-text-secondary mt-3 text-center">Secure payment via Zoho</p>
+                    <p className="text-xs text-text-tertiary mt-3 text-center">Secure payment via Zoho</p>
                   </>
                 )}
               </div>
             </div>
-          )} */}
+          )}
         </div>
       </div>
 
-      {/* Mobile sticky bottom CTA - commented out (payment/purchase related) */}
-      {/* {!session.is_free && (
+      {/* Mobile sticky bottom CTA */}
+      {!session.is_free && (
         <>
           {purchased ? (
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
+            <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
               <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-success">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span className="text-sm font-semibold text-success">Purchased — Open the PGME app to access</span>
+                <span className="text-sm font-semibold text-success">Purchased -- Open the PGME app to access</span>
               </div>
             </div>
           ) : (
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
+            <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
               <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
                 <PriceDisplay price={session.price} size="lg" />
-                <button
-                  onClick={handleBuy}
-                  className="px-5 sm:px-8 py-2.5 sm:py-3 bg-warning text-white font-semibold rounded-xl hover:bg-orange-600 transition-colors cursor-pointer border-0 text-sm sm:text-base shrink-0"
-                >
+                <button onClick={handleBuy} className="btn-primary !py-2.5 sm:!py-3 shrink-0">
                   Buy Now
                 </button>
               </div>
@@ -188,7 +199,7 @@ export default function SessionDetail() {
           )}
           <div className="h-20 sm:h-24 lg:hidden" />
         </>
-      )} */}
+      )}
     </div>
   );
 }

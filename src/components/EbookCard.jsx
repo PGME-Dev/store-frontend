@@ -84,7 +84,7 @@ export default function EbookCard({ book, purchased, illustrationIndex = 0, onCl
     <button
       type="button"
       onClick={onClick}
-      className="group relative block w-full text-left bg-white rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-md hover:border-primary/15 transition-all duration-300 cursor-pointer"
+      className="group relative block w-full text-left bg-white rounded-2xl border border-border overflow-hidden card-hover cursor-pointer"
     >
       {/* Cover image or illustration fallback */}
       {book.thumbnail_url ? (

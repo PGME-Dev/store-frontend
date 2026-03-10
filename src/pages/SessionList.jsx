@@ -96,12 +96,32 @@ function SessionCard({ session, purchased, illustrationIndex, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="group relative block w-full text-left bg-white rounded-xl sm:rounded-2xl border border-border overflow-hidden hover:shadow-md hover:border-primary/15 transition-all duration-300 cursor-pointer"
+      className="group relative block w-full text-left bg-white rounded-2xl border border-border overflow-hidden card-hover cursor-pointer"
     >
-      {/* Decorative illustration in bottom-right */}
-      <div className={`absolute -bottom-1 -right-1 pointer-events-none opacity-[0.08] group-hover:opacity-[0.12] transition-opacity ${colorClass}`}>
-        {illustration}
-      </div>
+      {/* Cover image or illustration fallback */}
+      {session.thumbnail_url ? (
+        <div className="aspect-[16/9] bg-surface-dim overflow-hidden relative">
+          <img
+            src={session.thumbnail_url}
+            alt={session.title}
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+          />
+          {purchased && (
+            <span className="absolute top-2 right-2 text-[10px] sm:text-xs font-semibold bg-success text-white px-2 py-0.5 rounded-full">
+              Purchased
+            </span>
+          )}
+          {!purchased && session.is_free && (
+            <span className="absolute top-2 right-2 text-[10px] sm:text-xs font-semibold bg-success text-white px-2 py-0.5 rounded-full">
+              FREE
+            </span>
+          )}
+        </div>
+      ) : (
+        <div className={`absolute -bottom-1 -right-1 pointer-events-none opacity-[0.08] group-hover:opacity-[0.12] transition-opacity ${colorClass}`}>
+          {illustration}
+        </div>
+      )}
 
       <div className="relative p-4 sm:p-5">
         {/* Top row: Subject tag + Price/Status */}
@@ -256,7 +276,7 @@ export default function SessionList() {
             </svg>
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-text">Live Sessions</h1>
+            <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-text">Live Sessions</h1>
             <p className="text-text-secondary text-xs sm:text-sm">Interactive live classes & webinars</p>
           </div>
         </div>

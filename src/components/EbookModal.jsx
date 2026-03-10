@@ -106,7 +106,7 @@ export default function EbookModal({ book: listBook, onClose }) {
             </button>
 
             {/* Header */}
-            <div className="relative bg-linear-to-br from-primary to-primary-light px-5 sm:px-6 md:px-8 pt-5 sm:pt-6 pb-5 sm:pb-6">
+            <div className="relative gradient-hero px-5 sm:px-6 md:px-8 pt-5 sm:pt-6 pb-5 sm:pb-6">
               <div className="flex items-center gap-2 mb-2">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
                   <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
@@ -264,7 +264,7 @@ export default function EbookModal({ book: listBook, onClose }) {
                   </div>
                   <button
                     onClick={handleBuy}
-                    className="px-6 sm:px-8 py-2.5 sm:py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors cursor-pointer border-0 text-sm sm:text-base"
+                    className="btn-primary !py-2.5 sm:!py-3"
                   >
                     Buy Now
                   </button>

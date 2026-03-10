@@ -253,7 +253,7 @@ export default function BillingAddressForm({ onSubmit, loading }) {
       <button
         type="submit"
         disabled={!isValid || loading}
-        className="w-full py-3 sm:py-3.5 bg-primary text-white text-sm sm:text-base font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-dark transition-colors cursor-pointer border-0 mt-1.5 sm:mt-2"
+        className="btn-primary w-full !py-3 sm:!py-3.5 disabled:opacity-50 disabled:cursor-not-allowed mt-1.5 sm:mt-2 text-sm sm:text-base"
       >
         {loading ? (
           <span className="flex items-center justify-center gap-2">

@@ -41,7 +41,7 @@ export default function EbookList() {
             </svg>
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-text">eBooks</h1>
+            <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-text">eBooks</h1>
             <p className="text-text-secondary text-xs sm:text-sm">Digital books for your medical preparation</p>
           </div>
         </div>

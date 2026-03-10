@@ -13,7 +13,7 @@ const markerIcon = new L.DivIcon({
   iconAnchor: [16, 42],
   popupAnchor: [0, -44],
   html: `<svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M16 0C7.163 0 0 7.163 0 16c0 10.512 14.112 24.372 14.745 24.98a1.71 1.71 0 0 0 2.51 0C17.888 40.372 32 26.512 32 16 32 7.163 24.837 0 16 0z" fill="#1847A2"/>
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 10.512 14.112 24.372 14.745 24.98a1.71 1.71 0 0 0 2.51 0C17.888 40.372 32 26.512 32 16 32 7.163 24.837 0 16 0z" fill="#0000C8"/>
     <circle cx="16" cy="16" r="6" fill="white"/>
   </svg>`,
 });
@@ -90,7 +90,7 @@ export default function Contact() {
     <div className="animate-fade-in-up">
       {/* Header */}
       <div className="mb-5 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-text mb-1.5">Contact Us</h1>
+        <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-extrabold text-text mb-1.5">Contact Us</h1>
         <p className="text-sm sm:text-base text-text-secondary">Please fill out the form to help us assist you better</p>
       </div>
 
@@ -100,7 +100,7 @@ export default function Contact() {
         {/* Contact Info Cards - Left column on desktop */}
         <div className="lg:col-span-1 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3 sm:gap-4 lg:gap-4">
           {/* Address Card */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-primary/15 transition-all duration-300">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden card-hover">
             <div className="h-20 sm:h-24 bg-gradient-to-br from-primary/8 via-primary/4 to-accent/6 relative overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" className="text-primary/20">
@@ -131,7 +131,7 @@ export default function Contact() {
           </div>
 
           {/* Email Card */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-accent/15 transition-all duration-300">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden card-hover">
             <div className="h-20 sm:h-24 bg-gradient-to-br from-accent/8 via-accent/4 to-primary/6 relative overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" className="text-accent/20">
@@ -162,7 +162,7 @@ export default function Contact() {
           </div>
 
           {/* Phone Card */}
-          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden group hover:shadow-md hover:border-success/15 transition-all duration-300">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-border overflow-hidden card-hover">
             <div className="h-20 sm:h-24 bg-gradient-to-br from-success/8 via-success/4 to-accent/6 relative overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" className="text-success/20">
@@ -205,7 +205,7 @@ export default function Contact() {
               <p className="text-sm text-text-secondary mb-5 max-w-sm">Thank you for reaching out. We'll get back to you as soon as possible.</p>
               <button
                 onClick={() => setSuccess(false)}
-                className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl border-0 cursor-pointer hover:bg-primary-dark transition-colors"
+                className="btn-primary"
               >
                 Send Another Message
               </button>
@@ -294,7 +294,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl border-0 cursor-pointer hover:bg-primary-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="btn-primary w-full sm:w-auto disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {submitting ? (
                     <>

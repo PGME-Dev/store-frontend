@@ -128,7 +128,7 @@ export default function Checkout() {
               <path d="M16 10a4 4 0 0 1-8 0"/>
             </svg>
           </div>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-text">Checkout</h1>
+          <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-text">Checkout</h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8">
