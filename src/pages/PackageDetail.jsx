@@ -106,11 +106,9 @@ export default function PackageDetail() {
                     >
                       <div className={`text-xs sm:text-sm font-semibold ${selectedTier === idx ? 'text-white' : 'text-text'}`}>{tier.name}</div>
                       <div className={`text-xs mt-0.5 ${selectedTier === idx ? 'text-white/70' : 'text-text-secondary'}`}>{tier.duration_days} days</div>
-                      {/* Price commented out
                       <div className={`text-sm sm:text-base font-bold mt-2 ${selectedTier === idx ? 'text-white' : 'text-primary'}`}>
                         {'\u20B9'}{Number(tier.effective_price || tier.price).toLocaleString('en-IN')}
                       </div>
-                      */}
                     </button>
                   ))}
                 </div>
@@ -145,30 +143,65 @@ export default function PackageDetail() {
             )}
           </div>
 
-          {/* Sidebar - Desktop sticky CTA - price & purchase commented out */}
-          {/*
+          {/* Sidebar - Desktop sticky CTA */}
           <div className="hidden lg:block">
             <div className="sticky top-24 bg-white rounded-xl border border-border p-6 shadow-md">
-              ...
+              {purchased ? (
+                <>
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-success">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <span className="text-sm font-semibold text-success">Purchased</span>
+                  </div>
+                  <p className="text-xs text-text-secondary leading-relaxed">You already own this package. Open the PGME app to access it.</p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-base font-semibold text-text mb-4 pb-2 border-b border-border">Order Summary</h3>
+                  <PriceDisplay price={price} originalPrice={originalPrice} isOnSale={isOnSale} size="lg" />
+                  {durationDays && (
+                    <p className="text-xs text-text-secondary mt-2">{durationDays} days access</p>
+                  )}
+                  <button
+                    onClick={handleBuy}
+                    className="btn-primary w-full mt-5 !py-3.5"
+                  >
+                    Buy Now
+                  </button>
+                  <p className="text-xs text-text-tertiary mt-3 text-center">Secure payment via Zoho</p>
+                </>
+              )}
             </div>
           </div>
-          */}
         </div>
       </div>
 
-      {/* Mobile sticky bottom CTA - price & purchase commented out */}
-      {/*
+      {/* Mobile sticky bottom CTA */}
       {purchased ? (
         <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
-          ...
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-success">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="text-sm font-semibold text-success">Purchased -- Open the PGME app to access</span>
+          </div>
         </div>
       ) : (
         <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
-          ...
+          <div className="max-w-7xl mx-auto flex items-center gap-4">
+            <PriceDisplay price={price} originalPrice={originalPrice} isOnSale={isOnSale} size="lg" />
+            <button onClick={handleBuy} className="btn-primary flex-1 !py-3">
+              Buy Now
+            </button>
+          </div>
         </div>
       )}
       <div className="h-20 sm:h-24 lg:hidden" />
-      */}
     </div>
   );
 }

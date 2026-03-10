@@ -152,15 +152,13 @@ export default function Checkout() {
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3 py-3 sm:py-3.5 border-b border-border">
                   <span className="text-xs sm:text-sm text-text-secondary leading-snug">{getProductName()}</span>
-                  {/* Price commented out */}
-                  {/* <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">{formatPrice(getDisplayPrice())}</span> */}
+                  <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">{formatPrice(getDisplayPrice())}</span>
                 </div>
               </div>
 
-              {/* GST note commented out */}
-              {/* <p className="text-[11px] sm:text-xs text-text-tertiary mt-3 sm:mt-4">
+              <p className="text-[11px] sm:text-xs text-text-tertiary mt-3 sm:mt-4">
                 * GST (18%) will be added at payment
-              </p> */}
+              </p>
 
               <div className="flex items-center gap-2.5 mt-4 sm:mt-5 p-3 sm:p-3.5 bg-surface-dim rounded-lg">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-success shrink-0">

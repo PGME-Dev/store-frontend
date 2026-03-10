@@ -37,10 +37,10 @@ export default function App() {
     <SmoothScroll>
       <Routes>
         <Route index element={<LandingPage />} />
-        <Route path="/" element={<Layout />}>
-          <Route path="home" element={<Home />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
+        <Route path="/" element={<Layout />}>
+          <Route path="home" element={<Home />} />
         <Route path="packages" element={<PackageList />} />
         <Route path="packages/:id" element={<PackageDetail />} />
         <Route path="ebooks" element={<EbookList />} />

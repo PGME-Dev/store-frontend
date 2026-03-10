@@ -130,7 +130,7 @@ function SessionCard({ session, purchased, onClick }) {
             ) : session.is_free ? (
               <span className="text-xs font-semibold text-success bg-success/8 px-2.5 py-1 rounded-full">FREE</span>
             ) : (
-              null /* price commented out */
+              <span className="text-sm font-bold text-text">{formatPrice(session.price)}</span>
             )}
           </div>
         </div>
