@@ -164,7 +164,7 @@ export default function MyPurchases() {
                         </div>
                         <div className="mt-3 sm:mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
                           <div className="text-[11px] sm:text-xs text-text-secondary flex flex-wrap gap-3 sm:gap-4">
-                            <span className="font-medium text-text">{formatPrice(p.amount_paid)}</span>
+                            {/* <span className="font-medium text-text">{formatPrice(p.amount_paid)}</span> */}
                             {p.expires_at && <span>Expires: {formatDate(p.expires_at)}</span>}
                             {p.purchased_at && <span>Purchased: {formatDate(p.purchased_at)}</span>}
                           </div>
@@ -212,7 +212,7 @@ export default function MyPurchases() {
                         </div>
                         <div className="mt-3 sm:mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
                           <div className="text-[11px] sm:text-xs text-text-secondary flex flex-wrap gap-3 sm:gap-4">
-                            <span className="font-medium text-text">{formatPrice(e.amount_paid)}</span>
+                            {/* <span className="font-medium text-text">{formatPrice(e.amount_paid)}</span> */}
                             {e.purchased_at && <span>{formatDate(e.purchased_at)}</span>}
                           </div>
                           {inv && (
@@ -261,7 +261,7 @@ export default function MyPurchases() {
                         </div>
                         <div className="mt-3 sm:mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
                           <div className="text-[11px] sm:text-xs text-text-secondary flex flex-wrap gap-3 sm:gap-4">
-                            <span className="font-medium text-text">{formatPrice(s.amount_paid)}</span>
+                            {/* <span className="font-medium text-text">{formatPrice(s.amount_paid)}</span> */}
                             {s.scheduled_start_time && <span>{formatDate(s.scheduled_start_time)}</span>}
                             {!s.scheduled_start_time && s.purchased_at && <span>{formatDate(s.purchased_at)}</span>}
                           </div>
