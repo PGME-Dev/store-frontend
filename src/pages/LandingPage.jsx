@@ -1,12 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function LandingPage() {
   const { isAuthenticated } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navHidden, setNavHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY > lastScrollY.current && currentY > 80) {
+        setNavHidden(true);
+      } else {
+        setNavHidden(false);
+      }
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
+    { to: '/home', label: 'Home' },
     { to: '/packages', label: 'Packages' },
     { to: '/ebooks', label: 'eBooks' },
     { to: '/sessions', label: 'Sessions' },
@@ -15,265 +32,352 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-[#f5f5f5]">
 
-      {/* ── Hero (full viewport, light blue gradient top to bottom) ── */}
-      <div className="relative h-screen min-h-[600px] max-h-[1200px] overflow-hidden bg-linear-to-b from-[#d6eaff] via-[#e8f4ff] to-white">
+      {/* ── Header - commented out
+      <header>
+        ...
+      </header>
+      */}
 
-        {/* Film grain overlay */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 opacity-[0.4] mix-blend-overlay" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E")`,
-            backgroundSize: '128px 128px',
-          }} />
-        </div>
+      {/* ── Hero Section ── */}
+      <section className="relative px-4 sm:px-6 lg:px-10 pt-8 sm:pt-12 lg:pt-16 pb-6">
+        <div className="max-w-[1400px] mx-auto">
 
-        {/* ── Header (glassmorphism bar like Nexora) ── */}
-        <header className="relative z-50 pt-4 sm:pt-6 px-4 sm:px-6 lg:px-10">
-          <div className="max-w-[1400px] mx-auto">
-            <div className="flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6 lg:px-8 rounded-full bg-white/40 backdrop-blur-xl border border-white/50 shadow-[0_2px_20px_rgba(0,0,0,0.06)]">
-              {/* Logo (left) */}
-              <Link to="/" className="flex items-center gap-2.5 no-underline shrink-0">
-                <div className="w-8 h-8 rounded-lg bg-white border border-border/50 flex items-center justify-center shadow-sm">
-                  <img src="/logo.png" alt="PGME" className="w-5 h-5 object-contain" />
+          {/* Large Hero Typography */}
+          <div className="relative">
+            <h1 className="font-display font-extrabold text-gray-900 leading-[0.95] tracking-tighter">
+              <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase">Revolutionize</span>
+              <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
+                <span className="text-[clamp(2.5rem,8vw,7rem)] uppercase">Learning</span>
+                <span className="inline-flex items-center px-4 sm:px-6 py-1.5 sm:py-2 rounded-full border-2 border-gray-300 text-base sm:text-lg font-medium text-gray-500 uppercase tracking-wide normal-case font-sans">with</span>
+              </div>
+              <div className="flex items-start gap-4 sm:gap-6 flex-wrap mt-1">
+                <div>
+                  <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase leading-[0.95]">Expert-Led</span>
+                  <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase leading-[0.95] ml-[10vw] sm:ml-[15vw]">Education</span>
                 </div>
-                <span className="text-base sm:text-lg font-bold text-text font-display tracking-tight">PGME</span>
-              </Link>
+              </div>
+            </h1>
 
-              {/* Nav links (center) */}
-              <nav className="hidden md:flex items-center gap-0.5 absolute left-1/2 -translate-x-1/2">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.to}
-                    to={link.to}
-                    className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-text no-underline transition-colors duration-200"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
+            {/* Welcome Card (positioned top-right, stretches full height of hero text) */}
+            <div className="hidden lg:flex absolute top-0 right-0 bottom-0 w-[380px]">
+              <div className="bg-[#0000C8] rounded-3xl p-10 text-white relative overflow-hidden w-full flex flex-col">
+                {/* Decorative streaks */}
+                <div className="absolute inset-0 opacity-20">
+                  <div className="absolute top-0 right-0 w-full h-full" style={{
+                    background: 'linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)',
+                  }} />
+                </div>
+                <div className="relative z-10 flex flex-col justify-between h-full flex-1">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex px-5 py-2 rounded-full bg-white/20 text-sm font-medium">Welcome</span>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 2L13.5 8.5L20 7L15 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L9 12L4 7L10.5 8.5L12 2Z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm leading-relaxed opacity-80 mb-5">
+                      Discover a new way of learning with our expert-led PG medical courses. Achieve your goals and succeed with PGME.
+                    </p>
+                    <div className="flex items-center gap-5 pt-4 border-t border-white/15">
+                      <div>
+                        <div className="text-xl font-bold">98%</div>
+                        <div className="text-[11px] text-white/50 mt-0.5">Pass Rate</div>
+                      </div>
+                      <div className="w-px h-8 bg-white/15" />
+                      <div>
+                        <div className="text-xl font-bold">500+</div>
+                        <div className="text-[11px] text-white/50 mt-0.5">Students</div>
+                      </div>
+                      <div className="w-px h-8 bg-white/15" />
+                      <div>
+                        <div className="text-xl font-bold">20+</div>
+                        <div className="text-[11px] text-white/50 mt-0.5">Faculty</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-              {/* Login button (right) */}
-              <div className="flex items-center gap-3">
-                <Link
-                  to={isAuthenticated ? '/home' : '/login'}
-                  className="hidden sm:inline-flex items-center gap-2 px-5 sm:px-6 py-2 sm:py-2.5 text-sm font-semibold text-white bg-primary rounded-full no-underline transition-all duration-300 hover:shadow-[0_4px_20px_rgba(0,0,200,0.3)] hover:scale-105"
-                >
-                  {isAuthenticated ? 'Dashboard' : 'Login'}
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
+            {/* Circular badge element */}
+            <div className="hidden md:flex absolute left-[5%] top-[90%] -translate-y-1/2 items-center justify-center">
+              <div className="relative w-28 h-28">
+                {/* Rotating text */}
+                <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100">
+                  <defs>
+                    <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+                  </defs>
+                  <text className="text-[9px] fill-gray-500 uppercase tracking-[0.25em]">
+                    <textPath href="#circlePath">
+                      with our personalized approach · don't just study, excel ·
+                    </textPath>
+                  </text>
+                </svg>
+                {/* Center icon */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-gray-800">
+                    <path d="M12 2L13.5 8.5L20 7L15 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L9 12L4 7L10.5 8.5L12 2Z" stroke="currentColor" strokeWidth="1.5" fill="currentColor" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Bottom Grid (bento layout) ── */}
+          <div className="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5">
+
+            {/* Medical image card */}
+            <div className="md:col-span-5 lg:col-span-4 rounded-3xl overflow-hidden bg-gradient-to-br from-[#d6e4ff] to-[#e8f0ff] min-h-[220px] sm:min-h-[260px] flex items-center justify-center relative">
+              <div className="absolute inset-0 opacity-10" style={{
+                backgroundImage: 'radial-gradient(circle at 50% 50%, #0000C8 1px, transparent 1px)',
+                backgroundSize: '20px 20px',
+              }} />
+              <div className="relative z-10 p-6 text-center">
+                {/* Medical icon/illustration */}
+                <svg width="80" height="80" viewBox="0 0 100 100" fill="none" className="mx-auto mb-3 opacity-60">
+                  <circle cx="50" cy="40" r="25" stroke="#0000C8" strokeWidth="2" fill="none" />
+                  <path d="M35 40 Q42 20 50 35 Q58 50 65 30 Q72 20 75 40" stroke="#0000C8" strokeWidth="2" fill="none" />
+                  <path d="M30 55 Q40 60 50 55 Q60 50 70 55 Q65 70 50 75 Q35 70 30 55Z" stroke="#0000C8" strokeWidth="1.5" fill="none" opacity="0.5" />
+                </svg>
+                <p className="text-sm text-[#0000C8]/60 font-medium">PG Medical Excellence</p>
+              </div>
+            </div>
+
+            {/* Stats boxes */}
+            <div className="md:col-span-3 lg:col-span-2 flex flex-row md:flex-col gap-4 sm:gap-5">
+              <div className="flex-1 rounded-3xl bg-white border border-gray-200 p-5 sm:p-6 flex flex-col items-center justify-center text-center">
+                <span className="text-3xl sm:text-4xl font-extrabold text-gray-900 font-display">50+</span>
+                <span className="text-xs sm:text-sm text-gray-500 mt-1 font-medium">Courses</span>
+              </div>
+              <div className="flex-1 rounded-3xl bg-[#0a0a2e] p-5 sm:p-6 flex flex-col items-center justify-center text-center">
+                <span className="text-3xl sm:text-4xl font-extrabold text-white font-display">500+</span>
+                <span className="text-xs sm:text-sm text-gray-400 mt-1 font-medium">Students</span>
+              </div>
+            </div>
+
+            {/* Feature card (blue version of the lime green card) */}
+            <div className="md:col-span-4 lg:col-span-6 rounded-3xl bg-[#d6e4ff] p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden min-h-[220px]">
+              {/* Tag pills */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                <span className="inline-flex px-4 py-1.5 rounded-full border border-[#0000C8]/20 text-xs sm:text-sm font-medium text-[#0000C8] bg-white/50">Personalized learning</span>
+                <span className="inline-flex px-4 py-1.5 rounded-full border border-[#0000C8]/20 text-xs sm:text-sm font-medium text-[#0000C8] bg-white/50">Expert Faculty</span>
+                <span className="inline-flex px-4 py-1.5 rounded-full border border-[#0000C8]/20 text-xs sm:text-sm font-medium text-[#0000C8] bg-white/50">PG Medical</span>
+              </div>
+
+              <div>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 font-display mb-3">Flexible</h2>
+                <div className="w-12 h-0.5 bg-gray-900/20 mb-4" />
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed max-w-md">
+                  Our cutting-edge platform adapts to your needs and provides a tailored curriculum that helps you succeed. Experience the future of PG medical education today.
+                </p>
+              </div>
+
+              {/* Arrow icon (bottom right) */}
+              <div className="absolute bottom-5 right-5 sm:bottom-7 sm:right-7">
+                <Link to="/packages" className="no-underline">
+                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" className="text-gray-900">
+                    <path d="M14 34L34 14" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M14 14H34V34" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </Link>
-
-                {/* Mobile hamburger */}
-                <button
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="md:hidden p-2 rounded-xl text-text-secondary hover:text-text transition-all duration-200 bg-transparent border-0 cursor-pointer"
-                >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    {mobileMenuOpen ? (
-                      <><path d="M18 6L6 18" /><path d="M6 6l12 12" /></>
-                    ) : (
-                      <><path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" /></>
-                    )}
-                  </svg>
-                </button>
               </div>
             </div>
-
-            {/* Mobile menu */}
-            {mobileMenuOpen && (
-              <div className="md:hidden mt-3 animate-slide-down">
-                <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl shadow-lg p-4 space-y-1">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.to}
-                      to={link.to}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-sm font-medium text-text-secondary hover:text-text hover:bg-white/50 rounded-xl no-underline transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                  <div className="border-t border-border/30 mx-2 my-2" />
-                  <Link
-                    to={isAuthenticated ? '/home' : '/login'}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-sm font-semibold text-primary no-underline"
-                  >
-                    {isAuthenticated ? 'Dashboard' : 'Login'}
-                  </Link>
-                </div>
-              </div>
-            )}
           </div>
-        </header>
+        </div>
+      </section>
 
-        {/* ── Centered hero content ── */}
-        <div className="absolute inset-0 flex items-center justify-center z-10 pt-16 sm:pt-20">
-          <div className="text-center px-5 sm:px-8 max-w-3xl mx-auto">
-            {/* Badge */}
-            <div className="animate-fade-in-up mb-6 sm:mb-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-primary">
-                  <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* ── Why PGME Section ── */}
+      <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="text-center mb-12 sm:mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0000C8]/5 border border-[#0000C8]/10 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0000C8]" />
+              <span className="text-xs sm:text-sm font-medium text-gray-600">Why Choose PGME</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 font-display tracking-tight">
+              Everything You Need to
+              <span className="text-[#0000C8]"> Excel</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Card 1 */}
+            <div className="group rounded-3xl bg-white border border-gray-200 p-7 sm:p-8 hover:shadow-lg hover:border-[#0000C8]/20 transition-all duration-300">
+              <div className="w-14 h-14 rounded-2xl bg-[#0000C8]/5 flex items-center justify-center mb-6">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0000C8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                  <line x1="9" y1="7" x2="15" y2="7" />
+                  <line x1="9" y1="11" x2="15" y2="11" />
                 </svg>
-                <span className="text-xs sm:text-sm font-medium text-text-secondary">Trusted by 500+ PG Medical Students</span>
               </div>
-            </div>
-
-            {/* Heading */}
-            <div className="animate-fade-in-up-delay-1">
-              <h1 className="font-display font-extrabold text-text leading-[1.05] tracking-tight mb-5 sm:mb-6">
-                <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-7xl">Ace Your MD/DNB Exams</span>
-                <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-7xl mt-1 sm:mt-2">With <em className="text-primary not-italic">PGME</em></span>
-              </h1>
-            </div>
-
-            {/* Subtitle */}
-            <div className="animate-fade-in-up-delay-2">
-              <p className="text-sm sm:text-base lg:text-lg text-text-secondary leading-relaxed max-w-lg mx-auto mb-8 sm:mb-10">
-                Curated course packages, comprehensive eBooks, and expert-led live sessions — everything you need for postgraduate medical success.
+              <h3 className="text-xl font-bold text-gray-900 font-display mb-3">Comprehensive eBooks</h3>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                In-depth study materials covering all PG medical specialties. Curated by experts with years of teaching experience.
               </p>
             </div>
 
-            {/* CTA */}
-            <div className="animate-fade-in-up-delay-3 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-              <Link
-                to="/home"
-                className="group inline-flex items-center gap-3 px-8 sm:px-10 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white bg-primary rounded-full no-underline transition-all duration-300 hover:shadow-[0_4px_24px_rgba(0,0,200,0.3)] hover:scale-105"
-              >
-                Explore Courses
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
+            {/* Card 2 */}
+            <div className="group rounded-3xl bg-[#0000C8] p-7 sm:p-8 text-white hover:shadow-lg hover:shadow-[#0000C8]/20 transition-all duration-300">
+              <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-6">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="23 7 16 12 23 17 23 7" />
+                  <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
                 </svg>
-              </Link>
-              <Link
-                to="/about"
-                className="inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-text-secondary bg-white/60 backdrop-blur-sm border border-border/40 rounded-full no-underline transition-all duration-300 hover:bg-white hover:border-border hover:text-text"
-              >
-                Learn More
-              </Link>
+              </div>
+              <h3 className="text-xl font-bold font-display mb-3">Live Sessions</h3>
+              <p className="text-sm text-white/70 leading-relaxed">
+                Interactive live classes with expert faculty. Ask questions, clear doubts, and learn in real-time with peers.
+              </p>
             </div>
 
-            {/* Stats marquee */}
-            <div className="mt-14 sm:mt-16 w-full max-w-2xl mx-auto overflow-hidden marquee-wrapper animate-fade-in-up-delay-3">
-              <div className="flex animate-marquee w-max">
-                {[...Array(2)].map((_, i) => (
-                  <div key={i} className="flex items-center gap-10 sm:gap-14 shrink-0 px-6">
-                    <div className="text-center shrink-0">
-                      <div className="text-lg sm:text-xl font-bold text-text-secondary">50+</div>
-                      <div className="text-[11px] sm:text-xs text-text-tertiary mt-0.5 font-medium">Courses</div>
+            {/* Card 3 */}
+            <div className="group rounded-3xl bg-white border border-gray-200 p-7 sm:p-8 hover:shadow-lg hover:border-[#0000C8]/20 transition-all duration-300">
+              <div className="w-14 h-14 rounded-2xl bg-[#0000C8]/5 flex items-center justify-center mb-6">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0000C8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 font-display mb-3">Course Packages</h3>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Bundled course packages tailored for MD/DNB exams. Get everything you need in one place at the best price.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── How It Works Section ── */}
+      <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            {/* Left content */}
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0000C8]/5 border border-[#0000C8]/10 mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0000C8]" />
+                <span className="text-xs sm:text-sm font-medium text-gray-600">How It Works</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 font-display tracking-tight mb-6">
+                Start Your Journey in
+                <span className="text-[#0000C8]"> 3 Simple Steps</span>
+              </h2>
+              <p className="text-base text-gray-500 leading-relaxed mb-10 max-w-lg">
+                Get started with PGME and unlock your potential for PG medical exam success.
+              </p>
+
+              <div className="space-y-8">
+                {[
+                  { step: '01', title: 'Create Your Account', desc: 'Sign up in seconds and explore our catalog of courses, eBooks, and live sessions.' },
+                  { step: '02', title: 'Choose Your Package', desc: 'Select from curated course packages designed for your specific specialty and exam.' },
+                  { step: '03', title: 'Start Learning', desc: 'Access all your materials anytime, anywhere. Track progress and ace your exams.' },
+                ].map((item) => (
+                  <div key={item.step} className="flex gap-5">
+                    <div className="shrink-0 w-12 h-12 rounded-2xl bg-[#0000C8]/5 flex items-center justify-center">
+                      <span className="text-sm font-bold text-[#0000C8]">{item.step}</span>
                     </div>
-                    <div className="w-px h-7 bg-border/60 shrink-0" />
-                    <div className="text-center shrink-0">
-                      <div className="text-lg sm:text-xl font-bold text-text-secondary">20+</div>
-                      <div className="text-[11px] sm:text-xs text-text-tertiary mt-0.5 font-medium">Expert Faculty</div>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900 font-display mb-1">{item.title}</h3>
+                      <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
                     </div>
-                    <div className="w-px h-7 bg-border/60 shrink-0" />
-                    <div className="text-center shrink-0">
-                      <div className="text-lg sm:text-xl font-bold text-text-secondary">24/7</div>
-                      <div className="text-[11px] sm:text-xs text-text-tertiary mt-0.5 font-medium">Access</div>
-                    </div>
-                    <div className="w-px h-7 bg-border/60 shrink-0" />
-                    <div className="text-center shrink-0">
-                      <div className="text-lg sm:text-xl font-bold text-text-secondary">500+</div>
-                      <div className="text-[11px] sm:text-xs text-text-tertiary mt-0.5 font-medium">Students</div>
-                    </div>
-                    <div className="w-px h-7 bg-border/60 shrink-0" />
-                    <div className="text-center shrink-0">
-                      <div className="text-lg sm:text-xl font-bold text-text-secondary">15+</div>
-                      <div className="text-[11px] sm:text-xs text-text-tertiary mt-0.5 font-medium">eBooks</div>
-                    </div>
-                    <div className="w-px h-7 bg-border/60 shrink-0" />
-                    <div className="text-center shrink-0">
-                      <div className="text-lg sm:text-xl font-bold text-text-secondary">100+</div>
-                      <div className="text-[11px] sm:text-xs text-text-tertiary mt-0.5 font-medium">Live Sessions</div>
-                    </div>
-                    <div className="w-px h-7 bg-border/60 shrink-0" />
-                    <div className="text-center shrink-0">
-                      <div className="text-lg sm:text-xl font-bold text-text-secondary">98%</div>
-                      <div className="text-[11px] sm:text-xs text-text-tertiary mt-0.5 font-medium">Pass Rate</div>
-                    </div>
-                    <div className="w-px h-7 bg-border/60 shrink-0" />
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* ── Footer (white) ── */}
-      <footer className="relative z-10 border-t border-border bg-white">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-12 sm:py-16">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-10 md:gap-12">
-            {/* Brand */}
-            <div className="col-span-2 md:col-span-2">
-              <div className="flex items-center gap-2.5 mb-5">
-                <div className="w-9 h-9 rounded-xl bg-white border border-border flex items-center justify-center shadow-sm">
-                  <img src="/logo.png" alt="PGME" className="w-6 h-6 object-contain" />
+            {/* Right - decorative card */}
+            <div className="relative">
+              <div className="rounded-3xl bg-gradient-to-br from-[#0000C8] to-[#0000a0] p-8 sm:p-10 text-white relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white/20 -translate-y-1/2 translate-x-1/2" />
+                  <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/10 translate-y-1/3 -translate-x-1/3" />
                 </div>
-                <span className="text-lg font-bold text-text font-display">PGME</span>
-              </div>
-              <p className="text-sm text-text-secondary leading-relaxed max-w-xs">
-                Your trusted platform for postgraduate medical education resources, courses, and exam preparation.
-              </p>
-            </div>
-
-            {/* Browse */}
-            <div>
-              <h4 className="text-xs font-semibold text-text uppercase tracking-wider mb-5">Browse</h4>
-              <div className="space-y-3.5">
-                <Link to="/packages" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Course Packages</Link>
-                <Link to="/ebooks" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">eBooks</Link>
-                <Link to="/sessions" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Live Sessions</Link>
-              </div>
-            </div>
-
-            {/* Legal */}
-            <div>
-              <h4 className="text-xs font-semibold text-text uppercase tracking-wider mb-5">Legal</h4>
-              <div className="space-y-3.5">
-                <Link to="/terms-and-conditions" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Terms & Conditions</Link>
-                <Link to="/refund-policy" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Refund Policy</Link>
-                <Link to="/privacy-policy" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Privacy Policy</Link>
-              </div>
-            </div>
-
-            {/* Company */}
-            <div className="col-span-2 md:col-span-1">
-              <h4 className="text-xs font-semibold text-text uppercase tracking-wider mb-5">Company</h4>
-              <div className="space-y-3.5">
-                <Link to="/about" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">About Us</Link>
-                <Link to="/contact" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Contact Us</Link>
-                <Link to="/my-purchases" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">My Purchases</Link>
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 2L13.5 8.5L20 7L15 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L9 12L4 7L10.5 8.5L12 2Z" />
+                      </svg>
+                    </div>
+                    <span className="text-sm font-medium text-white/70">PGME Platform</span>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold font-display mb-4">98% Pass Rate</h3>
+                  <p className="text-sm text-white/70 leading-relaxed mb-8">
+                    Our students consistently achieve outstanding results in MD/DNB examinations across all specialties.
+                  </p>
+                  <div className="flex items-center gap-6">
+                    <div>
+                      <div className="text-2xl font-bold">20+</div>
+                      <div className="text-xs text-white/60 mt-0.5">Expert Faculty</div>
+                    </div>
+                    <div className="w-px h-10 bg-white/20" />
+                    <div>
+                      <div className="text-2xl font-bold">15+</div>
+                      <div className="text-xs text-white/60 mt-0.5">Specialties</div>
+                    </div>
+                    <div className="w-px h-10 bg-white/20" />
+                    <div>
+                      <div className="text-2xl font-bold">24/7</div>
+                      <div className="text-xs text-white/60 mt-0.5">Access</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="border-t border-border mt-10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-sm text-text-secondary">
-              &copy; {new Date().getFullYear()} PGME Medical Education LLP. All rights reserved.
-            </p>
-            <p className="text-xs text-text-tertiary">
-              Access purchased content via the PGME mobile app
-            </p>
           </div>
         </div>
+      </section>
+
+      {/* ── CTA Section ── */}
+      <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="rounded-3xl bg-[#0a0a2e] p-8 sm:p-12 lg:p-16 text-center relative overflow-hidden">
+            {/* Decorative dots */}
+            <div className="absolute inset-0 opacity-5" style={{
+              backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
+              backgroundSize: '24px 24px',
+            }} />
+            <div className="relative z-10">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white font-display tracking-tight mb-5">
+                Ready to Ace Your Exams?
+              </h2>
+              <p className="text-base sm:text-lg text-gray-400 leading-relaxed max-w-xl mx-auto mb-8 sm:mb-10">
+                Join 500+ students who are already preparing smarter with PGME. Start your journey today.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link
+                  to="/home"
+                  className="group inline-flex items-center gap-3 px-8 sm:px-10 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-[#0a0a2e] bg-white rounded-full no-underline transition-all duration-300 hover:shadow-[0_4px_24px_rgba(255,255,255,0.2)] hover:scale-105"
+                >
+                  Explore Courses
+                  <svg
+                    width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </Link>
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white border border-white/20 rounded-full no-underline transition-all duration-300 hover:bg-white/10 hover:border-white/40"
+                >
+                  Contact Us
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer - commented out
+      <footer>
+        ...
       </footer>
+      */}
     </div>
   );
 }

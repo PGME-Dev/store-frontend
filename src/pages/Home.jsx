@@ -382,7 +382,7 @@ export default function Home() {
                         ) : session.is_free ? (
                           <span className="text-[10px] sm:text-xs font-semibold text-success bg-success/8 px-2.5 py-1 rounded-full">FREE</span>
                         ) : (
-                          <span className="text-sm font-bold text-text">{formatPrice(session.price)}</span>
+                          null /* price commented out */
                         )}
                       </div>
                     </div>

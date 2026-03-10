@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { getSessionById } from '../api/sessions';
@@ -13,6 +13,7 @@ export default function SessionModal({ session: listSession, onClose }) {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const bodyRef = useRef(null);
 
   const sessionId = listSession?.session_id || listSession?._id;
 
@@ -36,13 +37,23 @@ export default function SessionModal({ session: listSession, onClose }) {
     const handleKey = (e) => {
       if (e.key === 'Escape') onClose();
     };
+    const blockAllScroll = (e) => e.preventDefault();
     document.addEventListener('keydown', handleKey);
+    document.addEventListener('wheel', blockAllScroll, { passive: false });
     document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', handleKey);
+      document.removeEventListener('wheel', blockAllScroll);
       document.body.style.overflow = '';
     };
   }, [onClose]);
+
+  const handleModalWheel = (e) => {
+    e.stopPropagation();
+    if (bodyRef.current) {
+      bodyRef.current.scrollTop += e.deltaY;
+    }
+  };
 
   const purchased = isSessionPurchased(sessionId);
 
@@ -91,13 +102,14 @@ export default function SessionModal({ session: listSession, onClose }) {
         onClick={onClose}
       />
 
-      {/* Scrollable container */}
-      <div className="absolute inset-0 overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4 sm:p-6 py-8 sm:py-12">
+      {/* Centered container */}
+      <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-6">
+        <div className="w-full flex items-center justify-center">
           {/* Modal card */}
           <div
-            className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-modal-content"
+            className="relative w-full max-w-lg max-h-[85vh] bg-white rounded-2xl shadow-2xl overflow-clip animate-modal-content flex flex-col"
             onClick={(e) => e.stopPropagation()}
+            onWheel={handleModalWheel}
           >
             {/* Close button */}
             <button
@@ -110,7 +122,7 @@ export default function SessionModal({ session: listSession, onClose }) {
             </button>
 
             {/* Header */}
-            <div className="relative gradient-hero px-5 sm:px-6 md:px-8 pt-5 sm:pt-6 pb-5 sm:pb-6">
+            <div className="relative gradient-hero px-5 sm:px-6 md:px-8 pt-5 sm:pt-6 pb-5 sm:pb-6 shrink-0">
               <div className="flex items-center gap-2 mb-2">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
                   <polygon points="23 7 16 12 23 17 23 7"/>
@@ -131,7 +143,7 @@ export default function SessionModal({ session: listSession, onClose }) {
             </div>
 
             {/* Body */}
-            <div className="relative px-5 sm:px-6 md:px-8 py-5 sm:py-6 space-y-5">
+            <div ref={bodyRef} className="relative px-5 sm:px-6 md:px-8 py-5 sm:py-6 space-y-5 overflow-y-auto flex-1 min-h-0 overscroll-contain">
               {loading && !session ? (
                 <div className="space-y-5">
                   {/* Schedule card skeleton */}
@@ -268,8 +280,9 @@ export default function SessionModal({ session: listSession, onClose }) {
               )}
             </div>
 
-            {/* Footer CTA */}
-            <div className="relative border-t border-border px-5 sm:px-6 md:px-8 py-5 sm:py-6 bg-white">
+            {/* Footer CTA - price & purchase commented out */}
+            {/*
+            <div className="relative border-t border-border px-5 sm:px-6 md:px-8 py-5 sm:py-6 bg-white shrink-0">
               {purchased ? (
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 bg-success/8 rounded-lg flex items-center justify-center shrink-0">
@@ -305,6 +318,7 @@ export default function SessionModal({ session: listSession, onClose }) {
                 </div>
               )}
             </div>
+            */}
           </div>
         </div>
       </div>

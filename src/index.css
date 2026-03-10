@@ -126,6 +126,15 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 15s linear infinite;
+}
+
 /* ─── Marquee ─── */
 @keyframes marquee {
   0% { transform: translateX(0); }

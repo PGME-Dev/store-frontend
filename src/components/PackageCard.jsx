@@ -37,11 +37,13 @@ export default function PackageCard({ pkg, purchased, illustrationIndex = 0, onC
             Purchased
           </span>
         )}
+        {/* Discount badge commented out
         {!purchased && isOnSale && originalPrice > price && (
           <span className="absolute top-3 left-3 text-[10px] sm:text-xs font-semibold bg-white text-accent-dark px-2 py-0.5 rounded-full shadow-sm">
             {Math.round(((originalPrice - price) / originalPrice) * 100)}% off
           </span>
         )}
+        */}
       </div>
 
       {/* Content */}
@@ -100,7 +102,7 @@ export default function PackageCard({ pkg, purchased, illustrationIndex = 0, onC
           </div>
         )}
 
-        {/* Price footer — pushed to bottom */}
+        {/* Price footer — commented out
         <div className="mt-auto pt-3 border-t border-border/40 flex items-center justify-between gap-2">
           {purchased ? (
             <span className="text-xs font-semibold text-success bg-success/8 px-2.5 py-1 rounded-full">Purchased</span>
@@ -118,6 +120,7 @@ export default function PackageCard({ pkg, purchased, illustrationIndex = 0, onC
             <polyline points="9 18 15 12 9 6" />
           </svg>
         </div>
+        */}
       </div>
     </button>
   );
