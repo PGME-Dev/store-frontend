@@ -120,47 +120,47 @@ export default function Checkout() {
   return (
     <div className="animate-fade-in-up">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-2.5 sm:gap-3 mb-5 sm:mb-8">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 bg-primary/6 rounded-xl flex items-center justify-center text-primary shrink-0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <path d="M16 10a4 4 0 0 1-8 0"/>
-            </svg>
-          </div>
+        {/* Page header with left accent border */}
+        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10">
+          <div className="w-1 sm:w-1.5 h-8 sm:h-10 bg-primary rounded-full" />
           <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-text">Checkout</h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 sm:gap-6 lg:gap-8">
           {/* Billing Address Form */}
           <div className="lg:col-span-3">
             {error && (
-              <div className="bg-error/8 text-error text-xs sm:text-sm px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl mb-3 sm:mb-4 flex items-start gap-2">
+              <div className="bg-error/6 text-error text-xs sm:text-sm px-4 sm:px-5 py-3 sm:py-3.5 rounded-lg mb-4 sm:mb-5 flex items-start gap-2.5 border border-error/10">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="15" y1="9" x2="9" y2="15"/>
-                  <line x1="9" y1="9" x2="15" y2="15"/>
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
                 </svg>
-                {error}
+                <span>{error}</span>
               </div>
             )}
-            <div className="bg-white rounded-xl sm:rounded-2xl border border-border p-4 sm:p-5 lg:p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-border p-5 sm:p-6 lg:p-8">
               <BillingAddressForm onSubmit={handleAddressSubmit} loading={paying} />
             </div>
           </div>
 
           {/* Order summary sidebar */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl sm:rounded-2xl border border-border p-4 sm:p-5 lg:p-6 lg:sticky lg:top-24">
-              <h3 className="text-sm font-semibold text-text mb-3 sm:mb-4">Order Summary</h3>
-              <div className="flex items-center justify-between py-2.5 sm:py-3 border-b border-border">
-                <span className="text-xs sm:text-sm text-text-secondary">{getProductName()}</span>
-                <span className="text-sm sm:text-base font-bold text-text">{formatPrice(getDisplayPrice())}</span>
+            <div className="bg-white rounded-xl shadow-sm border border-border p-5 sm:p-6 lg:p-7 lg:sticky lg:top-24">
+              <h3 className="text-sm sm:text-base font-bold text-text mb-4 sm:mb-5">Order Summary</h3>
+
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-3 py-3 sm:py-3.5 border-b border-border">
+                  <span className="text-xs sm:text-sm text-text-secondary leading-snug">{getProductName()}</span>
+                  <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">{formatPrice(getDisplayPrice())}</span>
+                </div>
               </div>
-              <p className="text-[11px] sm:text-xs text-text-secondary mt-2.5 sm:mt-3">
+
+              <p className="text-[11px] sm:text-xs text-text-tertiary mt-3 sm:mt-4">
                 * GST (18%) will be added at payment
               </p>
-              <div className="flex items-center gap-2 mt-3 sm:mt-4 p-2.5 sm:p-3 bg-surface-dim rounded-xl">
+
+              <div className="flex items-center gap-2.5 mt-4 sm:mt-5 p-3 sm:p-3.5 bg-surface-dim rounded-lg">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-success shrink-0">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                   <path d="M7 11V7a5 5 0 0 1 10 0v4"/>

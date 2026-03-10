@@ -1,15 +1,15 @@
 export default function PrivacyPolicy() {
   return (
-    <div className="animate-fade-in-up">
-      <div className="bg-white rounded-2xl sm:rounded-3xl border border-border p-6 sm:p-8 lg:p-10">
+    <div className="animate-fade-in-up max-w-4xl mx-auto">
+      <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
         {/* Header */}
-        <div className="mb-6 sm:mb-8 pb-6 border-b border-border">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-text mb-2">Privacy Policy</h1>
-          <p className="text-sm text-text-secondary">PGME (PGME Medical Education LLP)</p>
-          <p className="text-sm text-text-secondary">Effective Date: February 23, 2026 &bull; Last Updated: February 23, 2026</p>
+        <div className="gradient-hero px-6 sm:px-8 lg:px-10 py-8 sm:py-10">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white mb-2 font-display">Privacy Policy</h1>
+          <p className="text-sm text-white/70">PGME (PGME Medical Education LLP)</p>
+          <p className="text-sm text-white/60 mt-1">Effective Date: February 23, 2026 &bull; Last Updated: February 23, 2026</p>
         </div>
 
-        <div className="prose prose-sm sm:prose max-w-none text-text-secondary leading-relaxed space-y-6">
+        <div className="px-6 sm:px-8 lg:px-10 py-8 sm:py-10 prose prose-sm sm:prose max-w-none text-text-secondary leading-relaxed space-y-6">
           <p>PGME Medical Education LLP (&quot;PGME,&quot; &quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) operates the PGME platform, including our mobile application and website (collectively, the &quot;Platform&quot;). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Platform. Please read this Privacy Policy carefully. By using the Platform, you agree to the collection and use of information in accordance with this policy.</p>
 
           <section>

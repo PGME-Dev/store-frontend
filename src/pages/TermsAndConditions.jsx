@@ -1,15 +1,15 @@
 export default function TermsAndConditions() {
   return (
-    <div className="animate-fade-in-up">
-      <div className="bg-white rounded-2xl sm:rounded-3xl border border-border p-6 sm:p-8 lg:p-10">
+    <div className="animate-fade-in-up max-w-4xl mx-auto">
+      <div className="bg-white rounded-xl shadow-sm border border-border overflow-hidden">
         {/* Header */}
-        <div className="mb-6 sm:mb-8 pb-6 border-b border-border">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-text mb-2">Terms and Conditions</h1>
-          <p className="text-sm text-text-secondary">PGME (PGME Medical Education LLP)</p>
-          <p className="text-sm text-text-secondary">Effective Date: February 23, 2026 &bull; Last Updated: February 23, 2026</p>
+        <div className="gradient-hero px-6 sm:px-8 lg:px-10 py-8 sm:py-10">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white mb-2 font-display">Terms and Conditions</h1>
+          <p className="text-sm text-white/70">PGME (PGME Medical Education LLP)</p>
+          <p className="text-sm text-white/60 mt-1">Effective Date: February 23, 2026 &bull; Last Updated: February 23, 2026</p>
         </div>
 
-        <div className="prose prose-sm sm:prose max-w-none text-text-secondary leading-relaxed space-y-6">
+        <div className="px-6 sm:px-8 lg:px-10 py-8 sm:py-10 prose prose-sm sm:prose max-w-none text-text-secondary leading-relaxed space-y-6">
           <section>
             <h2 className="text-base sm:text-lg font-bold text-text mt-0">Welcome to PGME</h2>
             <p>These Terms and Conditions (&quot;Terms&quot;) govern your access to and use of the PGME platform, including our mobile application and website (collectively, the &quot;Platform&quot;). By accessing or using the Platform, you agree to be bound by these Terms.</p>
@@ -164,7 +164,7 @@ export default function TermsAndConditions() {
 
           <section>
             <h2 className="text-base sm:text-lg font-bold text-text">15. Contact</h2>
-            <p><strong>Email:</strong> support@pgmemedicalteaching.com</p>
+            <p><strong>Email:</strong> <a href="mailto:support@pgmemedicalteaching.com" className="text-primary no-underline hover:underline">support@pgmemedicalteaching.com</a></p>
           </section>
         </div>
       </div>

@@ -37,25 +37,23 @@ export default function Login() {
   return (
     <div className="min-h-[70vh] flex items-center justify-center animate-fade-in-up">
       <div className="w-full max-w-md">
-        <div className="relative bg-white rounded-3xl shadow-xl overflow-hidden border border-border/50">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Gradient header */}
-          <div className="gradient-hero px-6 sm:px-8 pt-8 sm:pt-10 pb-6 sm:pb-8 text-center relative overflow-hidden">
+          <div className="gradient-hero px-8 sm:px-10 pt-10 sm:pt-12 pb-8 sm:pb-10 text-center relative overflow-hidden">
             <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/5" />
             <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full bg-white/5" />
-            <div className="absolute top-8 right-12 w-2 h-2 rounded-full bg-white/20" />
-            <div className="absolute bottom-6 left-16 w-1.5 h-1.5 rounded-full bg-white/15" />
 
             <div className="relative">
-              <div className="w-16 h-16 mx-auto mb-4 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+              <div className="w-16 h-16 mx-auto mb-5 bg-white rounded-2xl flex items-center justify-center shadow-sm">
                 <img src="/logo.png" alt="PGME" className="w-10 h-10 object-contain" />
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white font-display mb-1.5">Welcome Back</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white font-display mb-2">Welcome Back</h1>
               <p className="text-white/70 text-sm">Login to purchase courses and study materials</p>
             </div>
           </div>
 
           {/* Form */}
-          <div className="px-6 sm:px-8 py-6 sm:py-8">
+          <div className="px-8 sm:px-10 py-8 sm:py-10">
             {error && (
               <div className="bg-error/8 text-error text-sm px-4 py-3 rounded-xl mb-5 flex items-center gap-2.5">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
@@ -67,11 +65,11 @@ export default function Login() {
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-5">
+            <form onSubmit={handleLogin} className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-text mb-2">Phone Number</label>
-                <div className="flex items-center border-2 border-border rounded-2xl overflow-hidden focus-within:border-primary bg-surface-dim transition-all">
-                  <span className="px-4 text-text-secondary text-sm font-medium border-r border-border bg-white py-3.5">+91</span>
+                <label className="block text-sm font-semibold text-text mb-2.5">Phone Number</label>
+                <div className="flex items-center border border-border rounded-xl overflow-hidden focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/15 bg-surface transition-all">
+                  <span className="px-4 text-text-secondary text-sm font-medium border-r border-border bg-surface-dim py-3.5">+91</span>
                   <input
                     type="tel"
                     value={phone}
@@ -98,7 +96,7 @@ export default function Login() {
               </button>
             </form>
 
-            <div className="mt-6 pt-5 border-t border-border text-center">
+            <div className="mt-7 pt-6 border-t border-border text-center">
               <p className="text-sm text-text-secondary">
                 Don't have an account?{' '}
                 <Link to="/signup" className="text-primary font-semibold no-underline hover:underline">

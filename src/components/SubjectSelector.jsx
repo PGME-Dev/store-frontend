@@ -21,15 +21,15 @@ export default function SubjectSelector({ showAll = false, value, onChange }) {
   };
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex gap-2.5 sm:gap-3 overflow-x-auto sm:flex-wrap scrollbar-hide pb-1">
       {showAll && (
         <button
           type="button"
           onClick={() => handleSelect('')}
-          className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all cursor-pointer border ${
+          className={`py-2.5 px-5 sm:px-6 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ease-in-out cursor-pointer border whitespace-nowrap shrink-0 ${
             !selectedId
               ? 'bg-primary text-white border-primary shadow-sm'
-              : 'bg-white text-text-secondary border-border hover:border-primary/30 hover:text-primary'
+              : 'bg-white text-text-secondary border-border hover:border-primary/30 hover:text-primary hover:bg-primary/3'
           }`}
         >
           All Subjects
@@ -43,10 +43,10 @@ export default function SubjectSelector({ showAll = false, value, onChange }) {
             key={id}
             type="button"
             onClick={() => handleSelect(id)}
-            className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all cursor-pointer border ${
+            className={`py-2.5 px-5 sm:px-6 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ease-in-out cursor-pointer border whitespace-nowrap shrink-0 ${
               isActive
                 ? 'bg-primary text-white border-primary shadow-sm'
-                : 'bg-white text-text-secondary border-border hover:border-primary/30 hover:text-primary'
+                : 'bg-white text-text-secondary border-border hover:border-primary/30 hover:text-primary hover:bg-primary/3'
             }`}
           >
             {subject.name}

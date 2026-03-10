@@ -62,9 +62,10 @@ export default function SessionDetail() {
     <div className="animate-fade-in-up">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="bg-gradient-to-br from-warning to-orange-400 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 text-white mb-6 sm:mb-8 relative overflow-hidden">
-          <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/5" />
-          <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/3 -translate-x-1/3 translate-y-1/3" />
+        <div className="gradient-hero rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 text-white mb-6 sm:mb-8 relative overflow-hidden">
+          <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-white opacity-[0.06]" />
+          <div className="absolute bottom-0 left-0 w-36 h-36 rounded-full bg-white opacity-[0.06] -translate-x-1/3 translate-y-1/3" />
+          <div className="absolute top-1/2 right-1/4 w-24 h-24 rounded-full bg-white opacity-[0.06]" />
           <div className="relative">
             <div className="flex items-center gap-2 mb-3">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -75,7 +76,7 @@ export default function SessionDetail() {
             </div>
             <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-display mb-1">{session.title}</h1>
             {session.faculty_id?.name && (
-              <p className="text-white/80 text-sm">By {session.faculty_id.name}</p>
+              <p className="text-white/70 text-sm">By {session.faculty_id.name}</p>
             )}
           </div>
         </div>
@@ -91,18 +92,18 @@ export default function SessionDetail() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Main content */}
-          <div className="lg:col-span-2 space-y-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Schedule */}
-              <div className="bg-white rounded-2xl border border-border p-5 sm:p-6">
-                <div className="flex items-center gap-2 mb-3">
+              <div className="bg-white rounded-xl shadow-sm border border-border p-6">
+                <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary shrink-0">
                     <circle cx="12" cy="12" r="10"/>
                     <polyline points="12 6 12 12 16 14"/>
                   </svg>
-                  <h3 className="text-sm font-semibold text-text">Schedule</h3>
+                  <h3 className="text-base font-semibold text-text">Schedule</h3>
                 </div>
                 <div className="space-y-2 text-sm text-text-secondary">
                   {session.scheduled_start && (
@@ -116,8 +117,8 @@ export default function SessionDetail() {
 
               {/* Description */}
               {session.description && (
-                <div className="bg-white rounded-2xl border border-border p-5 sm:p-6">
-                  <h3 className="text-sm font-semibold text-text mb-3">About this Session</h3>
+                <div className="bg-white rounded-xl shadow-sm border border-border p-6">
+                  <h3 className="text-base font-semibold text-text mb-3 pb-2 border-b border-border">About this Session</h3>
                   <p className="text-sm text-text-secondary leading-relaxed">{session.description}</p>
                 </div>
               )}
@@ -125,13 +126,15 @@ export default function SessionDetail() {
 
             {/* Topics */}
             {session.topics?.length > 0 && (
-              <div className="bg-white rounded-2xl border border-border p-5 sm:p-6">
-                <h3 className="text-sm font-semibold text-text mb-4">Topics Covered</h3>
+              <div className="bg-white rounded-xl shadow-sm border border-border p-6">
+                <h3 className="text-base font-semibold text-text mb-4 pb-2 border-b border-border">Topics Covered</h3>
                 <ul className="space-y-3">
                   {session.topics.map((topic, idx) => (
                     <li key={idx} className="flex items-start gap-3 text-sm text-text-secondary">
-                      <div className="w-5 h-5 bg-primary/6 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                        <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                      <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
                       </div>
                       {topic}
                     </li>
@@ -144,7 +147,7 @@ export default function SessionDetail() {
           {/* Sidebar - Desktop sticky CTA */}
           {!session.is_free && (
             <div className="hidden lg:block">
-              <div className="sticky top-24 bg-white rounded-2xl border border-border p-6 shadow-sm">
+              <div className="sticky top-24 bg-white rounded-xl border border-border p-6 shadow-md">
                 {purchased ? (
                   <>
                     <div className="flex items-center gap-2 mb-3">
@@ -160,7 +163,7 @@ export default function SessionDetail() {
                   </>
                 ) : (
                   <>
-                    <h3 className="text-sm font-semibold text-text mb-4">Purchase Session</h3>
+                    <h3 className="text-base font-semibold text-text mb-4 pb-2 border-b border-border">Purchase Session</h3>
                     <PriceDisplay price={session.price} size="lg" />
                     <button onClick={handleBuy} className="btn-primary w-full mt-5 !py-3.5">
                       Buy Now
@@ -178,7 +181,7 @@ export default function SessionDetail() {
       {!session.is_free && (
         <>
           {purchased ? (
-            <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
+            <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
               <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-success">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -188,10 +191,10 @@ export default function SessionDetail() {
               </div>
             </div>
           ) : (
-            <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
-              <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
+              <div className="max-w-7xl mx-auto flex items-center gap-4">
                 <PriceDisplay price={session.price} size="lg" />
-                <button onClick={handleBuy} className="btn-primary !py-2.5 sm:!py-3 shrink-0">
+                <button onClick={handleBuy} className="btn-primary flex-1 !py-3">
                   Buy Now
                 </button>
               </div>

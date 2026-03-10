@@ -60,9 +60,10 @@ export default function PackageDetail() {
     <div className="animate-fade-in-up">
       <div className="max-w-5xl mx-auto">
         {/* Header card */}
-        <div className="gradient-hero rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 text-white mb-6 sm:mb-8 relative overflow-hidden">
-          <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/5" />
-          <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/3 -translate-x-1/3 translate-y-1/3" />
+        <div className="gradient-hero rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 text-white mb-6 sm:mb-8 relative overflow-hidden">
+          <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-white opacity-[0.06]" />
+          <div className="absolute bottom-0 left-0 w-36 h-36 rounded-full bg-white opacity-[0.06] -translate-x-1/3 translate-y-1/3" />
+          <div className="absolute top-1/2 right-1/4 w-24 h-24 rounded-full bg-white opacity-[0.06]" />
           <div className="relative">
             <span className="inline-flex items-center text-xs font-medium bg-white/15 backdrop-blur-sm px-3 py-1 rounded-full mb-3">
               {pkg.type}
@@ -85,13 +86,13 @@ export default function PackageDetail() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Main content */}
-          <div className="lg:col-span-2 space-y-5">
+          <div className="lg:col-span-2 space-y-6">
             {/* Tier selection */}
             {hasTiers && pkg.tiers.length > 1 && (
-              <div className="bg-white rounded-2xl border border-border p-5 sm:p-6">
-                <h3 className="text-sm font-semibold text-text mb-3 sm:mb-4">Select Duration</h3>
+              <div className="bg-white rounded-xl shadow-sm border border-border p-6">
+                <h3 className="text-base font-semibold text-text mb-4 pb-2 border-b border-border">Select Duration</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {pkg.tiers.map((tier, idx) => (
                     <button
@@ -99,13 +100,13 @@ export default function PackageDetail() {
                       onClick={() => setSelectedTier(idx)}
                       className={`p-3 sm:p-4 rounded-xl border-2 text-left transition-all cursor-pointer ${
                         selectedTier === idx
-                          ? 'border-primary bg-primary/4 shadow-sm'
+                          ? 'border-primary bg-primary text-white shadow-sm'
                           : 'border-border bg-white hover:border-primary/30'
                       }`}
                     >
-                      <div className="text-xs sm:text-sm font-semibold text-text">{tier.name}</div>
-                      <div className="text-xs text-text-secondary mt-0.5">{tier.duration_days} days</div>
-                      <div className="text-sm sm:text-base font-bold text-primary mt-2">
+                      <div className={`text-xs sm:text-sm font-semibold ${selectedTier === idx ? 'text-white' : 'text-text'}`}>{tier.name}</div>
+                      <div className={`text-xs mt-0.5 ${selectedTier === idx ? 'text-white/70' : 'text-text-secondary'}`}>{tier.duration_days} days</div>
+                      <div className={`text-sm sm:text-base font-bold mt-2 ${selectedTier === idx ? 'text-white' : 'text-primary'}`}>
                         {'\u20B9'}{Number(tier.effective_price || tier.price).toLocaleString('en-IN')}
                       </div>
                     </button>
@@ -116,21 +117,21 @@ export default function PackageDetail() {
 
             {/* Description */}
             {pkg.description && (
-              <div className="bg-white rounded-2xl border border-border p-5 sm:p-6">
-                <h3 className="text-sm font-semibold text-text mb-3">Description</h3>
+              <div className="bg-white rounded-xl shadow-sm border border-border p-6">
+                <h3 className="text-base font-semibold text-text mb-3 pb-2 border-b border-border">Description</h3>
                 <p className="text-sm text-text-secondary leading-relaxed">{pkg.description}</p>
               </div>
             )}
 
             {/* Features */}
             {pkg.features?.length > 0 && (
-              <div className="bg-white rounded-2xl border border-border p-5 sm:p-6">
-                <h3 className="text-sm font-semibold text-text mb-4">What's Included</h3>
+              <div className="bg-white rounded-xl shadow-sm border border-border p-6">
+                <h3 className="text-base font-semibold text-text mb-4 pb-2 border-b border-border">What's Included</h3>
                 <ul className="space-y-3">
                   {pkg.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3 text-sm text-text-secondary">
-                      <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center shrink-0 mt-0.5">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-success">
+                      <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
                           <polyline points="20 6 9 17 4 12"/>
                         </svg>
                       </div>
@@ -144,7 +145,7 @@ export default function PackageDetail() {
 
           {/* Sidebar - Desktop sticky CTA */}
           <div className="hidden lg:block">
-            <div className="sticky top-24 bg-white rounded-2xl border border-border p-6 shadow-sm">
+            <div className="sticky top-24 bg-white rounded-xl border border-border p-6 shadow-md">
               {purchased ? (
                 <>
                   <div className="flex items-center gap-2 mb-3">
@@ -160,7 +161,7 @@ export default function PackageDetail() {
                 </>
               ) : (
                 <>
-                  <h3 className="text-sm font-semibold text-text mb-4">Order Summary</h3>
+                  <h3 className="text-base font-semibold text-text mb-4 pb-2 border-b border-border">Order Summary</h3>
                   <PriceDisplay price={price} originalPrice={originalPrice} isOnSale={isOnSale} size="lg" />
                   {durationDays && (
                     <p className="text-xs text-text-secondary mt-2">{durationDays} days access</p>
@@ -181,7 +182,7 @@ export default function PackageDetail() {
 
       {/* Mobile sticky bottom CTA */}
       {purchased ? (
-        <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
+        <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
           <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-success">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -191,10 +192,10 @@ export default function PackageDetail() {
           </div>
         </div>
       ) : (
-        <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-3 sm:p-4 safe-area-inset-bottom lg:hidden z-40">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
+          <div className="max-w-7xl mx-auto flex items-center gap-4">
             <PriceDisplay price={price} originalPrice={originalPrice} isOnSale={isOnSale} size="lg" />
-            <button onClick={handleBuy} className="btn-primary !py-2.5 sm:!py-3 shrink-0">
+            <button onClick={handleBuy} className="btn-primary flex-1 !py-3">
               Buy Now
             </button>
           </div>
