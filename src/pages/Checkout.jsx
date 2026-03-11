@@ -126,7 +126,7 @@ export default function Checkout() {
           <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-text">Checkout</h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 sm:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 sm:gap-6 lg:gap-8 2xl:gap-10">
           {/* Billing Address Form */}
           <div className="lg:col-span-3">
             {error && (

@@ -48,7 +48,7 @@ export default function EbookList() {
       <div className="mb-6 sm:mb-10 lg:mb-12">
         <div className="mb-5">
           <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Library</p>
-          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text tracking-tight">
+          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-extrabold text-text tracking-tight">
             eBooks
           </h1>
           <p className="text-text-secondary text-sm sm:text-base mt-2">
@@ -154,7 +154,7 @@ export default function EbookList() {
           <p className="text-text-tertiary text-xs sm:text-sm">Try selecting a different subject to see available eBooks</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 lg:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5 lg:gap-6 2xl:gap-7">
           {books.map((book, index) => (
             <EbookCard
               key={book.book_id}

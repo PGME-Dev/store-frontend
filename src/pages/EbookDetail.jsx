@@ -52,7 +52,7 @@ export default function EbookDetail() {
 
   return (
     <div className="animate-fade-in-up">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl 2xl:max-w-6xl mx-auto">
         {/* Header card */}
         <div className="gradient-hero rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 text-white mb-6 sm:mb-8 relative overflow-hidden">
           <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-white opacity-[0.06]" />
@@ -66,12 +66,12 @@ export default function EbookDetail() {
               </svg>
               eBook
             </span>
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-display mb-1">{book.title}</h1>
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold font-display mb-1">{book.title}</h1>
             {book.author && <p className="text-white/70 text-sm">by {book.author}</p>}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 2xl:gap-10">
           {/* Book cover + Details */}
           <div className="lg:col-span-2 space-y-6">
             <div className="flex flex-col sm:flex-row gap-6 lg:gap-8">

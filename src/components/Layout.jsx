@@ -116,8 +116,8 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col relative">
       {/* Header */}
-      <header className="sticky top-0 z-50 pt-3 sm:pt-4 px-4 sm:px-6 lg:px-10 pb-3 sm:pb-4 pointer-events-none">
-        <div className="max-w-350 mx-auto pointer-events-auto relative">
+      <header className="sticky top-0 z-50 pt-3 sm:pt-4 px-4 sm:px-6 lg:px-10 2xl:px-16 pb-3 sm:pb-4 pointer-events-none">
+        <div className="max-w-350 2xl:max-w-[1700px] mx-auto pointer-events-auto relative">
           <div className={`flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6 lg:px-8 rounded-full transition-all duration-300 ${
             scrolled
               ? 'bg-white/70 backdrop-blur-xl border border-white/50 shadow-[0_2px_20px_rgba(0,0,0,0.06)]'
@@ -137,7 +137,7 @@ export default function Layout() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`px-4 py-2 text-sm font-medium no-underline transition-colors duration-200 ${
+                  className={`px-4 2xl:px-5 py-2 text-sm 2xl:text-base font-medium no-underline transition-colors duration-200 ${
                     isActive(link.to)
                       ? 'text-primary font-semibold'
                       : 'text-text-secondary hover:text-text'
@@ -227,7 +227,7 @@ export default function Layout() {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
+      <main className="flex-1 max-w-7xl 2xl:max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-6 sm:py-8 md:py-10 2xl:py-14">
         <Outlet />
       </main>
 
@@ -239,8 +239,8 @@ export default function Layout() {
         <div className="h-px bg-linear-to-r from-transparent via-border to-transparent"></div>
 
         <div className="bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-10 md:gap-12">
+          <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-12 sm:py-16 2xl:py-20">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-10 md:gap-12 2xl:gap-16">
               {/* Brand */}
               <div className="col-span-2 md:col-span-2">
                 <div className="flex items-center gap-2.5 mb-5">

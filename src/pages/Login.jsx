@@ -54,7 +54,7 @@ export default function Login() {
 
       {/* Main content */}
       <div className="flex-1 flex items-center justify-center px-4 sm:px-6 pb-16">
-        <div className="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+        <div className="w-full max-w-[1100px] 2xl:max-w-[1300px] grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 2xl:gap-20 items-center">
 
           {/* Left — Big typography */}
           <div className="hidden lg:block">

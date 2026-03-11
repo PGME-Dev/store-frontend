@@ -66,7 +66,7 @@ export default function PackageList() {
       <div className="mb-6 sm:mb-10 lg:mb-12">
         <div className="mb-5">
           <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Browse</p>
-          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text tracking-tight">
+          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-extrabold text-text tracking-tight">
             Course Packages
           </h1>
           <p className="text-text-secondary text-sm sm:text-base mt-2">
@@ -150,7 +150,7 @@ export default function PackageList() {
           <p className="text-text-tertiary text-xs sm:text-sm">Try selecting a different subject to see available packages</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 2xl:gap-7">
           {packages.map((pkg, index) => (
             <PackageCard
               key={pkg.package_id}
@@ -171,7 +171,7 @@ export default function PackageList() {
               Other Packages
             </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 2xl:gap-7">
             {otherPackages.map((pkg, index) => (
               <PackageCard
                 key={pkg.package_id}

@@ -44,6 +44,17 @@ body {
   overflow-x: hidden;
 }
 
+/* ─── Large Monitor Scaling (24–27″+) ─── */
+@media (min-width: 1536px) {
+  html { font-size: 17px; }
+}
+@media (min-width: 1920px) {
+  html { font-size: 18px; }
+}
+@media (min-width: 2560px) {
+  html { font-size: 20px; }
+}
+
 .font-display {
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', system-ui, sans-serif;
 }

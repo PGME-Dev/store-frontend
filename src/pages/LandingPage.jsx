@@ -45,8 +45,8 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col bg-[#f5f5f5]">
 
       {/* ── Header ── */}
-      <header className={`sticky top-0 z-50 pt-4 sm:pt-5 px-4 sm:px-6 lg:px-10 pb-3 pointer-events-none transition-transform duration-300 ${navHidden ? '-translate-y-full' : 'translate-y-0'}`}>
-        <div className="max-w-[1400px] mx-auto pointer-events-auto relative">
+      <header className={`sticky top-0 z-50 pt-4 sm:pt-5 px-4 sm:px-6 lg:px-10 2xl:px-16 pb-3 pointer-events-none transition-transform duration-300 ${navHidden ? '-translate-y-full' : 'translate-y-0'}`}>
+        <div className="max-w-[1400px] 2xl:max-w-[1700px] mx-auto pointer-events-auto relative">
           <div className="flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6 lg:px-8 rounded-full bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_2px_20px_rgba(0,0,0,0.06)]">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 no-underline shrink-0">
@@ -62,7 +62,7 @@ export default function LandingPage() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 no-underline transition-colors duration-200"
+                  className="px-4 2xl:px-5 py-2 text-sm 2xl:text-base font-medium text-gray-600 hover:text-gray-900 no-underline transition-colors duration-200"
                 >
                   {link.label}
                 </Link>
@@ -127,8 +127,8 @@ export default function LandingPage() {
       </header>
 
       {/* ── Hero Section ── */}
-      <section className="relative px-4 sm:px-6 lg:px-10 pt-8 sm:pt-12 lg:pt-16 pb-6">
-        <div className="max-w-[1400px] mx-auto">
+      <section className="relative px-4 sm:px-6 lg:px-10 2xl:px-16 pt-8 sm:pt-12 lg:pt-16 2xl:pt-20 pb-6">
+        <div className="max-w-[1400px] 2xl:max-w-[1700px] mx-auto">
 
           {/* Large Hero Typography */}
           <div className="relative flex flex-row items-start md:block">
@@ -169,7 +169,7 @@ export default function LandingPage() {
             </div>
 
             {/* Welcome Card (positioned top-right, stretches full height of hero text) */}
-            <div className="hidden lg:flex absolute top-0 right-0 bottom-0 w-[380px]">
+            <div className="hidden lg:flex absolute top-0 right-0 bottom-0 w-[380px] 2xl:w-[440px]">
               <div className="bg-[#0000C8] rounded-3xl p-10 text-white relative overflow-hidden w-full flex flex-col">
                 {/* Decorative streaks */}
                 <div className="absolute inset-0 opacity-20">
@@ -232,7 +232,7 @@ export default function LandingPage() {
           </div>
 
           {/* ── Bottom Grid (bento layout) ── */}
-          <div className="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5">
+          <div className="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 2xl:gap-6">
 
             {/* Video card */}
             <div className="md:col-span-5 lg:col-span-4 rounded-3xl overflow-hidden min-h-[220px] sm:min-h-[260px] relative">
@@ -319,20 +319,20 @@ export default function LandingPage() {
       </section>
 
       {/* ── Why PGME Section ── */}
-      <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20">
-        <div className="max-w-[1400px] mx-auto">
+      <section className="px-4 sm:px-6 lg:px-10 2xl:px-16 py-16 sm:py-20 2xl:py-24">
+        <div className="max-w-[1400px] 2xl:max-w-[1700px] mx-auto">
           <div className="text-center mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0000C8]/5 border border-[#0000C8]/10 mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#0000C8]" />
               <span className="text-xs sm:text-sm font-medium text-gray-600">Why Choose PGME</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 font-display tracking-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl font-extrabold text-gray-900 font-display tracking-tight">
               Everything You Need to
               <span className="text-[#0000C8]"> Excel</span>
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 2xl:gap-7">
             {/* Card 1 */}
             <div
               onClick={() => setActiveFeature('ebooks')}
@@ -391,16 +391,16 @@ export default function LandingPage() {
       </section>
 
       {/* ── How It Works Section ── */}
-      <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <section className="px-4 sm:px-6 lg:px-10 2xl:px-16 py-16 sm:py-20 2xl:py-24">
+        <div className="max-w-[1400px] 2xl:max-w-[1700px] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 2xl:gap-20 items-center">
             {/* Left content */}
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0000C8]/5 border border-[#0000C8]/10 mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0000C8]" />
                 <span className="text-xs sm:text-sm font-medium text-gray-600">How It Works</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 font-display tracking-tight mb-6">
+              <h2 className="text-3xl sm:text-4xl 2xl:text-5xl font-extrabold text-gray-900 font-display tracking-tight mb-6">
                 Start Your Journey in
                 <span className="text-[#0000C8]"> 3 Simple Steps</span>
               </h2>
@@ -471,8 +471,8 @@ export default function LandingPage() {
       </section>
 
       {/* ── CTA Section ── */}
-      <section className="px-4 sm:px-6 lg:px-10 py-16 sm:py-20">
-        <div className="max-w-[1400px] mx-auto">
+      <section className="px-4 sm:px-6 lg:px-10 2xl:px-16 py-16 sm:py-20 2xl:py-24">
+        <div className="max-w-[1400px] 2xl:max-w-[1700px] mx-auto">
           <div className="rounded-3xl bg-[#d6e4ff] p-8 sm:p-12 lg:p-16 text-center relative overflow-hidden">
             {/* Decorative dots */}
             <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -480,7 +480,7 @@ export default function LandingPage() {
               backgroundSize: '24px 24px',
             }} />
             <div className="relative z-10">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0a0a2e] font-display tracking-tight mb-5">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl font-extrabold text-[#0a0a2e] font-display tracking-tight mb-5">
                 Ready to Ace Your Exams?
               </h2>
               <p className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-xl mx-auto mb-8 sm:mb-10">
@@ -514,7 +514,7 @@ export default function LandingPage() {
 
       {/* ── Footer ── */}
       <footer className="relative z-10 border-t border-gray-200 bg-white">
-        <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-10 py-12 sm:py-16">
+        <div className="max-w-[1400px] 2xl:max-w-[1700px] mx-auto px-5 sm:px-8 lg:px-10 py-12 sm:py-16">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-10 md:gap-12">
             {/* Brand */}
             <div className="col-span-2 md:col-span-2">

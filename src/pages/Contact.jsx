@@ -91,12 +91,12 @@ export default function Contact() {
       {/* Header */}
       <div className="mb-8 sm:mb-10">
         <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Get In Touch</p>
-        <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text mb-3 tracking-tight">Contact Us</h1>
+        <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-extrabold text-text mb-3 tracking-tight">Contact Us</h1>
         <p className="text-sm sm:text-base text-text-secondary max-w-lg">Have a question or need help? Fill out the form and we'll get back to you as soon as possible.</p>
       </div>
 
       {/* Bento Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 2xl:gap-8">
 
         {/* Contact Info Cards - Left column on desktop */}
         <div className="lg:col-span-1 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 sm:gap-5 lg:gap-5">

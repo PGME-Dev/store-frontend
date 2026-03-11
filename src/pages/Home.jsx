@@ -134,12 +134,12 @@ export default function Home() {
   }, [sessions]);
 
   return (
-    <div className="animate-fade-in-up -mx-4 sm:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 md:-mt-10">
+    <div className="animate-fade-in-up -mx-4 sm:-mx-6 lg:-mx-8 2xl:-mx-12 -mt-6 sm:-mt-8 md:-mt-10 2xl:-mt-14">
 
       {isAuthenticated ? (
         <>
           {/* ── Hero / Welcome (Logged In) ── */}
-          <section className="bg-gradient-to-br from-[#0000C8]/90 to-[#0000a0]/90 backdrop-blur-xl px-5 sm:px-8 lg:px-12 pt-10 sm:pt-14 pb-20 sm:pb-24 relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border border-white/10">
+          <section className="bg-gradient-to-br from-[#0000C8]/90 to-[#0000a0]/90 backdrop-blur-xl px-5 sm:px-8 lg:px-12 2xl:px-16 pt-10 sm:pt-14 2xl:pt-18 pb-20 sm:pb-24 2xl:pb-28 relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border border-white/10">
             {/* SVG Decorations */}
             <svg className="absolute top-0 right-0 w-72 h-72 opacity-[0.07]" viewBox="0 0 300 300" fill="none">
               <circle cx="200" cy="100" r="120" stroke="white" strokeWidth="1.5" />
@@ -156,11 +156,11 @@ export default function Home() {
               backgroundSize: '20px 20px',
             }} />
 
-            <div className="relative max-w-7xl mx-auto">
+            <div className="relative max-w-7xl 2xl:max-w-[1600px] mx-auto">
               <div className="flex items-start justify-between gap-6 flex-wrap">
                 <div>
                   <p className="text-white/50 text-sm font-medium mb-2">{getGreeting()}</p>
-                  <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.1]">
+                  <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl font-extrabold text-white tracking-tight leading-[1.1]">
                     {displayName}
                   </h1>
                   {selectedSubject && (
@@ -182,8 +182,8 @@ export default function Home() {
           </section>
 
           {/* ── Stats Cards (overlapping hero) ── */}
-          <section className="px-5 sm:px-8 lg:px-12 -mt-10 sm:-mt-12 relative z-10 mb-8 sm:mb-10">
-            <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+          <section className="px-5 sm:px-8 lg:px-12 2xl:px-16 -mt-10 sm:-mt-12 relative z-10 mb-8 sm:mb-10 2xl:mb-14">
+            <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 2xl:gap-4">
               <div className="bg-white rounded-2xl border border-gray-200 p-3.5 sm:p-4 shadow-[0_4px_24px_rgba(0,0,0,0.04)]">
                 <div className="flex items-center gap-2.5 mb-1.5">
                   <div className="w-8 h-8 rounded-lg bg-[#0000C8]/5 flex items-center justify-center flex-shrink-0">
@@ -245,8 +245,8 @@ export default function Home() {
 
           {/* ── Promotional Banners Carousel ── */}
           {banners.length > 0 && (
-            <section className="px-5 sm:px-8 lg:px-12 mb-10 sm:mb-14">
-              <div className="max-w-7xl mx-auto">
+            <section className="px-5 sm:px-8 lg:px-12 2xl:px-16 mb-10 sm:mb-14">
+              <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto">
                 <div className="relative rounded-3xl overflow-hidden">
                   <div className="relative" style={{ aspectRatio: '21/9' }}>
                     {banners.map((b, i) => (
@@ -282,8 +282,8 @@ export default function Home() {
         </>
       ) : (
         /* ── Banner (Not Logged In) ── */
-        <section className="px-5 sm:px-8 lg:px-12 pt-2 pb-6 sm:pb-8">
-          <div className="max-w-7xl mx-auto">
+        <section className="px-5 sm:px-8 lg:px-12 2xl:px-16 pt-2 pb-6 sm:pb-8">
+          <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto">
             <div className="rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-br from-[#0000C8] to-[#0000a0] p-7 sm:p-10 lg:p-12 relative overflow-hidden">
               {/* SVG Decorations */}
               <svg className="absolute top-0 right-0 w-72 h-72 opacity-[0.07]" viewBox="0 0 300 300" fill="none">
@@ -342,8 +342,8 @@ export default function Home() {
 
       {/* ── Promotional Banners (all users) ── */}
       {!isAuthenticated && banners.length > 0 && (
-        <section className="px-5 sm:px-8 lg:px-12 mb-6 sm:mb-8">
-          <div className="max-w-7xl mx-auto">
+        <section className="px-5 sm:px-8 lg:px-12 2xl:px-16 mb-6 sm:mb-8">
+          <div className="max-w-7xl 2xl:max-w-[1600px] mx-auto">
             <div className="relative rounded-3xl overflow-hidden">
               <div className="relative" style={{ aspectRatio: '21/9' }}>
                 {banners.map((b, i) => (
@@ -387,7 +387,7 @@ export default function Home() {
       )}
 
       {/* ── Content wrapper ── */}
-      <div className="px-5 sm:px-8 lg:px-12 max-w-7xl mx-auto pb-10">
+      <div className="px-5 sm:px-8 lg:px-12 2xl:px-16 max-w-7xl 2xl:max-w-[1600px] mx-auto pb-10 2xl:pb-14">
 
         {/* ── Specialty Selector ── */}
         <div className="mb-10 sm:mb-14 relative" ref={specialtyRef}>
@@ -456,7 +456,7 @@ export default function Home() {
         <section className="mb-14 sm:mb-18">
           <div className="flex items-end justify-between mb-6 sm:mb-8">
             <div>
-              <h2 className="font-display text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">Course Packages</h2>
+              <h2 className="font-display text-xl sm:text-2xl 2xl:text-3xl font-extrabold text-gray-900 tracking-tight">Course Packages</h2>
               <p className="text-xs sm:text-sm text-gray-400 mt-1">Top picks for {selectedSubject?.name || 'you'}</p>
             </div>
             <Link to="/packages" className="group text-sm font-semibold text-[#0000C8] hover:text-[#0000a0] no-underline flex items-center gap-1.5">
@@ -479,7 +479,7 @@ export default function Home() {
               <p className="text-sm text-gray-400">No packages for {selectedSubject?.name}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-5 2xl:gap-6">
               {packages.slice(0, 6).map((pkg, index) => (
                 <PackageCard
                   key={pkg.package_id}
@@ -497,7 +497,7 @@ export default function Home() {
         <section className="mb-14 sm:mb-18">
           <div className="flex items-end justify-between mb-6 sm:mb-8">
             <div>
-              <h2 className="font-display text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">eBooks</h2>
+              <h2 className="font-display text-xl sm:text-2xl 2xl:text-3xl font-extrabold text-gray-900 tracking-tight">eBooks</h2>
               <p className="text-xs sm:text-sm text-gray-400 mt-1">Digital study materials</p>
             </div>
             <Link to="/ebooks" className="group text-sm font-semibold text-[#0000C8] hover:text-[#0000a0] no-underline flex items-center gap-1.5">
@@ -520,7 +520,7 @@ export default function Home() {
               <p className="text-sm text-gray-400">No ebooks for {selectedSubject?.name}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 sm:gap-5 2xl:gap-6">
               {ebooks.slice(0, 5).map((book, index) => (
                 <EbookCard
                   key={book.book_id}
@@ -538,7 +538,7 @@ export default function Home() {
         <section className="mb-14 sm:mb-18">
           <div className="flex items-end justify-between mb-6 sm:mb-8">
             <div>
-              <h2 className="font-display text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">Live Sessions</h2>
+              <h2 className="font-display text-xl sm:text-2xl 2xl:text-3xl font-extrabold text-gray-900 tracking-tight">Live Sessions</h2>
               <p className="text-xs sm:text-sm text-gray-400 mt-1">Interactive classes & webinars</p>
             </div>
             <Link to="/sessions" className="group text-sm font-semibold text-[#0000C8] hover:text-[#0000a0] no-underline flex items-center gap-1.5">
@@ -561,7 +561,7 @@ export default function Home() {
               <p className="text-sm text-gray-400">No sessions available</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-5 2xl:gap-6">
               {sessions.slice(0, 3).map((session) => {
                 const purchased = isSessionPurchased(session.session_id);
                 const startTime = session.scheduled_start_time || session.scheduled_start;
@@ -638,7 +638,7 @@ export default function Home() {
               backgroundSize: '24px 24px',
             }} />
             <div className="relative">
-              <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight mb-4">
+              <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-extrabold text-white tracking-tight mb-4">
                 Ready to Ace Your Exams?
               </h2>
               <p className="text-sm sm:text-base text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
@@ -670,7 +670,7 @@ export default function Home() {
           <section className="mb-4">
             <div className="flex items-end justify-between mb-6 sm:mb-8">
               <div>
-                <h2 className="font-display text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">Our Faculty</h2>
+                <h2 className="font-display text-xl sm:text-2xl 2xl:text-3xl font-extrabold text-gray-900 tracking-tight">Our Faculty</h2>
                 <p className="text-xs sm:text-sm text-gray-400 mt-1">Learn from the best in PG medical education</p>
               </div>
             </div>
@@ -679,7 +679,7 @@ export default function Home() {
               {faculty.map((f) => (
                 <div
                   key={f.name}
-                  className="shrink-0 w-[200px] sm:w-[220px] bg-white rounded-3xl border border-gray-200 p-5 sm:p-6 text-center hover:shadow-lg hover:border-[#0000C8]/20 transition-all duration-300"
+                  className="shrink-0 w-[200px] sm:w-[220px] 2xl:w-[260px] bg-white rounded-3xl border border-gray-200 p-5 sm:p-6 2xl:p-7 text-center hover:shadow-lg hover:border-[#0000C8]/20 transition-all duration-300"
                 >
                   {f.photo ? (
                     <img
