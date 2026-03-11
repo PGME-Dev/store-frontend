@@ -130,65 +130,51 @@ export default function LandingPage() {
       <section className="relative px-4 sm:px-6 lg:px-10 2xl:px-16 pt-8 sm:pt-12 lg:pt-16 2xl:pt-20 pb-6">
         <div className="max-w-[1400px] 2xl:max-w-[1700px] mx-auto">
 
-          {/* Large Hero Typography */}
-          <div className="relative flex flex-row items-start md:block">
-            {/* Text + circle wrapper for mobile row layout */}
-            <h1 className="font-display font-extrabold text-gray-900 leading-[0.95] tracking-tighter text-left">
-              <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase">Revolutionize</span>
-              <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
-                <span className="text-[clamp(2.5rem,8vw,7rem)] uppercase">Learning</span>
-                <span className="inline-flex items-center px-4 sm:px-6 py-1.5 sm:py-2 rounded-full border-2 border-gray-300 text-base sm:text-lg font-medium text-gray-500 uppercase tracking-wide normal-case font-sans">with</span>
-              </div>
-              <div className="flex items-start gap-4 sm:gap-6 flex-wrap mt-1">
-                <div>
-                  <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase leading-[0.95]">Expert-Led</span>
-                  <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase leading-[0.95] ml-0 sm:ml-[10vw] md:ml-[15vw]">Education</span>
-                </div>
-              </div>
-            </h1>
+          {/* ── Top Row: Video Hero + Welcome Card ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 2xl:gap-6">
 
-            {/* Circular badge — visible on mobile (right of text) and md+ (absolute positioned) */}
-            <div className="flex md:hidden shrink-0 items-center justify-center self-end -ml-8 -mb-1">
-              <div className="relative w-28 h-28">
-                <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100">
-                  <defs>
-                    <path id="circlePathMobile" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
-                  </defs>
-                  <text className="text-[9px] fill-gray-500 uppercase tracking-[0.25em]">
-                    <textPath href="#circlePathMobile">
-                      with our personalized approach · don't just study, excel ·
-                    </textPath>
-                  </text>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-gray-800">
-                    <path d="M12 2L13.5 8.5L20 7L15 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L9 12L4 7L10.5 8.5L12 2Z" stroke="currentColor" strokeWidth="1.5" fill="currentColor" />
-                  </svg>
-                </div>
+            {/* Video Hero Card — large */}
+            <div className="lg:col-span-8 rounded-3xl overflow-hidden min-h-[300px] sm:min-h-[360px] lg:min-h-[420px] relative">
+              <video
+                src="https://pgmeessentials.com/wp-content/uploads/2025/01/Website-2-1.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20" />
+              <div className="relative z-10 p-6 sm:p-8 lg:p-10 flex flex-col justify-end h-full">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl font-extrabold text-white font-display leading-tight mb-2">
+                  Post Graduate<br />Medical Essentials
+                </h1>
+                <span className="text-xl sm:text-2xl font-bold text-[#00BEFA] mb-3">(PGME)</span>
+                <p className="text-sm sm:text-base text-white/70 font-medium max-w-lg">
+                  Empowering Excellence In Postgraduate Medical Education
+                </p>
               </div>
             </div>
 
-            {/* Welcome Card (positioned top-right, stretches full height of hero text) */}
-            <div className="hidden lg:flex absolute top-0 right-0 bottom-0 w-[380px] 2xl:w-[440px]">
-              <div className="bg-[#0000C8] rounded-3xl p-10 text-white relative overflow-hidden w-full flex flex-col">
-                {/* Decorative streaks */}
+            {/* Welcome Card — right side */}
+            <div className="lg:col-span-4">
+              <div className="bg-[#0000C8] rounded-3xl p-7 sm:p-8 lg:p-8 text-white relative overflow-hidden h-full flex flex-col">
                 <div className="absolute inset-0 opacity-20">
                   <div className="absolute top-0 right-0 w-full h-full" style={{
                     background: 'linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)',
                   }} />
                 </div>
                 <div className="relative z-10 flex flex-col justify-between h-full flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex px-5 py-2 rounded-full bg-white/20 text-sm font-medium">Welcome</span>
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
-                      <path d="M12 2L13.5 8.5L20 7L15 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L9 12L4 7L10.5 8.5L12 2Z" />
-                    </svg>
-                  </div>
                   <div>
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="inline-flex px-5 py-2 rounded-full bg-white/20 text-sm font-medium">Welcome</span>
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 2L13.5 8.5L20 7L15 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L9 12L4 7L10.5 8.5L12 2Z" />
+                      </svg>
+                    </div>
                     <p className="text-sm leading-relaxed opacity-80 mb-5">
                       Discover a new way of learning with our expert-led PG medical courses. Achieve your goals and succeed with PGME.
                     </p>
-                    <div className="flex items-center gap-5 pt-4 border-t border-white/15">
+                    <div className="flex items-center gap-5 pt-4 border-t border-white/15 mb-6">
                       <div>
                         <div className="text-xl font-bold">98%</div>
                         <div className="text-[11px] text-white/50 mt-0.5">Pass Rate</div>
@@ -205,58 +191,50 @@ export default function LandingPage() {
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Circular badge element — desktop (md+) */}
-            <div className="hidden md:flex absolute left-[5%] top-[90%] -translate-y-1/2 items-center justify-center">
-              <div className="relative w-28 h-28">
-                <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100">
-                  <defs>
-                    <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
-                  </defs>
-                  <text className="text-[9px] fill-gray-500 uppercase tracking-[0.25em]">
-                    <textPath href="#circlePath">
-                      with our personalized approach · don't just study, excel ·
-                    </textPath>
-                  </text>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-gray-800">
-                    <path d="M12 2L13.5 8.5L20 7L15 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L9 12L4 7L10.5 8.5L12 2Z" stroke="currentColor" strokeWidth="1.5" fill="currentColor" />
-                  </svg>
+                  {/* Download Our App */}
+                  <div className="mt-auto">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-white/50 mb-3">Download Our App</p>
+                    <div className="flex items-center gap-3">
+                      {/* Google Play */}
+                      <a
+                        href="https://play.google.com/store/apps/details?id=com.pgme.app"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 border border-white/15 hover:bg-white/20 transition-colors no-underline"
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.807 1.626a1 1 0 0 1 0 1.732l-2.807 1.626L15.206 12l2.492-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
+                        </svg>
+                        <div className="text-left">
+                          <div className="text-[9px] text-white/60 leading-none">GET IT ON</div>
+                          <div className="text-xs font-semibold text-white leading-tight">Google Play</div>
+                        </div>
+                      </a>
+                      {/* App Store */}
+                      <a
+                        href="https://apps.apple.com/in/app/pgme-medical-education/id6759380549"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 border border-white/15 hover:bg-white/20 transition-colors no-underline"
+                      >
+                        <svg width="18" height="20" viewBox="0 0 384 512" fill="white">
+                          <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5c0 26.2 4.8 53.3 14.4 81.2 12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+                        </svg>
+                        <div className="text-left">
+                          <div className="text-[9px] text-white/60 leading-none">Download on the</div>
+                          <div className="text-xs font-semibold text-white leading-tight">App Store</div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ── Bottom Grid (bento layout) ── */}
-          <div className="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 2xl:gap-6">
-
-            {/* Video card */}
-            <div className="md:col-span-5 lg:col-span-4 rounded-3xl overflow-hidden min-h-[220px] sm:min-h-[260px] relative">
-              <video
-                src="https://pgmeessentials.com/wp-content/uploads/2025/01/Website-2-1.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              {/* Dark overlay */}
-              <div className="absolute inset-0 bg-black/50" />
-              {/* Text overlay */}
-              <div className="relative z-10 p-6 sm:p-8 flex flex-col justify-end h-full">
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display leading-tight mb-1">
-                  Post Graduate Medical Essentials
-                </h2>
-                <span className="text-lg sm:text-xl font-bold text-[#00BEFA] mb-3">(PGME)</span>
-                <p className="text-xs sm:text-sm text-white/70 font-medium">
-                  Empowering Excellence In Postgraduate Medical Education
-                </p>
-              </div>
-            </div>
+          {/* ── Bottom Row (stats + trailers) ── */}
+          <div className="mt-4 sm:mt-5 grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5 2xl:gap-6">
 
             {/* Stats boxes */}
             <div className="md:col-span-3 lg:col-span-2 flex flex-row md:flex-col gap-4 sm:gap-5">
@@ -271,21 +249,18 @@ export default function LandingPage() {
             </div>
 
             {/* Video Trailers Card */}
-            <div className="md:col-span-4 lg:col-span-6 rounded-3xl bg-[#d6e4ff] p-2.5 sm:p-3 relative overflow-hidden">
+            <div className="md:col-span-9 lg:col-span-10 rounded-3xl bg-[#d6e4ff] p-2.5 sm:p-3 relative overflow-hidden">
               <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                 {packageTypes.slice(0, 2).map((pt) => {
-                  const route = pt.name?.toLowerCase().includes('theory') ? '/packages' : pt.name?.toLowerCase().includes('practical') ? '/packages' : '/packages';
+                  const route = '/packages';
                   return (
                     <div key={pt.type_id || pt._id} className="relative rounded-2xl overflow-hidden group">
-                      {/* Thumbnail */}
                       {pt.thumbnail_url ? (
                         <img src={pt.thumbnail_url} alt={pt.name} className="w-full object-cover" style={{ aspectRatio: '4/3' }} />
                       ) : (
                         <div className="w-full bg-[#0000C8]/20" style={{ aspectRatio: '4/3' }} />
                       )}
-                      {/* Black overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
-                      {/* Play button — opens popup */}
                       <button
                         onClick={() => setPlayingTrailer(pt)}
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white/20 border border-white/40 flex items-center justify-center backdrop-blur-md cursor-pointer hover:bg-white/30 transition-colors"
@@ -294,7 +269,6 @@ export default function LandingPage() {
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       </button>
-                      {/* Bottom text + arrow link */}
                       <div className="absolute bottom-0 inset-x-0 p-3 flex items-end justify-between">
                         <div>
                           <span className="text-white text-sm sm:text-base font-bold block">{pt.name}</span>
