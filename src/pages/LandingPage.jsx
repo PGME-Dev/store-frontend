@@ -46,7 +46,7 @@ export default function LandingPage() {
 
       {/* ── Header ── */}
       <header className={`sticky top-0 z-50 pt-4 sm:pt-5 px-4 sm:px-6 lg:px-10 pb-3 pointer-events-none transition-transform duration-300 ${navHidden ? '-translate-y-full' : 'translate-y-0'}`}>
-        <div className="max-w-[1400px] mx-auto pointer-events-auto">
+        <div className="max-w-[1400px] mx-auto pointer-events-auto relative">
           <div className="flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6 lg:px-8 rounded-full bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_2px_20px_rgba(0,0,0,0.06)]">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 no-underline shrink-0">
@@ -100,8 +100,8 @@ export default function LandingPage() {
 
           {/* Mobile menu */}
           {mobileMenuOpen && (
-            <div className="lg:hidden mt-3 animate-slide-down">
-              <div className="bg-white/80 backdrop-blur-xl border border-white/60 rounded-2xl shadow-lg p-4 space-y-1">
+            <div className="lg:hidden absolute left-0 right-0 top-full mt-3 px-4 sm:px-6 z-50 animate-slide-down">
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-xl p-4 space-y-1">
                 {navLinks.map((link) => (
                   <Link
                     key={link.to}
@@ -142,7 +142,7 @@ export default function LandingPage() {
               <div className="flex items-start gap-4 sm:gap-6 flex-wrap mt-1">
                 <div>
                   <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase leading-[0.95]">Expert-Led</span>
-                  <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase leading-[0.95] ml-0 md:ml-[10vw] sm:ml-[15vw]">Education</span>
+                  <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase leading-[0.95] ml-0 sm:ml-[10vw] md:ml-[15vw]">Education</span>
                 </div>
               </div>
             </h1>

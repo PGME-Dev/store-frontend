@@ -117,7 +117,7 @@ export default function Layout() {
     <div className="min-h-screen flex flex-col relative">
       {/* Header */}
       <header className="sticky top-0 z-50 pt-3 sm:pt-4 px-4 sm:px-6 lg:px-10 pb-3 sm:pb-4 pointer-events-none">
-        <div className="max-w-350 mx-auto pointer-events-auto">
+        <div className="max-w-350 mx-auto pointer-events-auto relative">
           <div className={`flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6 lg:px-8 rounded-full transition-all duration-300 ${
             scrolled
               ? 'bg-white/70 backdrop-blur-xl border border-white/50 shadow-[0_2px_20px_rgba(0,0,0,0.06)]'
@@ -183,8 +183,8 @@ export default function Layout() {
 
           {/* Mobile menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden mt-3 animate-slide-down">
-              <div className="bg-white/60 backdrop-blur-xl border border-white/50 rounded-2xl shadow-lg p-4 space-y-1">
+            <div className="md:hidden absolute left-0 right-0 top-full mt-3 px-4 sm:px-6 z-50 animate-slide-down">
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-xl p-4 space-y-1">
                 {navLinks.map((link) => (
                   <Link
                     key={link.to}
