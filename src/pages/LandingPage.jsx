@@ -131,8 +131,9 @@ export default function LandingPage() {
         <div className="max-w-[1400px] mx-auto">
 
           {/* Large Hero Typography */}
-          <div className="relative">
-            <h1 className="font-display font-extrabold text-gray-900 leading-[0.95] tracking-tighter">
+          <div className="relative flex flex-row items-start md:block">
+            {/* Text + circle wrapper for mobile row layout */}
+            <h1 className="font-display font-extrabold text-gray-900 leading-[0.95] tracking-tighter text-left">
               <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase">Revolutionize</span>
               <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
                 <span className="text-[clamp(2.5rem,8vw,7rem)] uppercase">Learning</span>
@@ -141,10 +142,31 @@ export default function LandingPage() {
               <div className="flex items-start gap-4 sm:gap-6 flex-wrap mt-1">
                 <div>
                   <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase leading-[0.95]">Expert-Led</span>
-                  <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase leading-[0.95] ml-[10vw] sm:ml-[15vw]">Education</span>
+                  <span className="block text-[clamp(2.5rem,8vw,7rem)] uppercase leading-[0.95] ml-0 md:ml-[10vw] sm:ml-[15vw]">Education</span>
                 </div>
               </div>
             </h1>
+
+            {/* Circular badge — visible on mobile (right of text) and md+ (absolute positioned) */}
+            <div className="flex md:hidden shrink-0 items-center justify-center self-end -ml-8 -mb-1">
+              <div className="relative w-28 h-28">
+                <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100">
+                  <defs>
+                    <path id="circlePathMobile" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+                  </defs>
+                  <text className="text-[9px] fill-gray-500 uppercase tracking-[0.25em]">
+                    <textPath href="#circlePathMobile">
+                      with our personalized approach · don't just study, excel ·
+                    </textPath>
+                  </text>
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-gray-800">
+                    <path d="M12 2L13.5 8.5L20 7L15 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L9 12L4 7L10.5 8.5L12 2Z" stroke="currentColor" strokeWidth="1.5" fill="currentColor" />
+                  </svg>
+                </div>
+              </div>
+            </div>
 
             {/* Welcome Card (positioned top-right, stretches full height of hero text) */}
             <div className="hidden lg:flex absolute top-0 right-0 bottom-0 w-[380px]">
@@ -187,10 +209,9 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Circular badge element */}
+            {/* Circular badge element — desktop (md+) */}
             <div className="hidden md:flex absolute left-[5%] top-[90%] -translate-y-1/2 items-center justify-center">
               <div className="relative w-28 h-28">
-                {/* Rotating text */}
                 <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100">
                   <defs>
                     <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
@@ -201,7 +222,6 @@ export default function LandingPage() {
                     </textPath>
                   </text>
                 </svg>
-                {/* Center icon */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-gray-800">
                     <path d="M12 2L13.5 8.5L20 7L15 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L9 12L4 7L10.5 8.5L12 2Z" stroke="currentColor" strokeWidth="1.5" fill="currentColor" />
