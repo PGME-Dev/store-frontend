@@ -11,8 +11,6 @@ export default function PackageList() {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [allPackages, setAllPackages] = useState([]);
-  const [allLoading, setAllLoading] = useState(true);
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [specialtyOpen, setSpecialtyOpen] = useState(false);
   const specialtyRef = useRef(null);
@@ -42,25 +40,6 @@ export default function PackageList() {
     })();
   }, [subjectId]);
 
-  // Fetch all packages (no subject filter)
-  useEffect(() => {
-    setAllLoading(true);
-    (async () => {
-      try {
-        const result = await getPackages();
-        setAllPackages(result.packages || result || []);
-      } catch {
-        // Silently fail — the main section still works
-      } finally {
-        setAllLoading(false);
-      }
-    })();
-  }, []);
-
-  // Other packages = all packages minus the ones already shown in the subject section
-  const subjectPackageIds = new Set(packages.map((p) => p.package_id));
-  const otherPackages = allPackages.filter((p) => !subjectPackageIds.has(p.package_id));
-
   return (
     <div className="animate-fade-in-up">
       <div className="mb-6 sm:mb-10 lg:mb-12">
@@ -79,7 +58,7 @@ export default function PackageList() {
           <button
             type="button"
             onClick={() => setSpecialtyOpen(!specialtyOpen)}
-            className="w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-4 sm:py-5 bg-white rounded-2xl border border-border/60 hover:border-primary/30 transition-all duration-200 cursor-pointer text-left"
+            className="w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-4 sm:py-5 bg-primary/4 rounded-2xl border border-primary/15 hover:border-primary/30 transition-all duration-200 cursor-pointer text-left"
           >
             <div className="min-w-0">
               <p className="text-[11px] sm:text-xs font-medium text-text-tertiary uppercase tracking-wider mb-1">Your Specialty</p>
@@ -160,28 +139,6 @@ export default function PackageList() {
               onClick={() => setSelectedPackage(pkg)}
             />
           ))}
-        </div>
-      )}
-
-      {/* Other Packages section */}
-      {!allLoading && otherPackages.length > 0 && (
-        <div className="mt-10 sm:mt-12 lg:mt-14">
-          <div className="border-t border-border pt-6 sm:pt-8 mb-5 sm:mb-6">
-            <h2 className="text-lg sm:text-xl font-semibold text-text">
-              Other Packages
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 2xl:gap-7">
-            {otherPackages.map((pkg, index) => (
-              <PackageCard
-                key={pkg.package_id}
-                pkg={pkg}
-                purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
-                illustrationIndex={packages.length + index}
-                onClick={() => setSelectedPackage(pkg)}
-              />
-            ))}
-          </div>
         </div>
       )}
 

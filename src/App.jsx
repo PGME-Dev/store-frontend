@@ -17,6 +17,7 @@ import PaymentSuccess from './pages/PaymentSuccess';
 import MyPurchases from './pages/MyPurchases';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Careers from './pages/Careers';
 import TermsAndConditions from './pages/TermsAndConditions';
 import RefundPolicy from './pages/RefundPolicy';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -51,6 +52,7 @@ export default function App() {
         <Route path="payment/success" element={<PaymentSuccess />} />
         <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="careers" element={<Careers />} />
         <Route path="terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="refund-policy" element={<RefundPolicy />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />

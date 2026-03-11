@@ -104,11 +104,12 @@ export default function Layout() {
 
   const navLinks = [
     { to: '/home', label: 'Home' },
+    { to: '/about', label: 'About' },
     { to: '/packages', label: 'Packages' },
     { to: '/ebooks', label: 'eBooks' },
     { to: '/sessions', label: 'Sessions' },
-    { to: '/about', label: 'About' },
     { to: '/contact', label: 'Contact' },
+    { to: '/careers', label: 'Careers' },
   ];
 
   const isActive = (path) => location.pathname.startsWith(path);
@@ -280,6 +281,7 @@ export default function Layout() {
                 <div className="space-y-3.5">
                   <Link to="/about" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">About Us</Link>
                   <Link to="/contact" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Contact Us</Link>
+                  <Link to="/careers" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Careers</Link>
                   <Link to="/my-purchases" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">My Purchases</Link>
                 </div>
               </div>
