@@ -58,7 +58,7 @@ export default function PackageList() {
           <button
             type="button"
             onClick={() => setSpecialtyOpen(!specialtyOpen)}
-            className="w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-4 sm:py-5 bg-primary/4 rounded-2xl border border-primary/15 hover:border-primary/30 transition-all duration-200 cursor-pointer text-left"
+            className="w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-4 sm:py-5 bg-[#d6e4ff] rounded-2xl border border-[#d6e4ff] hover:border-primary/30 transition-all duration-200 cursor-pointer text-left"
           >
             <div className="min-w-0">
               <p className="text-[11px] sm:text-xs font-medium text-text-tertiary uppercase tracking-wider mb-1">Your Specialty</p>
