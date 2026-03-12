@@ -136,7 +136,7 @@ export default function LandingPage() {
             {/* Video Hero Card — large */}
             <div className="lg:col-span-8 rounded-3xl overflow-hidden min-h-[300px] sm:min-h-[360px] lg:min-h-[420px] relative">
               <video
-                src="https://pgmeessentials.com/wp-content/uploads/2025/01/Website-2-1.mp4"
+                src="https://res.cloudinary.com/dsdcdpwxm/video/upload/v1773300607/Website-2-1_mkmepe.mp4"
                 autoPlay
                 loop
                 muted

@@ -105,8 +105,8 @@ export default function Careers() {
       </div>
 
       {/* Form Section */}
-      <div className="max-w-2xl">
-        <div className="mb-6">
+      <div className="max-w-2xl mx-auto">
+        <div className="mb-6 text-center">
           <h2 className="text-lg sm:text-xl font-bold text-text mb-1.5">Apply Now</h2>
           <p className="text-sm text-text-secondary">Fill in the details below and we'll get back to you.</p>
         </div>
