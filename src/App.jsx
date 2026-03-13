@@ -15,6 +15,7 @@ import SessionDetail from './pages/SessionDetail';
 import Checkout from './pages/Checkout';
 import PaymentSuccess from './pages/PaymentSuccess';
 import MyPurchases from './pages/MyPurchases';
+import Invoices from './pages/Invoices';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Careers from './pages/Careers';
@@ -57,6 +58,7 @@ export default function App() {
         <Route path="refund-policy" element={<RefundPolicy />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
         <Route path="my-purchases" element={<ProtectedRoute><MyPurchases /></ProtectedRoute>} />
+        <Route path="invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
         </Route>
       </Routes>
     </SmoothScroll>
