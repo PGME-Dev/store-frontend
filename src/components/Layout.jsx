@@ -117,15 +117,11 @@ export default function Layout() {
 
   const navLinks = [
     { to: '/home', label: 'Home' },
-    isAuthenticated
-      ? { to: '/my-purchases', label: 'My Purchases' }
-      : { to: '/about', label: 'About' },
+    { to: '/about', label: 'About' },
     { to: '/packages', label: 'Packages' },
     { to: '/ebooks', label: 'eBooks' },
     { to: '/sessions', label: 'Live Sessions' },
-    isAuthenticated
-      ? { to: '/invoices', label: 'Invoices' }
-      : { to: '/contact', label: 'Contact' },
+    { to: '/contact', label: 'Contact' },
     { to: '/careers', label: 'Careers' },
   ];
 
