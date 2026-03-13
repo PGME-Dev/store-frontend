@@ -60,7 +60,7 @@ export default function SessionDetail() {
 
   return (
     <div className="animate-fade-in-up">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl 2xl:max-w-6xl mx-auto">
         {/* Header */}
         <div className="gradient-hero rounded-2xl sm:rounded-3xl p-8 sm:p-10 lg:p-12 text-white mb-6 sm:mb-8 relative overflow-hidden">
           <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-white opacity-[0.06]" />
@@ -74,7 +74,7 @@ export default function SessionDetail() {
               </svg>
               <span className="text-sm font-medium text-white/80">Live Session</span>
             </div>
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold font-display mb-1">{session.title}</h1>
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-bold font-display mb-1">{session.title}</h1>
             {session.faculty_id?.name && (
               <p className="text-white/70 text-sm">By {session.faculty_id.name}</p>
             )}
@@ -92,7 +92,7 @@ export default function SessionDetail() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 2xl:gap-10">
           {/* Main content */}
           <div className="lg:col-span-2 space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -144,28 +144,65 @@ export default function SessionDetail() {
             )}
           </div>
 
-          {/* Sidebar - Desktop sticky CTA - price & purchase commented out */}
-          {/*
+          {/* Sidebar - Desktop sticky CTA */}
           {!session.is_free && (
             <div className="hidden lg:block">
               <div className="sticky top-24 bg-white rounded-xl border border-border p-6 shadow-md">
-                ...
+                {purchased ? (
+                  <>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-success">
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                      <span className="text-sm font-semibold text-success">Purchased</span>
+                    </div>
+                    <p className="text-xs text-text-secondary leading-relaxed">You already own this session. Open the PGME app to access it.</p>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="text-base font-semibold text-text mb-4 pb-2 border-b border-border">Purchase Session</h3>
+                    <PriceDisplay price={session.price} size="lg" />
+                    <button onClick={handleBuy} className="btn-primary w-full mt-5 !py-3.5">
+                      Buy Now
+                    </button>
+                    <p className="text-xs text-text-tertiary mt-3 text-center">Secure payment via Zoho</p>
+                  </>
+                )}
               </div>
             </div>
           )}
-          */}
         </div>
       </div>
 
-      {/* Mobile sticky bottom CTA - price & purchase commented out */}
-      {/*
+      {/* Mobile sticky bottom CTA */}
       {!session.is_free && (
         <>
-          ...
+          {purchased ? (
+            <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
+              <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-success">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span className="text-sm font-semibold text-success">Purchased -- Open the PGME app to access</span>
+              </div>
+            </div>
+          ) : (
+            <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
+              <div className="max-w-7xl mx-auto flex items-center gap-4">
+                <PriceDisplay price={session.price} size="lg" />
+                <button onClick={handleBuy} className="btn-primary flex-1 !py-3">
+                  Buy Now
+                </button>
+              </div>
+            </div>
+          )}
           <div className="h-20 sm:h-24 lg:hidden" />
         </>
       )}
-      */}
     </div>
   );
 }

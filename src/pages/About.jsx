@@ -10,7 +10,7 @@ export default function About() {
           <span className="inline-block text-[11px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-text-tertiary mb-6 sm:mb-8">
             About PGME
           </span>
-          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-text leading-[1.05] tracking-tight mb-6 sm:mb-8">
+          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl font-extrabold text-text leading-[1.05] tracking-tight mb-6 sm:mb-8">
             We're Building the Future of{' '}
             <span className="gradient-text">Medical Education</span>
           </h1>
@@ -22,7 +22,7 @@ export default function About() {
 
       {/* ── Stats — giant typography ── */}
       <section className="relative px-4 sm:px-6 lg:px-8 py-16 sm:py-20 border-y border-border/40">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-6">
+        <div className="max-w-6xl 2xl:max-w-[1500px] mx-auto grid grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-6">
           <div className="text-center">
             <div className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight gradient-text leading-none">159</div>
             <div className="text-xs sm:text-sm text-text-tertiary mt-3 font-medium uppercase tracking-wider">Sessions Conducted</div>
@@ -44,7 +44,7 @@ export default function About() {
 
       {/* ── What We Do — editorial alternating sections ── */}
       <section className="relative px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl 2xl:max-w-[1500px] mx-auto">
           {/* Section label */}
           <div className="text-center mb-16 sm:mb-20">
             <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-text-tertiary mb-4 block">
@@ -217,7 +217,7 @@ export default function About() {
 
       {/* ── CTA ── */}
       <section className="relative px-4 sm:px-6 lg:px-8 pb-8">
-        <div className="max-w-6xl mx-auto gradient-primary rounded-3xl p-10 sm:p-14 lg:p-20 text-center relative overflow-hidden">
+        <div className="max-w-6xl 2xl:max-w-[1500px] mx-auto gradient-primary rounded-3xl p-10 sm:p-14 lg:p-20 text-center relative overflow-hidden">
           <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-white/5" />
           <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-white/3" />
 

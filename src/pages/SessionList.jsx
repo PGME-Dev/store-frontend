@@ -130,7 +130,7 @@ function SessionCard({ session, purchased, onClick }) {
             ) : session.is_free ? (
               <span className="text-xs font-semibold text-success bg-success/8 px-2.5 py-1 rounded-full">FREE</span>
             ) : (
-              null /* price commented out */
+              <span className="text-sm font-bold text-text">{formatPrice(session.price)}</span>
             )}
           </div>
         </div>
@@ -202,7 +202,7 @@ export default function SessionList() {
       <div className="mb-6 sm:mb-10 lg:mb-12">
         <div>
           <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Live</p>
-          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text tracking-tight">
+          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-extrabold text-text tracking-tight">
             Live Sessions
           </h1>
           <p className="text-text-secondary text-sm sm:text-base mt-2">
@@ -232,7 +232,7 @@ export default function SessionList() {
                   Your Sessions
                 </h2>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 2xl:gap-7">
                 {yourSessions.map((session) => (
                   <SessionCard
                     key={session.session_id}
@@ -255,7 +255,7 @@ export default function SessionList() {
                   </h2>
                 </div>
               )}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 2xl:gap-7">
                 {otherSessions.map((session) => (
                   <SessionCard
                     key={session.session_id}

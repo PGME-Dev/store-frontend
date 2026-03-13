@@ -15,8 +15,10 @@ import SessionDetail from './pages/SessionDetail';
 import Checkout from './pages/Checkout';
 import PaymentSuccess from './pages/PaymentSuccess';
 import MyPurchases from './pages/MyPurchases';
+import Invoices from './pages/Invoices';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Careers from './pages/Careers';
 import TermsAndConditions from './pages/TermsAndConditions';
 import RefundPolicy from './pages/RefundPolicy';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -37,10 +39,10 @@ export default function App() {
     <SmoothScroll>
       <Routes>
         <Route index element={<LandingPage />} />
-        <Route path="/" element={<Layout />}>
-          <Route path="home" element={<Home />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
+        <Route path="/" element={<Layout />}>
+          <Route path="home" element={<Home />} />
         <Route path="packages" element={<PackageList />} />
         <Route path="packages/:id" element={<PackageDetail />} />
         <Route path="ebooks" element={<EbookList />} />
@@ -51,10 +53,12 @@ export default function App() {
         <Route path="payment/success" element={<PaymentSuccess />} />
         <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
+        <Route path="careers" element={<Careers />} />
         <Route path="terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="refund-policy" element={<RefundPolicy />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
         <Route path="my-purchases" element={<ProtectedRoute><MyPurchases /></ProtectedRoute>} />
+        <Route path="invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
         </Route>
       </Routes>
     </SmoothScroll>

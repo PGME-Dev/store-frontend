@@ -1,5 +1,10 @@
 import client from './client';
 
+export async function getPackageTypes() {
+  const { data } = await client.get('/package-types');
+  return data.data?.packageTypes || data.data || [];
+}
+
 export async function getPackages(subjectId) {
   const params = {};
   if (subjectId) params.subject_id = subjectId;

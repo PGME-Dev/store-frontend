@@ -31,13 +31,11 @@ export default function ProductCard({ to, title, subtitle, price, originalPrice,
         </div>
         <h3 className="text-sm sm:text-base font-semibold text-text line-clamp-2 mb-0.5 sm:mb-1 group-hover:text-primary transition-colors">{title}</h3>
         {subtitle && <p className="text-xs sm:text-sm text-text-secondary line-clamp-1 mb-2 sm:mb-3">{subtitle}</p>}
-        {/* Price & purchase status commented out
         {purchased ? (
           <span className="text-xs sm:text-sm font-medium text-success">Owned</span>
         ) : (
           <PriceDisplay price={price} originalPrice={originalPrice} isOnSale={isOnSale} />
         )}
-        */}
       </div>
     </Link>
   );

@@ -102,7 +102,7 @@ export default function MyPurchases() {
         {/* Page header with left accent border */}
         <div className="mb-6 sm:mb-10">
           <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-3">Account</p>
-          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text tracking-tight">My Purchases</h1>
+          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-extrabold text-text tracking-tight">My Purchases</h1>
           <p className="text-sm text-text-secondary mt-2">View and manage your purchased content</p>
         </div>
 
@@ -139,7 +139,7 @@ export default function MyPurchases() {
                     Packages
                   </h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 sm:gap-4 2xl:gap-5">
                   {packages.map((p) => {
                     const inv = invoiceMap[p.purchase_id];
                     return (
@@ -164,7 +164,7 @@ export default function MyPurchases() {
                         </div>
                         <div className="mt-3 sm:mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
                           <div className="text-[11px] sm:text-xs text-text-secondary flex flex-wrap gap-3 sm:gap-4">
-                            {/* <span className="font-medium text-text">{formatPrice(p.amount_paid)}</span> */}
+                            <span className="font-medium text-text">{formatPrice(p.amount_paid)}</span>
                             {p.expires_at && <span>Expires: {formatDate(p.expires_at)}</span>}
                             {p.purchased_at && <span>Purchased: {formatDate(p.purchased_at)}</span>}
                           </div>
@@ -192,7 +192,7 @@ export default function MyPurchases() {
                     eBooks
                   </h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 sm:gap-4 2xl:gap-5">
                   {ebooks.map((e) => {
                     const inv = invoiceMap[e.purchase_id];
                     return (
@@ -212,7 +212,7 @@ export default function MyPurchases() {
                         </div>
                         <div className="mt-3 sm:mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
                           <div className="text-[11px] sm:text-xs text-text-secondary flex flex-wrap gap-3 sm:gap-4">
-                            {/* <span className="font-medium text-text">{formatPrice(e.amount_paid)}</span> */}
+                            <span className="font-medium text-text">{formatPrice(e.amount_paid)}</span>
                             {e.purchased_at && <span>{formatDate(e.purchased_at)}</span>}
                           </div>
                           {inv && (
@@ -239,7 +239,7 @@ export default function MyPurchases() {
                     Live Sessions
                   </h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 sm:gap-4 2xl:gap-5">
                   {sessions.map((s) => {
                     const inv = invoiceMap[s.purchase_id];
                     return (
@@ -261,7 +261,7 @@ export default function MyPurchases() {
                         </div>
                         <div className="mt-3 sm:mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
                           <div className="text-[11px] sm:text-xs text-text-secondary flex flex-wrap gap-3 sm:gap-4">
-                            {/* <span className="font-medium text-text">{formatPrice(s.amount_paid)}</span> */}
+                            <span className="font-medium text-text">{formatPrice(s.amount_paid)}</span>
                             {s.scheduled_start_time && <span>{formatDate(s.scheduled_start_time)}</span>}
                             {!s.scheduled_start_time && s.purchased_at && <span>{formatDate(s.purchased_at)}</span>}
                           </div>

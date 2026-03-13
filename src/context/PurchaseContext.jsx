@@ -79,6 +79,9 @@ export function PurchaseProvider({ children }) {
 
   const value = {
     purchaseData,
+    purchasedPackageIds,
+    purchasedEbookIds,
+    purchasedSessionIds,
     isPackagePurchased,
     isEbookPurchased,
     isSessionPurchased,
