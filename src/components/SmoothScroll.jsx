@@ -15,14 +15,17 @@ export default function SmoothScroll({ children }) {
       smoothTouch: false,
     });
 
+    let rafId;
     function raf(time) {
+      if (!lenis) return;
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
 
     return () => {
+      cancelAnimationFrame(rafId);
       lenis.destroy();
       lenis = null;
     };
