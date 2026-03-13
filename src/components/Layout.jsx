@@ -120,7 +120,7 @@ export default function Layout() {
     { to: '/about', label: 'About' },
     { to: '/packages', label: 'Packages' },
     { to: '/ebooks', label: 'eBooks' },
-    { to: '/sessions', label: 'Sessions' },
+    { to: '/sessions', label: 'Live Sessions' },
     isAuthenticated
       ? { to: '/invoices', label: 'Invoices' }
       : { to: '/contact', label: 'Contact' },
