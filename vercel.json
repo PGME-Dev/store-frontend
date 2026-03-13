@@ -1,6 +1,9 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/:path(.*)", "destination": "https://pgmeessentials.com/:path", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
