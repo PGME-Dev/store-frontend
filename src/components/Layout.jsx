@@ -117,7 +117,9 @@ export default function Layout() {
 
   const navLinks = [
     { to: '/home', label: 'Home' },
-    { to: '/about', label: 'About' },
+    isAuthenticated
+      ? { to: '/my-purchases', label: 'My Purchases' }
+      : { to: '/about', label: 'About' },
     { to: '/packages', label: 'Packages' },
     { to: '/ebooks', label: 'eBooks' },
     { to: '/sessions', label: 'Live Sessions' },
