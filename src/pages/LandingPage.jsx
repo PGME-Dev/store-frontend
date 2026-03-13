@@ -36,7 +36,7 @@ export default function LandingPage() {
     { to: '/home', label: 'Home' },
     { to: '/packages', label: 'Packages' },
     { to: '/ebooks', label: 'eBooks' },
-    { to: '/sessions', label: 'Sessions' },
+    { to: '/sessions', label: 'Live Sessions' },
     { to: '/about', label: 'About' },
     { to: '/contact', label: 'Contact' },
   ];
