@@ -1,16 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { getPackageTypes } from '../api/packages';
+import Header from '../components/Header';
 
 export default function LandingPage() {
-  const { isAuthenticated } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [navHidden, setNavHidden] = useState(false);
   const [packageTypes, setPackageTypes] = useState([]);
   const [playingTrailer, setPlayingTrailer] = useState(null);
   const [activeFeature, setActiveFeature] = useState(null);
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
     getPackageTypes()
@@ -18,113 +14,10 @@ export default function LandingPage() {
       .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-      if (currentY > lastScrollY.current && currentY > 80) {
-        setNavHidden(true);
-      } else {
-        setNavHidden(false);
-      }
-      lastScrollY.current = currentY;
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const navLinks = [
-    { to: '/home', label: 'Home' },
-    { to: '/packages', label: 'Packages' },
-    { to: '/ebooks', label: 'eBooks' },
-    { to: '/sessions', label: 'Live Sessions' },
-    { to: '/about', label: 'About' },
-    { to: '/contact', label: 'Contact' },
-  ];
-
   return (
     <div className="min-h-screen flex flex-col bg-[#f5f5f5]">
 
-      {/* ── Header ── */}
-      <header className={`sticky top-0 z-50 pt-4 sm:pt-5 px-4 sm:px-6 lg:px-10 2xl:px-16 pb-3 pointer-events-none transition-transform duration-300 ${navHidden ? '-translate-y-full' : 'translate-y-0'}`}>
-        <div className="max-w-[1400px] 2xl:max-w-[1700px] mx-auto pointer-events-auto relative">
-          <div className="flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6 lg:px-8 rounded-full bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_2px_20px_rgba(0,0,0,0.06)]">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 no-underline shrink-0">
-              <div className="w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center shadow-sm">
-                <img src="/logo.png" alt="PGME" className="w-5 h-5 object-contain" />
-              </div>
-              <span className="text-base sm:text-lg font-bold text-gray-900 font-display tracking-tight">PGME</span>
-            </Link>
-
-            {/* Nav links (center) */}
-            <nav className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="px-4 2xl:px-5 py-2 text-sm 2xl:text-base font-medium text-gray-600 hover:text-gray-900 no-underline transition-colors duration-200"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            {/* Right side */}
-            <div className="flex items-center gap-3">
-              <Link
-                to={isAuthenticated ? '/home' : '/login'}
-                className="hidden sm:inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-[#0000C8] rounded-full no-underline transition-all duration-300 hover:bg-[#0000a0] hover:shadow-[0_4px_20px_rgba(0,0,200,0.3)] hover:scale-105"
-              >
-                {isAuthenticated ? 'Dashboard' : 'Get Started'}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </Link>
-
-              {/* Mobile hamburger */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 rounded-xl text-gray-500 hover:text-gray-900 transition-all duration-200 bg-transparent border-0 cursor-pointer"
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  {mobileMenuOpen ? (
-                    <><path d="M18 6L6 18" /><path d="M6 6l12 12" /></>
-                  ) : (
-                    <><path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" /></>
-                  )}
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile menu */}
-          {mobileMenuOpen && (
-            <div className="lg:hidden absolute left-0 right-0 top-full mt-3 px-4 sm:px-6 z-50 animate-slide-down">
-              <div className="bg-white border border-gray-200 rounded-2xl shadow-xl p-4 space-y-1">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.to}
-                    to={link.to}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl no-underline transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                <div className="border-t border-gray-200 mx-2 my-2" />
-                <Link
-                  to={isAuthenticated ? '/home' : '/login'}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 text-sm font-semibold text-[#0000C8] no-underline"
-                >
-                  {isAuthenticated ? 'Dashboard' : 'Get Started'}
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-      </header>
+      <Header />
 
       {/* ── Hero Section ── */}
       <section className="relative px-4 sm:px-6 lg:px-10 2xl:px-16 pt-8 sm:pt-12 lg:pt-16 2xl:pt-20 pb-6">
