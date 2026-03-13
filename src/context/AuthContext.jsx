@@ -7,6 +7,15 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
+    // If a magic link token is present, clear any previous session immediately
+    // (before first render) so PurchaseContext never fires stale API calls
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('token')) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
+      return null;
+    }
     try {
       const stored = localStorage.getItem('user');
       return stored ? JSON.parse(stored) : null;
@@ -27,13 +36,6 @@ export function AuthProvider({ children }) {
     const token = params.get('token');
 
     if (token) {
-      // Clear old session BEFORE verifying new token — prevents race condition
-      // where the refresh interceptor could refresh a stale user's expired token
-      // and overwrite the new user's tokens in localStorage
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('user');
-      setUser(null);
       handleWebToken(token);
     } else {
       setLoading(false);
@@ -56,12 +58,8 @@ export function AuthProvider({ children }) {
       navigate(cleanPath, { replace: true });
     } catch (err) {
       console.error('Web token verification failed:', err);
-      // Ensure no stale tokens remain from a previous user
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('user');
-      setUser(null);
-      navigate('/login', { replace: true });
+      // Preserve the intended destination so Login can redirect back after manual login
+      navigate('/login', { replace: true, state: { from: location } });
     } finally {
       setLoading(false);
     }
