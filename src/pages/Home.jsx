@@ -107,17 +107,7 @@ export default function Home() {
   const rawName = user?.name || 'Student';
   const displayName = rawName.replace(/\b\w/g, (c) => c.toUpperCase());
 
-  if (subjectLoading) {
-    return (
-      <div className="flex justify-center py-24">
-        <div className="w-9 h-9 border-3 border-primary/30 border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  const upcomingSessions = sessions.slice(0, 5);
-
-  // Extract unique faculty from sessions
+  // Extract unique faculty from sessions — must be before any early return (hooks rule)
   const faculty = useMemo(() => {
     const map = new Map();
     sessions.forEach((s) => {
@@ -132,6 +122,16 @@ export default function Home() {
     });
     return Array.from(map.values());
   }, [sessions]);
+
+  if (subjectLoading) {
+    return (
+      <div className="flex justify-center py-24">
+        <div className="w-9 h-9 border-3 border-primary/30 border-t-primary rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  const upcomingSessions = sessions.slice(0, 5);
 
   return (
     <div className="animate-fade-in-up -mx-4 sm:-mx-6 lg:-mx-8 2xl:-mx-12 -mt-6 sm:-mt-8 md:-mt-10 2xl:-mt-14">
