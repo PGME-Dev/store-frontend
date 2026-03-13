@@ -27,6 +27,13 @@ export function AuthProvider({ children }) {
     const token = params.get('token');
 
     if (token) {
+      // Clear old session BEFORE verifying new token — prevents race condition
+      // where the refresh interceptor could refresh a stale user's expired token
+      // and overwrite the new user's tokens in localStorage
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
+      setUser(null);
       handleWebToken(token);
     } else {
       setLoading(false);
@@ -49,6 +56,11 @@ export function AuthProvider({ children }) {
       navigate(cleanPath, { replace: true });
     } catch (err) {
       console.error('Web token verification failed:', err);
+      // Ensure no stale tokens remain from a previous user
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
+      setUser(null);
       navigate('/login', { replace: true });
     } finally {
       setLoading(false);

@@ -5,17 +5,19 @@ import { useAuth } from './AuthContext';
 const PurchaseContext = createContext(null);
 
 export function PurchaseProvider({ children }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [purchaseData, setPurchaseData] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Re-fetch when user identity changes (not just auth boolean), so switching
+  // accounts correctly loads the new user's purchases
   useEffect(() => {
     if (isAuthenticated) {
       fetchPurchases();
     } else {
       setPurchaseData(null);
     }
-  }, [isAuthenticated]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, user?._id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchPurchases = async () => {
     setLoading(true);
