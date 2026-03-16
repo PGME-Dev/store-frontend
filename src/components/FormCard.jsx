@@ -34,7 +34,7 @@ export default function FormCard({ form, onClick }) {
           </p>
         )}
 
-        {/* Field count */}
+        {/* Field count + payment badge */}
         <div className="mt-auto flex items-center gap-2 text-xs text-text-tertiary">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -43,6 +43,11 @@ export default function FormCard({ form, onClick }) {
             <line x1="16" y1="17" x2="8" y2="17" />
           </svg>
           <span>{template?.fields?.length || 0} fields</span>
+          {form.payment_amount > 0 && (
+            <span className="ml-auto text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600">
+              {'\u20B9'}{form.payment_amount}
+            </span>
+          )}
         </div>
 
         {/* Fill Form CTA */}

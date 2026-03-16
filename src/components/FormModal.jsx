@@ -11,6 +11,7 @@ export default function FormModal({ form, onClose }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [paymentLinkUrl, setPaymentLinkUrl] = useState(null);
 
   const template = form?.template;
   const fields = template?.fields || [];
@@ -22,6 +23,7 @@ export default function FormModal({ form, onClose }) {
     setErrors({});
     setSubmitError('');
     setSubmitting(false);
+    setPaymentLinkUrl(null);
 
     // Build pre-fill from user profile
     const prefill = {};
@@ -96,7 +98,10 @@ export default function FormModal({ form, onClose }) {
     setSubmitting(true);
     setSubmitError('');
     try {
-      await submitForm(form._id, responses);
+      const result = await submitForm(form._id, responses);
+      if (result?.submission?.payment_link_url) {
+        setPaymentLinkUrl(result.submission.payment_link_url);
+      }
       setSubmitted(true);
     } catch (err) {
       setSubmitError(err.response?.data?.message || err.message || 'Failed to submit form');
@@ -155,7 +160,25 @@ export default function FormModal({ form, onClose }) {
                     </svg>
                   </div>
                   <h3 className="text-lg font-semibold text-text mb-2">Form Submitted!</h3>
-                  <p className="text-sm text-text-secondary mb-6">Thank you for your submission. We will get back to you soon.</p>
+                  <p className="text-sm text-text-secondary mb-4">Thank you for your submission. We will get back to you soon.</p>
+
+                  {paymentLinkUrl && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-4 mb-6">
+                      <p className="text-sm font-medium text-amber-800 mb-3">Payment Required</p>
+                      <p className="text-xs text-amber-700 mb-3">
+                        Please complete your payment of <span className="font-semibold">{'\u20B9'}{form.payment_amount}</span> to finalize your registration.
+                      </p>
+                      <a
+                        href={paymentLinkUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block px-6 py-2.5 bg-amber-600 text-white text-sm font-semibold rounded-xl hover:bg-amber-700 transition-colors"
+                      >
+                        Pay Now
+                      </a>
+                    </div>
+                  )}
+
                   <button
                     type="button"
                     onClick={onClose}
@@ -223,18 +246,12 @@ export default function FormModal({ form, onClose }) {
                       </div>
                     ))}
 
-                  {/* Payment link */}
-                  {form.payment_link && (
+                  {/* Payment info */}
+                  {form.payment_amount > 0 && (
                     <div className="pt-2 border-t border-border/40">
-                      <p className="text-xs text-text-tertiary mb-1">Payment details (Non-refundable)</p>
-                      <a
-                        href={form.payment_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-primary font-medium hover:underline"
-                      >
-                        Click here for Payment Link
-                      </a>
+                      <p className="text-xs text-text-tertiary">
+                        This form requires a non-refundable payment of <span className="font-semibold text-text-secondary">{'\u20B9'}{form.payment_amount}</span>. A payment link will be provided after submission.
+                      </p>
                     </div>
                   )}
 
