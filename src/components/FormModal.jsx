@@ -184,13 +184,15 @@ export default function FormModal({ form, onClose }) {
                     </div>
                   )}
 
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors cursor-pointer"
-                  >
-                    Close
-                  </button>
+                  {!paymentLinkUrl && (
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors cursor-pointer"
+                    >
+                      Close
+                    </button>
+                  )}
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">

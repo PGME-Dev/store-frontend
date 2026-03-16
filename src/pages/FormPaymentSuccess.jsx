@@ -1,10 +1,31 @@
+import { useEffect, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import client from '../api/client';
 
 export default function FormPaymentSuccess() {
   const [params] = useSearchParams();
   const status = params.get('status'); // 'succeeded' or 'failed'
   const amount = params.get('amount');
+  const paymentLinkReference = params.get('payment_link_reference');
+  const paymentId = params.get('payment_id');
+  const paymentLinkId = params.get('payment_link_id');
   const isSuccess = status === 'succeeded';
+  const callbackSent = useRef(false);
+
+  // Verify payment with backend (backend calls Zoho API to confirm)
+  useEffect(() => {
+    if (!paymentLinkReference || !status || callbackSent.current) return;
+    callbackSent.current = true;
+
+    client.post('/forms/payment-callback', {
+      payment_link_reference: paymentLinkReference,
+      status,
+      payment_id: paymentId || undefined,
+      payment_link_id: paymentLinkId || undefined,
+    }).catch(() => {
+      // Silent — webhook will handle it as backup
+    });
+  }, [paymentLinkReference, status, paymentId, paymentLinkId]);
 
   return (
     <div className="flex items-start justify-center pt-6 sm:pt-10 lg:pt-20 animate-fade-in-up">
