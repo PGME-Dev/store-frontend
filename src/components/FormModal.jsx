@@ -178,7 +178,7 @@ export default function FormModal({ form, onClose }) {
                           {field.required && <span className="text-red-500 ml-0.5">*</span>}
                         </label>
 
-                        {field.type === 'radio' ? (
+                        {field.type === 'radio' && field.options?.length > 0 ? (
                           <div className="space-y-2" role="radiogroup" aria-label={field.label}>
                             {field.options.map((option) => (
                               <label
