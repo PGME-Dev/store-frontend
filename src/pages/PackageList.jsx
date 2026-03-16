@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { getPackages } from '../api/packages';
+import { getFormsBySubject } from '../api/forms';
 import { useSubject } from '../context/SubjectContext';
 import { usePurchase } from '../context/PurchaseContext';
 import PackageCard from '../components/PackageCard';
 import PackageModal from '../components/PackageModal';
+import FormCard from '../components/FormCard';
+import FormModal from '../components/FormModal';
 
 export default function PackageList() {
   const { subjects, subjectId, selectedSubject, selectSubject } = useSubject();
@@ -15,6 +18,10 @@ export default function PackageList() {
   const [specialtyOpen, setSpecialtyOpen] = useState(false);
   const specialtyRef = useRef(null);
 
+  // Forms state
+  const [forms, setForms] = useState([]);
+  const [selectedForm, setSelectedForm] = useState(null);
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (specialtyRef.current && !specialtyRef.current.contains(e.target)) setSpecialtyOpen(false);
@@ -23,15 +30,19 @@ export default function PackageList() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch subject-filtered packages
+  // Fetch subject-filtered packages and forms
   useEffect(() => {
     if (!subjectId) return;
     setLoading(true);
     setError('');
     (async () => {
       try {
-        const result = await getPackages(subjectId);
-        setPackages(result.packages || result || []);
+        const [packagesResult, formsResult] = await Promise.all([
+          getPackages(subjectId),
+          getFormsBySubject(subjectId).catch(() => []),
+        ]);
+        setPackages(packagesResult.packages || packagesResult || []);
+        setForms(formsResult || []);
       } catch {
         setError('Failed to load packages');
       } finally {
@@ -117,7 +128,7 @@ export default function PackageList() {
         </div>
       ) : error ? (
         <div className="text-center py-16 text-error text-sm">{error}</div>
-      ) : packages.length === 0 ? (
+      ) : packages.length === 0 && forms.length === 0 ? (
         <div className="text-center py-16 sm:py-24">
           <div className="w-18 h-18 sm:w-20 sm:h-20 bg-surface-dim rounded-2xl flex items-center justify-center mx-auto mb-5">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-text-tertiary">
@@ -129,17 +140,46 @@ export default function PackageList() {
           <p className="text-text-tertiary text-xs sm:text-sm">Try selecting a different subject to see available packages</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 2xl:gap-7">
-          {packages.map((pkg, index) => (
-            <PackageCard
-              key={pkg.package_id}
-              pkg={pkg}
-              purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
-              illustrationIndex={index}
-              onClick={() => setSelectedPackage(pkg)}
-            />
-          ))}
-        </div>
+        <>
+          {/* Packages grid */}
+          {packages.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 2xl:gap-7">
+              {packages.map((pkg, index) => (
+                <PackageCard
+                  key={pkg.package_id}
+                  pkg={pkg}
+                  purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
+                  illustrationIndex={index}
+                  onClick={() => setSelectedPackage(pkg)}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Registration Forms section */}
+          {forms.length > 0 && (
+            <div className="mt-12 sm:mt-16">
+              <div className="mb-5 sm:mb-6">
+                <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">Register</p>
+                <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-text tracking-tight">
+                  Registration Forms
+                </h2>
+                <p className="text-text-secondary text-sm sm:text-base mt-1">
+                  Register as an examiner or examinee for upcoming examinations
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 2xl:gap-7">
+                {forms.map((form) => (
+                  <FormCard
+                    key={form._id}
+                    form={form}
+                    onClick={() => setSelectedForm(form)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {/* Package detail modal */}
@@ -147,6 +187,14 @@ export default function PackageList() {
         <PackageModal
           package={selectedPackage}
           onClose={() => setSelectedPackage(null)}
+        />
+      )}
+
+      {/* Form modal */}
+      {selectedForm && (
+        <FormModal
+          form={selectedForm}
+          onClose={() => setSelectedForm(null)}
         />
       )}
     </div>
