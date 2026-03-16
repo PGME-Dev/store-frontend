@@ -14,6 +14,7 @@ import SessionList from './pages/SessionList';
 import SessionDetail from './pages/SessionDetail';
 import Checkout from './pages/Checkout';
 import PaymentSuccess from './pages/PaymentSuccess';
+import FormPaymentSuccess from './pages/FormPaymentSuccess';
 import MyPurchases from './pages/MyPurchases';
 import Invoices from './pages/Invoices';
 import About from './pages/About';
@@ -51,6 +52,7 @@ export default function App() {
         <Route path="sessions/:id" element={<SessionDetail />} />
         <Route path="checkout/:type/:id" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="payment/success" element={<PaymentSuccess />} />
+        <Route path="payment-success" element={<FormPaymentSuccess />} />
         <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
         <Route path="careers" element={<Careers />} />
