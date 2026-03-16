@@ -99,8 +99,13 @@ export default function FormModal({ form, onClose }) {
     setSubmitError('');
     try {
       const result = await submitForm(form._id, responses);
-      if (result?.submission?.payment_link_url) {
-        setPaymentLinkUrl(result.submission.payment_link_url);
+      const paymentUrl = result?.submission?.payment_link_url;
+      if (paymentUrl) {
+        setPaymentLinkUrl(paymentUrl);
+        // Auto-redirect to payment link after a brief delay
+        setTimeout(() => {
+          window.open(paymentUrl, '_blank');
+        }, 1500);
       }
       setSubmitted(true);
     } catch (err) {
