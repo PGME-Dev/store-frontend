@@ -12,6 +12,7 @@ export default function FormModal({ form, onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [paymentLinkUrl, setPaymentLinkUrl] = useState(null);
+  const [examProcessExpanded, setExamProcessExpanded] = useState(false);
 
   const template = form?.template;
   const fields = template?.fields || [];
@@ -24,6 +25,7 @@ export default function FormModal({ form, onClose }) {
     setSubmitError('');
     setSubmitting(false);
     setPaymentLinkUrl(null);
+    setExamProcessExpanded(false);
 
     // Build pre-fill from user profile
     const prefill = {};
@@ -65,8 +67,26 @@ export default function FormModal({ form, onClose }) {
     if (bodyRef.current) bodyRef.current.scrollTop += e.deltaY;
   };
 
+  // Helper: check if a field is the examiner multi-select slot field
+  const isMultiSelectField = (field) => {
+    return isExaminer && field.type === 'radio' && field.options?.length > 0;
+  };
+
   const handleChange = (fieldKey, value) => {
     setResponses((prev) => ({ ...prev, [fieldKey]: value }));
+    if (errors[fieldKey]) {
+      setErrors((prev) => { const next = { ...prev }; delete next[fieldKey]; return next; });
+    }
+  };
+
+  const handleCheckboxToggle = (fieldKey, option) => {
+    setResponses((prev) => {
+      const current = prev[fieldKey] ? prev[fieldKey].split(',').map(s => s.trim()).filter(Boolean) : [];
+      const updated = current.includes(option)
+        ? current.filter((v) => v !== option)
+        : [...current, option];
+      return { ...prev, [fieldKey]: updated.join(', ') };
+    });
     if (errors[fieldKey]) {
       setErrors((prev) => { const next = { ...prev }; delete next[fieldKey]; return next; });
     }
@@ -142,6 +162,17 @@ export default function FormModal({ form, onClose }) {
               </svg>
             </button>
 
+            {/* Banner */}
+            {form.banner_url && (
+              <div className="w-full flex-shrink-0" style={{ aspectRatio: '18/7' }}>
+                <img
+                  src={form.banner_url}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
             {/* Header */}
             <div className={`px-5 sm:px-6 pt-6 pb-4 ${isExaminer ? 'bg-purple-500/5' : 'bg-primary/5'}`}>
               <span className={`inline-block text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full mb-2 ${
@@ -154,6 +185,39 @@ export default function FormModal({ form, onClose }) {
                 <p className="text-xs sm:text-sm text-text-secondary mt-2 leading-relaxed">{form.description}</p>
               )}
             </div>
+
+            {/* Exam Process (collapsible) */}
+            {form.exam_process && (
+              <div className="px-5 sm:px-6 border-b border-border/40">
+                <button
+                  type="button"
+                  onClick={() => setExamProcessExpanded((prev) => !prev)}
+                  className="w-full flex items-center justify-between py-3 text-left cursor-pointer"
+                >
+                  <span className="text-sm font-semibold text-text">Exam Process</span>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`text-text-tertiary transition-transform ${examProcessExpanded ? 'rotate-180' : ''}`}
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                {examProcessExpanded && (
+                  <div className="pb-4">
+                    <p className="text-xs sm:text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">
+                      {form.exam_process}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Body */}
             <div ref={bodyRef} className="flex-1 overflow-y-auto px-5 sm:px-6 py-5" data-lenis-prevent>
@@ -208,7 +272,34 @@ export default function FormModal({ form, onClose }) {
                           {field.required && <span className="text-red-500 ml-0.5">*</span>}
                         </label>
 
-                        {field.type === 'radio' && field.options?.length > 0 ? (
+                        {/* Multi-select checkboxes for examiner slot fields */}
+                        {isMultiSelectField(field) ? (
+                          <div className="space-y-2" role="group" aria-label={field.label}>
+                            {field.options.map((option) => {
+                              const selected = responses[field.field_key]
+                                ? responses[field.field_key].split(',').map(s => s.trim()).includes(option)
+                                : false;
+                              return (
+                                <label
+                                  key={option}
+                                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl border cursor-pointer transition-all ${
+                                    selected
+                                      ? 'border-purple-500 bg-purple-500/5 text-purple-600'
+                                      : 'border-border/60 hover:border-purple-300 text-text-secondary'
+                                  }`}
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={selected}
+                                    onChange={() => handleCheckboxToggle(field.field_key, option)}
+                                    className="accent-purple-500"
+                                  />
+                                  <span className="text-sm">{option}</span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        ) : field.type === 'radio' && field.options?.length > 0 ? (
                           <div className="space-y-2" role="radiogroup" aria-label={field.label}>
                             {field.options.map((option) => (
                               <label

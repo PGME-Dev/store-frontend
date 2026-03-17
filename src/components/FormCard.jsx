@@ -8,8 +8,18 @@ export default function FormCard({ form, onClick }) {
       onClick={onClick}
       className="group relative flex flex-col w-full text-left bg-white rounded-2xl border border-border/60 overflow-hidden hover:shadow-lg hover:border-primary/20 transition-all duration-200 cursor-pointer"
     >
-      {/* Header accent */}
-      <div className={`h-2 w-full ${isExaminer ? 'bg-purple-500' : 'bg-primary'}`} />
+      {/* Header accent / Banner */}
+      {form.banner_url ? (
+        <div className="w-full" style={{ aspectRatio: '18/7' }}>
+          <img
+            src={form.banner_url}
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ) : (
+        <div className={`h-2 w-full ${isExaminer ? 'bg-purple-500' : 'bg-primary'}`} />
+      )}
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-4 sm:p-5">
