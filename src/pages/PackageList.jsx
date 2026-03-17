@@ -168,7 +168,7 @@ export default function PackageList() {
                   Register as an examiner or examinee for upcoming examinations
                 </p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 2xl:gap-7">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 lg:gap-6 2xl:gap-7 items-start">
                 {forms.map((form) => (
                   <FormCard
                     key={form._id}
