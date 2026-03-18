@@ -151,9 +151,9 @@ export default function FormModal({ form, onClose }) {
         onClick={onClose}
       />
 
-      <div className="absolute inset-0 flex items-end sm:items-center justify-center sm:p-6">
+      <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-6">
         <div
-          className="relative w-full sm:max-w-lg max-h-[92vh] sm:max-h-[85vh] bg-white sm:rounded-2xl rounded-t-2xl shadow-2xl overflow-hidden animate-modal-content flex flex-col"
+          className="relative w-full max-w-lg max-h-[85vh] bg-white rounded-2xl shadow-2xl overflow-hidden animate-modal-content flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* ── Close button ── */}
