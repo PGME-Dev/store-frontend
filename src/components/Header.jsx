@@ -131,7 +131,9 @@ export default function Header() {
     { to: '/packages', label: 'Packages' },
     { to: '/ebooks', label: 'eBooks' },
     { to: '/sessions', label: 'Live Sessions' },
-    { to: '/contact', label: 'Contact' },
+    ...(isAuthenticated
+      ? [{ to: '/my-purchases', label: 'My Purchases' }]
+      : [{ to: '/contact', label: 'Contact' }]),
     { to: '/careers', label: 'Careers' },
   ];
 
@@ -220,17 +222,6 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              {isAuthenticated && (
-                <>
-                  <div className="border-t border-border/30 mx-2 my-2" />
-                  <Link
-                    to="/my-purchases"
-                    className="block px-4 py-3 text-sm font-medium text-text-secondary hover:text-text hover:bg-white/50 rounded-xl no-underline transition-colors"
-                  >
-                    My Purchases
-                  </Link>
-                </>
-              )}
               {!isAuthenticated && (
                 <>
                   <div className="border-t border-border/30 mx-2 my-2" />
