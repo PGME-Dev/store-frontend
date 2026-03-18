@@ -5,7 +5,7 @@ import { submitForm } from '../api/forms';
 
 export default function FormModal({ form, onClose }) {
   const { user } = useAuth();
-  const bodyRef = useRef(null);
+  const scrollRef = useRef(null);
   const [responses, setResponses] = useState({});
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -14,14 +14,14 @@ export default function FormModal({ form, onClose }) {
   const [paymentLinkUrl, setPaymentLinkUrl] = useState(null);
   const [examProcessExpanded, setExamProcessExpanded] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
-  const [descClamped, setDescClamped] = useState(false);
-  const descRef = useRef(null);
 
   const template = form?.template;
   const fields = template?.fields || [];
   const isExaminer = template?.slug === 'examiner';
+  const hasDescription = !!form.description;
+  const hasExamProcess = !!form.exam_process;
 
-  // Reset state when form changes (handles re-open with same/different form)
+  // Reset state when form changes
   useEffect(() => {
     setSubmitted(false);
     setErrors({});
@@ -30,24 +30,14 @@ export default function FormModal({ form, onClose }) {
     setPaymentLinkUrl(null);
     setExamProcessExpanded(false);
     setDescExpanded(false);
-    setDescClamped(false);
 
-    // Build pre-fill from user profile
     const prefill = {};
     if (user && fields.length) {
       for (const field of fields) {
-        if (field.type === 'email' && user.email) {
-          prefill[field.field_key] = user.email;
-        }
-        if (field.field_key === 'full_name' && user.name) {
-          prefill[field.field_key] = user.name;
-        }
-        if (field.field_key === 'examiner_name' && user.name) {
-          prefill[field.field_key] = user.name;
-        }
-        if (field.field_key === 'whatsapp_contact' && user.phone_number) {
-          prefill[field.field_key] = user.phone_number;
-        }
+        if (field.type === 'email' && user.email) prefill[field.field_key] = user.email;
+        if (field.field_key === 'full_name' && user.name) prefill[field.field_key] = user.name;
+        if (field.field_key === 'examiner_name' && user.name) prefill[field.field_key] = user.name;
+        if (field.field_key === 'whatsapp_contact' && user.phone_number) prefill[field.field_key] = user.phone_number;
       }
     }
     setResponses(prefill);
@@ -56,35 +46,18 @@ export default function FormModal({ form, onClose }) {
   // Lock body scroll & close on Escape
   useEffect(() => {
     const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
-    const blockScroll = (e) => e.preventDefault();
-    document.addEventListener('keydown', handleKey);
-    document.addEventListener('wheel', blockScroll, { passive: false });
     document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKey);
     return () => {
       document.removeEventListener('keydown', handleKey);
-      document.removeEventListener('wheel', blockScroll);
       document.body.style.overflow = '';
     };
   }, [onClose]);
 
-  // Detect if description overflows 3 lines
-  useEffect(() => {
-    if (descRef.current) {
-      setDescClamped(descRef.current.scrollHeight > descRef.current.clientHeight + 1);
-    }
-  }, [form?._id, form?.description]);
-
-  const handleModalWheel = (e) => {
-    e.stopPropagation();
-    if (bodyRef.current) bodyRef.current.scrollTop += e.deltaY;
-  };
-
-  // Helper: check if a field is the examiner multi-select slot field.
-  // Only applies to radio fields whose options were injected from exam_slots.
+  // Multi-select slot detection
   const examSlots = form?.exam_slots || [];
   const isMultiSelectField = (field) => {
     if (!isExaminer || field.type !== 'radio' || !field.options?.length) return false;
-    // Match when the options are exactly the exam_slots (injected by backend)
     if (examSlots.length === 0) return false;
     return examSlots.length === field.options.length && examSlots.every((s, i) => s === field.options[i]);
   };
@@ -139,10 +112,7 @@ export default function FormModal({ form, onClose }) {
       const paymentUrl = result?.submission?.payment_link_url;
       if (paymentUrl) {
         setPaymentLinkUrl(paymentUrl);
-        // Auto-redirect to payment link after a brief delay
-        setTimeout(() => {
-          window.open(paymentUrl, '_blank');
-        }, 1500);
+        setTimeout(() => { window.open(paymentUrl, '_blank'); }, 1500);
       }
       setSubmitted(true);
     } catch (err) {
@@ -152,6 +122,28 @@ export default function FormModal({ form, onClose }) {
     }
   };
 
+  /* ── Accordion toggle row ── */
+  const AccordionToggle = ({ label, expanded, onToggle, accentColor = 'text-text' }) => (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="w-full flex items-center justify-between py-3 text-left cursor-pointer group/acc"
+    >
+      <span className={`text-sm font-semibold ${accentColor}`}>{label}</span>
+      <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
+        expanded ? 'bg-primary/10' : 'bg-surface-dim group-hover/acc:bg-primary/5'
+      }`}>
+        <svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          className={`text-text-tertiary transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </div>
+    </button>
+  );
+
   const modal = (
     <div className="fixed inset-0 z-999">
       <div
@@ -159,105 +151,86 @@ export default function FormModal({ form, onClose }) {
         onClick={onClose}
       />
 
-      <div className="absolute inset-0 flex items-center justify-center p-4 sm:p-6">
-        <div className="w-full flex items-center justify-center">
-          <div
-            className="relative w-full max-w-lg max-h-[85vh] bg-white rounded-2xl shadow-2xl overflow-clip animate-modal-content flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-            onWheel={handleModalWheel}
+      <div className="absolute inset-0 flex items-end sm:items-center justify-center sm:p-6">
+        <div
+          className="relative w-full sm:max-w-lg max-h-[92vh] sm:max-h-[85vh] bg-white sm:rounded-2xl rounded-t-2xl shadow-2xl overflow-hidden animate-modal-content flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* ── Close button ── */}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close form"
+            className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-sm hover:bg-white shadow-sm transition-colors cursor-pointer"
           >
-            {/* Close button */}
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Close form"
-              className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-sm hover:bg-white shadow-sm transition-colors cursor-pointer"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
 
+          {/* ── Single scroll container for everything ── */}
+          <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain" data-lenis-prevent>
             {/* Banner */}
             {form.banner_url && (
               <div className="w-full flex-shrink-0" style={{ aspectRatio: '18/7' }}>
-                <img
-                  src={form.banner_url}
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
+                <img src={form.banner_url} alt="" className="w-full h-full object-cover" />
               </div>
             )}
 
-            {/* Header */}
-            <div className={`px-5 sm:px-6 pt-6 pb-4 ${isExaminer ? 'bg-purple-500/5' : 'bg-primary/5'}`}>
+            {/* Compact header: badge + title only */}
+            <div className={`px-5 sm:px-6 pt-5 pb-3 ${isExaminer ? 'bg-purple-500/5' : 'bg-primary/5'}`}>
               <span className={`inline-block text-[10px] sm:text-xs font-medium px-2 py-0.5 rounded-full mb-2 ${
                 isExaminer ? 'text-purple-600 bg-purple-500/10' : 'text-primary bg-primary/10'
               }`}>
                 {template?.name || 'Form'}
               </span>
-              <h2 className="text-lg sm:text-xl font-bold text-text">{form.title}</h2>
-              {form.description && (
-                <div className="mt-2">
-                  <p
-                    ref={descRef}
-                    className={`text-xs sm:text-sm text-text-secondary leading-relaxed ${
-                      !descExpanded ? 'line-clamp-3' : ''
-                    }`}
-                  >
-                    {form.description}
-                  </p>
-                  {(descClamped || descExpanded) && (
-                    <button
-                      type="button"
-                      onClick={() => setDescExpanded((prev) => !prev)}
-                      className={`text-xs font-medium mt-1 cursor-pointer ${
-                        isExaminer ? 'text-purple-600' : 'text-primary'
-                      }`}
-                    >
-                      {descExpanded ? 'Show less' : 'Read more'}
-                    </button>
-                  )}
-                </div>
-              )}
+              <h2 className="text-base sm:text-lg font-bold text-text leading-snug pr-8">{form.title}</h2>
             </div>
 
-            {/* Exam Process (collapsible) */}
-            {form.exam_process && (
-              <div className="px-5 sm:px-6 border-b border-border/40">
-                <button
-                  type="button"
-                  onClick={() => setExamProcessExpanded((prev) => !prev)}
-                  className="w-full flex items-center justify-between py-3 text-left cursor-pointer"
-                >
-                  <span className="text-sm font-semibold text-text">Exam Process</span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className={`text-text-tertiary transition-transform ${examProcessExpanded ? 'rotate-180' : ''}`}
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </button>
-                {examProcessExpanded && (
-                  <div className="pb-4">
-                    <p className="text-xs sm:text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">
-                      {form.exam_process}
-                    </p>
+            {/* ── Info accordions (description + exam process) ── */}
+            {(hasDescription || hasExamProcess) && (
+              <div className="px-5 sm:px-6 border-b border-border/40 divide-y divide-border/30">
+                {/* Description accordion */}
+                {hasDescription && (
+                  <div>
+                    <AccordionToggle
+                      label="About this Exam"
+                      expanded={descExpanded}
+                      onToggle={() => setDescExpanded((p) => !p)}
+                    />
+                    {descExpanded && (
+                      <div className="pb-3 -mt-1">
+                        <p className="text-xs sm:text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">
+                          {form.description}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Exam Process accordion */}
+                {hasExamProcess && (
+                  <div>
+                    <AccordionToggle
+                      label="Exam Process"
+                      expanded={examProcessExpanded}
+                      onToggle={() => setExamProcessExpanded((p) => !p)}
+                    />
+                    {examProcessExpanded && (
+                      <div className="pb-3 -mt-1">
+                        <p className="text-xs sm:text-sm text-text-secondary leading-relaxed whitespace-pre-wrap">
+                          {form.exam_process}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
             )}
 
-            {/* Body */}
-            <div ref={bodyRef} className="flex-1 overflow-y-auto px-5 sm:px-6 py-5" data-lenis-prevent>
+            {/* ── Form body ── */}
+            <div className="px-5 sm:px-6 py-5">
               {submitted ? (
                 <div className="text-center py-8">
                   <div className="w-14 h-14 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
