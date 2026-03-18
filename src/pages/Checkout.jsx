@@ -209,48 +209,45 @@ export default function Checkout() {
   );
 }
 
-function launchZohoPayment(paymentSessionId, amount) {
-  return new Promise((resolve) => {
-    try {
-      const zpay = new window.ZPayments({
-        account_id: import.meta.env.VITE_ZOHO_ACCOUNT_ID,
-        domain: 'IN',
-        otherOptions: {
-          api_key: import.meta.env.VITE_ZOHO_API_KEY,
-        },
-      });
+async function launchZohoPayment(paymentSessionId, amount) {
+  let zpay;
+  try {
+    zpay = new window.ZPayments({
+      account_id: import.meta.env.VITE_ZOHO_ACCOUNT_ID,
+      domain: 'IN',
+      otherOptions: {
+        api_key: import.meta.env.VITE_ZOHO_API_KEY,
+      },
+    });
 
-      zpay.requestPaymentMethod({
-        payments_session_id: paymentSessionId,
-        amount: String(amount),
-        currency_code: 'INR',
-        transaction_type: 'payment',
-      }).then((data) => {
-        if (data && data.payment_id) {
-          resolve({
-            status: 'success',
-            payment_id: data.payment_id,
-            payment_session_id: data.payment_session_id || paymentSessionId,
-            signature: data.signature || null,
-          });
-        } else {
-          resolve({ status: 'cancelled' });
-        }
-      }).catch((err) => {
-        if (err?.code === 'PAYMENT_CANCELLED' || err?.message?.includes('cancel')) {
-          resolve({ status: 'cancelled' });
-        } else {
-          resolve({
-            status: 'failed',
-            error_message: err?.message || 'Payment failed',
-          });
-        }
-      });
-    } catch (err) {
-      resolve({
-        status: 'failed',
-        error_message: 'Failed to initialize payment. Please try again.',
-      });
+    const data = await zpay.requestPaymentMethod({
+      payments_session_id: paymentSessionId,
+      amount: String(amount),
+      currency_code: 'INR',
+    });
+
+    if (data && data.payment_id) {
+      return {
+        status: 'success',
+        payment_id: data.payment_id,
+        payment_session_id: data.payment_session_id || paymentSessionId,
+        signature: data.signature || null,
+      };
     }
-  });
+    return { status: 'cancelled' };
+  } catch (err) {
+    if (err?.code === 'widget_closed') {
+      return { status: 'cancelled' };
+    }
+    return {
+      status: 'failed',
+      error_message: err?.message || 'Payment failed',
+    };
+  } finally {
+    try {
+      if (zpay) await zpay.close();
+    } catch {
+      // Widget may already be closed
+    }
+  }
 }
