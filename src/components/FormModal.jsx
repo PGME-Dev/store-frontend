@@ -13,6 +13,9 @@ export default function FormModal({ form, onClose }) {
   const [submitError, setSubmitError] = useState('');
   const [paymentLinkUrl, setPaymentLinkUrl] = useState(null);
   const [examProcessExpanded, setExamProcessExpanded] = useState(false);
+  const [descExpanded, setDescExpanded] = useState(false);
+  const [descClamped, setDescClamped] = useState(false);
+  const descRef = useRef(null);
 
   const template = form?.template;
   const fields = template?.fields || [];
@@ -26,6 +29,8 @@ export default function FormModal({ form, onClose }) {
     setSubmitting(false);
     setPaymentLinkUrl(null);
     setExamProcessExpanded(false);
+    setDescExpanded(false);
+    setDescClamped(false);
 
     // Build pre-fill from user profile
     const prefill = {};
@@ -62,14 +67,26 @@ export default function FormModal({ form, onClose }) {
     };
   }, [onClose]);
 
+  // Detect if description overflows 3 lines
+  useEffect(() => {
+    if (descRef.current) {
+      setDescClamped(descRef.current.scrollHeight > descRef.current.clientHeight + 1);
+    }
+  }, [form?._id, form?.description]);
+
   const handleModalWheel = (e) => {
     e.stopPropagation();
     if (bodyRef.current) bodyRef.current.scrollTop += e.deltaY;
   };
 
-  // Helper: check if a field is the examiner multi-select slot field
+  // Helper: check if a field is the examiner multi-select slot field.
+  // Only applies to radio fields whose options were injected from exam_slots.
+  const examSlots = form?.exam_slots || [];
   const isMultiSelectField = (field) => {
-    return isExaminer && field.type === 'radio' && field.options?.length > 0;
+    if (!isExaminer || field.type !== 'radio' || !field.options?.length) return false;
+    // Match when the options are exactly the exam_slots (injected by backend)
+    if (examSlots.length === 0) return false;
+    return examSlots.length === field.options.length && examSlots.every((s, i) => s === field.options[i]);
   };
 
   const handleChange = (fieldKey, value) => {
@@ -182,7 +199,27 @@ export default function FormModal({ form, onClose }) {
               </span>
               <h2 className="text-lg sm:text-xl font-bold text-text">{form.title}</h2>
               {form.description && (
-                <p className="text-xs sm:text-sm text-text-secondary mt-2 leading-relaxed">{form.description}</p>
+                <div className="mt-2">
+                  <p
+                    ref={descRef}
+                    className={`text-xs sm:text-sm text-text-secondary leading-relaxed ${
+                      !descExpanded ? 'line-clamp-3' : ''
+                    }`}
+                  >
+                    {form.description}
+                  </p>
+                  {(descClamped || descExpanded) && (
+                    <button
+                      type="button"
+                      onClick={() => setDescExpanded((prev) => !prev)}
+                      className={`text-xs font-medium mt-1 cursor-pointer ${
+                        isExaminer ? 'text-purple-600' : 'text-primary'
+                      }`}
+                    >
+                      {descExpanded ? 'Show less' : 'Read more'}
+                    </button>
+                  )}
+                </div>
               )}
             </div>
 

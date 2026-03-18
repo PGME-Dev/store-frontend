@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getSessions } from '../api/sessions';
 import { getFormsBySubject } from '../api/forms';
 import { usePurchase } from '../context/PurchaseContext';
 import { useAuth } from '../context/AuthContext';
 import { useSubject } from '../context/SubjectContext';
+import { slugify } from '../utils/slugify';
 import { formatPrice } from '../components/PriceDisplay';
 import SessionModal from '../components/SessionModal';
 import FormCard from '../components/FormCard';
@@ -146,18 +148,38 @@ function SessionCard({ session, purchased, onClick }) {
 export default function SessionList() {
   const { isSessionPurchased } = usePurchase();
   const { isAuthenticated } = useAuth();
-  const { subjects, subjectId, selectedSubject, selectSubject } = useSubject();
+  const { subjects, subjectId, selectedSubject, selectSubject, selectSubjectBySlug } = useSubject();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedSession, setSelectedSession] = useState(null);
   const [specialtyOpen, setSpecialtyOpen] = useState(false);
   const specialtyRef = useRef(null);
+  const formsSectionRef = useRef(null);
 
   // Forms state
   const [forms, setForms] = useState([]);
   const [selectedForm, setSelectedForm] = useState(null);
   const [formsLoading, setFormsLoading] = useState(false);
+
+  // Track if we've already applied the URL params (once)
+  const urlAppliedRef = useRef(false);
+  const pendingFormIdRef = useRef(null);
+
+  // On mount: read ?subject= param and select the subject
+  useEffect(() => {
+    if (urlAppliedRef.current || subjects.length === 0) return;
+    const subjectSlug = searchParams.get('subject');
+    if (subjectSlug) {
+      selectSubjectBySlug(subjectSlug);
+    }
+    const formId = searchParams.get('form');
+    if (formId) {
+      pendingFormIdRef.current = formId;
+    }
+    urlAppliedRef.current = true;
+  }, [subjects, searchParams, selectSubjectBySlug]);
 
   // Close specialty dropdown on outside click
   useEffect(() => {
@@ -187,10 +209,56 @@ export default function SessionList() {
     if (!subjectId) return;
     setFormsLoading(true);
     getFormsBySubject(subjectId)
-      .then((result) => setForms(result || []))
+      .then((result) => {
+        const loadedForms = result || [];
+        setForms(loadedForms);
+
+        // Auto-open form from URL param (match by slug)
+        if (pendingFormIdRef.current && loadedForms.length > 0) {
+          const match = loadedForms.find((f) => f.slug === pendingFormIdRef.current || f._id === pendingFormIdRef.current);
+          if (match) {
+            setSelectedForm(match);
+            setTimeout(() => {
+              formsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+          }
+          pendingFormIdRef.current = null;
+        }
+      })
       .catch(() => setForms([]))
       .finally(() => setFormsLoading(false));
   }, [subjectId]);
+
+  // Update URL when subject changes
+  const handleSubjectSelect = (subject) => {
+    selectSubject(subject);
+    setSpecialtyOpen(false);
+    const newParams = new URLSearchParams();
+    newParams.set('subject', slugify(subject.name));
+    setSearchParams(newParams, { replace: true });
+  };
+
+  // Open form and update URL
+  const handleFormClick = (form) => {
+    setSelectedForm(form);
+    if (selectedSubject) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set('subject', slugify(selectedSubject.name));
+      newParams.set('form', form.slug || form._id);
+      setSearchParams(newParams, { replace: true });
+    }
+  };
+
+  // Close form and remove form param from URL
+  const handleFormClose = () => {
+    setSelectedForm(null);
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('form');
+    if (selectedSubject) {
+      newParams.set('subject', slugify(selectedSubject.name));
+    }
+    setSearchParams(newParams, { replace: true });
+  };
 
   if (loading) {
     return (
@@ -273,7 +341,7 @@ export default function SessionList() {
                     <button
                       key={id}
                       type="button"
-                      onClick={() => { selectSubject(subject); setSpecialtyOpen(false); }}
+                      onClick={() => handleSubjectSelect(subject)}
                       className={`flex items-center gap-3 px-4 py-3 sm:py-3.5 rounded-xl text-left transition-all duration-150 cursor-pointer border ${
                         isActive
                           ? 'bg-primary/5 border-primary/20 text-primary'
@@ -361,7 +429,7 @@ export default function SessionList() {
 
       {/* Registration Forms section */}
       {forms.length > 0 && !formsLoading && (
-        <div className="mt-12 sm:mt-16">
+        <div ref={formsSectionRef} id="registration-forms" className="mt-12 sm:mt-16 scroll-mt-6">
           <div className="mb-5 sm:mb-6">
             <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-2">Register</p>
             <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-text tracking-tight">
@@ -376,7 +444,7 @@ export default function SessionList() {
               <FormCard
                 key={form._id}
                 form={form}
-                onClick={() => setSelectedForm(form)}
+                onClick={() => handleFormClick(form)}
               />
             ))}
           </div>
@@ -395,7 +463,7 @@ export default function SessionList() {
       {selectedForm && (
         <FormModal
           form={selectedForm}
-          onClose={() => setSelectedForm(null)}
+          onClose={handleFormClose}
         />
       )}
     </div>
