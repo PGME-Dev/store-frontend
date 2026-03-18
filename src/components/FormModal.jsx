@@ -1,17 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { submitForm } from '../api/forms';
 
 export default function FormModal({ form, onClose }) {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const scrollRef = useRef(null);
   const [responses, setResponses] = useState({});
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState('');
-  const [paymentLinkUrl, setPaymentLinkUrl] = useState(null);
   const [examProcessExpanded, setExamProcessExpanded] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
 
@@ -27,7 +28,6 @@ export default function FormModal({ form, onClose }) {
     setErrors({});
     setSubmitError('');
     setSubmitting(false);
-    setPaymentLinkUrl(null);
     setExamProcessExpanded(false);
     setDescExpanded(false);
 
@@ -105,15 +105,28 @@ export default function FormModal({ form, onClose }) {
     e.preventDefault();
     if (!validate()) return;
 
+    // All forms require login
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: window.location.pathname + window.location.search } });
+      return;
+    }
+
     setSubmitting(true);
     setSubmitError('');
     try {
       const result = await submitForm(form._id, responses);
-      const paymentUrl = result?.submission?.payment_link_url;
-      if (paymentUrl) {
-        setPaymentLinkUrl(paymentUrl);
-        setTimeout(() => { window.open(paymentUrl, '_blank'); }, 1500);
+      const submission = result?.submission;
+
+      // Paid form: redirect to checkout
+      if (submission?.payment_required) {
+        onClose();
+        navigate(`/checkout/forms/${form._id}`, {
+          state: { submissionId: submission._id, formTitle: form.title, paymentAmount: submission.payment_amount },
+        });
+        return;
       }
+
+      // Free form: show success
       setSubmitted(true);
     } catch (err) {
       setSubmitError(err.response?.data?.message || err.message || 'Failed to submit form');
@@ -231,7 +244,28 @@ export default function FormModal({ form, onClose }) {
 
             {/* ── Form body ── */}
             <div className="px-5 sm:px-6 py-5">
-              {submitted ? (
+              {!isAuthenticated ? (
+                <div className="text-center py-8">
+                  <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-text mb-2">Login Required</h3>
+                  <p className="text-sm text-text-secondary mb-4">Please log in to fill out this form.</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      navigate('/login', { state: { from: window.location.pathname + window.location.search } });
+                    }}
+                    className="px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors cursor-pointer"
+                  >
+                    Log In
+                  </button>
+                </div>
+              ) : submitted ? (
                 <div className="text-center py-8">
                   <div className="w-14 h-14 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-success">
@@ -240,33 +274,13 @@ export default function FormModal({ form, onClose }) {
                   </div>
                   <h3 className="text-lg font-semibold text-text mb-2">Form Submitted!</h3>
                   <p className="text-sm text-text-secondary mb-4">Thank you for your submission. We will get back to you soon.</p>
-
-                  {paymentLinkUrl && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-4 mb-6">
-                      <p className="text-sm font-medium text-amber-800 mb-3">Payment Required</p>
-                      <p className="text-xs text-amber-700 mb-3">
-                        Please complete your payment of <span className="font-semibold">{'\u20B9'}{form.payment_amount}</span> to finalize your registration.
-                      </p>
-                      <a
-                        href={paymentLinkUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block px-6 py-2.5 bg-amber-600 text-white text-sm font-semibold rounded-xl hover:bg-amber-700 transition-colors"
-                      >
-                        Pay Now
-                      </a>
-                    </div>
-                  )}
-
-                  {!paymentLinkUrl && (
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors cursor-pointer"
-                    >
-                      Close
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primary/90 transition-colors cursor-pointer"
+                  >
+                    Close
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -358,7 +372,7 @@ export default function FormModal({ form, onClose }) {
                   {form.payment_amount > 0 && (
                     <div className="pt-2 border-t border-border/40">
                       <p className="text-xs text-text-tertiary">
-                        This form requires a non-refundable payment of <span className="font-semibold text-text-secondary">{'\u20B9'}{form.payment_amount}</span>. A payment link will be provided after submission.
+                        This form requires a non-refundable payment of <span className="font-semibold text-text-secondary">{'\u20B9'}{form.payment_amount}</span>. You will be redirected to checkout after submission.
                       </p>
                     </div>
                   )}

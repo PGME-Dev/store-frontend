@@ -8,6 +8,7 @@ const TYPE_CONFIG = {
   session: { label: 'Session', color: 'bg-accent/10 text-accent' },
   book:    { label: 'eBook',   color: 'bg-success/10 text-success' },
   ebook:   { label: 'eBook',   color: 'bg-success/10 text-success' },
+  form:    { label: 'Form Registration', color: 'bg-amber-500/10 text-amber-600' },
 };
 
 const STATUS_CONFIG = {
@@ -97,6 +98,12 @@ export default function Invoices() {
         sub: s.faculty_name ? `By ${s.faculty_name}` : null,
       };
     });
+    (data?.form_registrations || []).forEach((f) => {
+      map[f.purchase_id] = {
+        name: f.name || 'Form Registration',
+        sub: f.subject || null,
+      };
+    });
     return map;
   }, [data]);
 
@@ -144,6 +151,7 @@ export default function Invoices() {
     { value: 'package', label: 'Packages' },
     { value: 'session', label: 'Sessions' },
     { value: 'ebook',   label: 'eBooks' },
+    { value: 'form',    label: 'Forms' },
   ];
 
   return (

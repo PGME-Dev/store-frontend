@@ -9,3 +9,26 @@ export async function submitForm(formId, responses) {
   const { data } = await client.post(`/forms/${formId}/submit`, { responses });
   return data.data;
 }
+
+export async function getFormById(formId) {
+  const { data } = await client.get(`/forms/${formId}`);
+  return data.data?.form || null;
+}
+
+export async function createFormPaymentSession(formId, submissionId, billingAddress) {
+  const { data } = await client.post('/form-payments/create-order', {
+    form_id: formId,
+    submission_id: submissionId,
+    billing_address: billingAddress,
+  });
+  return data.data;
+}
+
+export async function verifyFormPayment(paymentSessionId, paymentId, signature) {
+  const { data } = await client.post('/form-payments/verify', {
+    payment_session_id: paymentSessionId,
+    payment_id: paymentId,
+    signature,
+  });
+  return data.data;
+}

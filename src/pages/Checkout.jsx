@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getPackageById, createPackagePaymentSession, verifyPackagePayment } from '../api/packages';
 import { getEbookById, createEbookPaymentSession, verifyEbookPayment } from '../api/ebooks';
 import { getSessionById, createSessionPaymentSession, verifySessionPayment } from '../api/sessions';
+import { getFormById, createFormPaymentSession, verifyFormPayment } from '../api/forms';
 import BillingAddressForm from '../components/BillingAddressForm';
 import { formatPrice } from '../components/PriceDisplay';
 
@@ -11,6 +12,10 @@ export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
   const tierIndex = location.state?.tierIndex ?? 0;
+  // Form checkout passes submission details via navigation state
+  const submissionId = location.state?.submissionId;
+  const formTitle = location.state?.formTitle;
+  const formPaymentAmount = location.state?.paymentAmount;
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,6 +35,24 @@ export default function Checkout() {
         } else if (type === 'sessions') {
           result = await getSessionById(id);
           setProduct({ ...(result.session || result), _type: 'sessions' });
+        } else if (type === 'forms') {
+          // Form checkout requires submissionId (passed via navigation state from FormModal)
+          if (!submissionId) {
+            setError('Missing submission details. Please fill the form again.');
+            setLoading(false);
+            return;
+          }
+          // Fetch form details from API (survives page refresh)
+          const form = await getFormById(id);
+          if (form) {
+            setProduct({
+              _type: 'forms',
+              title: form.title || 'Form Registration',
+              price: form.payment_amount || formPaymentAmount || 0,
+            });
+          } else {
+            setError('Form not found');
+          }
         }
       } catch {
         setError('Failed to load product details');
@@ -47,6 +70,7 @@ export default function Checkout() {
       return product.sale_price || product.price;
     }
     if (product._type === 'ebooks') return product.effective_price || product.price;
+    if (product._type === 'forms') return product.price;
     return product.price;
   };
 
@@ -69,6 +93,8 @@ export default function Checkout() {
         sessionData = await createEbookPaymentSession(id, billingAddress);
       } else if (type === 'sessions') {
         sessionData = await createSessionPaymentSession(id, billingAddress);
+      } else if (type === 'forms') {
+        sessionData = await createFormPaymentSession(id, submissionId, billingAddress);
       }
 
       const paymentSessionId = sessionData.payment_session_id;
@@ -84,6 +110,8 @@ export default function Checkout() {
           verification = await verifyEbookPayment(paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature);
         } else if (type === 'sessions') {
           verification = await verifySessionPayment(id, paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature);
+        } else if (type === 'forms') {
+          verification = await verifyFormPayment(paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature);
         }
 
         navigate('/payment/success', {
