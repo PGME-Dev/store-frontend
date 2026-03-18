@@ -117,8 +117,12 @@ export default function FormModal({ form, onClose }) {
       const result = await submitForm(form._id, responses);
       const submission = result?.submission;
 
+      if (!submission?._id) {
+        throw new Error('Form submission failed. Please try again.');
+      }
+
       // Paid form: redirect to checkout
-      if (submission?.payment_required) {
+      if (submission.payment_required) {
         onClose();
         navigate(`/checkout/forms/${form._id}`, {
           state: { submissionId: submission._id, formTitle: form.title, paymentAmount: submission.payment_amount },

@@ -97,6 +97,10 @@ export default function Checkout() {
         sessionData = await createFormPaymentSession(id, submissionId, billingAddress);
       }
 
+      if (!sessionData?.payment_session_id) {
+        throw new Error('Failed to create payment session. Please try again.');
+      }
+
       const paymentSessionId = sessionData.payment_session_id;
       const amount = sessionData.amount;
 
@@ -124,6 +128,8 @@ export default function Checkout() {
         });
       } else if (paymentResult.status === 'failed') {
         setError(`Payment failed: ${paymentResult.error_message || 'Please try again'}`);
+      } else if (paymentResult.status === 'cancelled') {
+        // User closed the payment dialog — reset silently, finally block handles setPaying
       }
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Payment failed';
