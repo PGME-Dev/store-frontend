@@ -10,6 +10,18 @@ export async function submitForm(formId, responses) {
   return data.data;
 }
 
+export async function getAllForms(search) {
+  const params = {};
+  if (search) params.search = search;
+  const { data } = await client.get('/forms/all', { params });
+  return data.data?.forms || [];
+}
+
+export async function getMySubmissions() {
+  const { data } = await client.get('/forms/my-submissions');
+  return data.data?.submissions || [];
+}
+
 export async function getFormById(formId) {
   const { data } = await client.get(`/forms/${formId}`);
   return data.data?.form || null;

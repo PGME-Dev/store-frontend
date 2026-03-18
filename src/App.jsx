@@ -15,6 +15,7 @@ import SessionDetail from './pages/SessionDetail';
 import Checkout from './pages/Checkout';
 import PaymentSuccess from './pages/PaymentSuccess';
 import FormPaymentSuccess from './pages/FormPaymentSuccess';
+import FormSubmissions from './pages/FormSubmissions';
 import MyPurchases from './pages/MyPurchases';
 import Invoices from './pages/Invoices';
 import About from './pages/About';
@@ -59,6 +60,7 @@ export default function App() {
         <Route path="terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="refund-policy" element={<RefundPolicy />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="forms" element={<FormSubmissions />} />
         <Route path="my-purchases" element={<ProtectedRoute><MyPurchases /></ProtectedRoute>} />
         <Route path="invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
         </Route>

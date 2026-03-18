@@ -40,6 +40,7 @@ export default function Layout() {
                   <Link to="/packages" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Course Packages</Link>
                   <Link to="/ebooks" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">eBooks</Link>
                   <Link to="/sessions" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Live Sessions</Link>
+                  <Link to="/forms" className="block text-sm text-text-secondary hover:text-primary no-underline transition-colors">Exam Forms</Link>
                 </div>
               </div>
 
