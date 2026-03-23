@@ -21,6 +21,14 @@ export default function Checkout() {
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState('');
+  // [TAX BREAKDOWN CHANGE - 2026-03-23]
+  // Added taxInfo state to store the base_amount and total (amount) returned by
+  // the create-order API. Previously only showed "* GST (18%) will be added at payment"
+  // as a disclaimer, causing confusion when users saw a higher amount on the Zoho widget.
+  // Now we show an actual breakdown (base + GST = total) after address submission.
+  // To rollback: remove taxInfo state, remove the setTaxInfo call in handleAddressSubmit,
+  // and revert the Order Summary JSX to the old static disclaimer.
+  const [taxInfo, setTaxInfo] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -104,6 +112,16 @@ export default function Checkout() {
       const paymentSessionId = sessionData.payment_session_id;
       const amount = sessionData.amount;
 
+      // [TAX BREAKDOWN] Capture base_amount and total from the create-order response
+      // so we can show the GST breakdown in the order summary while Zoho widget is open.
+      if (sessionData.base_amount != null && sessionData.amount != null) {
+        setTaxInfo({
+          base: sessionData.base_amount,
+          total: sessionData.amount,
+          tax: Math.round((sessionData.amount - sessionData.base_amount) * 100) / 100,
+        });
+      }
+
       const paymentResult = await launchZohoPayment(paymentSessionId, amount);
 
       if (paymentResult.status === 'success') {
@@ -183,16 +201,49 @@ export default function Checkout() {
             <div className="bg-white rounded-xl shadow-sm border border-border p-5 sm:p-6 lg:p-7 lg:sticky lg:top-24">
               <h3 className="text-sm sm:text-base font-bold text-text mb-4 sm:mb-5">Order Summary</h3>
 
+              {/* [TAX BREAKDOWN CHANGE - 2026-03-23]
+                * Previously showed only the base price and a disclaimer "* GST (18%) will be added at payment".
+                * Now, once the payment session is created (after address submit), we show a proper breakdown:
+                * base price + GST (18%) = total. Before address submission, we still show the base price
+                * with the disclaimer since we don't know the exact tax amount yet (Zoho calculates it).
+                * To rollback: replace this entire block with the old static markup:
+                *   <div className="space-y-3">
+                *     <div className="flex items-start justify-between gap-3 py-3 sm:py-3.5 border-b border-border">
+                *       <span className="text-xs sm:text-sm text-text-secondary leading-snug">{getProductName()}</span>
+                *       <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">{formatPrice(getDisplayPrice())}</span>
+                *     </div>
+                *   </div>
+                *   <p className="text-[11px] sm:text-xs text-text-tertiary mt-3 sm:mt-4">
+                *     * GST (18%) will be added at payment
+                *   </p>
+                */}
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3 py-3 sm:py-3.5 border-b border-border">
                   <span className="text-xs sm:text-sm text-text-secondary leading-snug">{getProductName()}</span>
                   <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">{formatPrice(getDisplayPrice())}</span>
                 </div>
-              </div>
 
-              <p className="text-[11px] sm:text-xs text-text-tertiary mt-3 sm:mt-4">
-                * GST (18%) will be added at payment
-              </p>
+                {taxInfo ? (
+                  <>
+                    <div className="flex items-center justify-between py-1.5">
+                      <span className="text-xs sm:text-sm text-text-tertiary">Base Price</span>
+                      <span className="text-xs sm:text-sm text-text-secondary">{formatPrice(taxInfo.base)}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-1.5">
+                      <span className="text-xs sm:text-sm text-text-tertiary">GST (18%)</span>
+                      <span className="text-xs sm:text-sm text-text-secondary">{formatPrice(taxInfo.tax)}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 sm:py-2.5 border-t border-dashed border-border">
+                      <span className="text-sm sm:text-base font-bold text-text">Total</span>
+                      <span className="text-sm sm:text-base font-bold text-primary">{formatPrice(taxInfo.total)}</span>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-[11px] sm:text-xs text-text-tertiary mt-1">
+                    * GST (18%) will be added at payment
+                  </p>
+                )}
+              </div>
 
               <div className="flex items-center gap-2.5 mt-4 sm:mt-5 p-3 sm:p-3.5 bg-surface-dim rounded-lg">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-success shrink-0">
