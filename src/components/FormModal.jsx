@@ -121,12 +121,15 @@ export default function FormModal({ form, onClose }) {
         throw new Error('Form submission failed. Please try again.');
       }
 
-      // Paid form: redirect to checkout
+      // Paid form: redirect to checkout with submissionId in URL (survives page reload/redirect)
       if (submission.payment_required) {
         onClose();
-        navigate(`/checkout/forms/${form._id}`, {
-          state: { submissionId: submission._id, formTitle: form.title, paymentAmount: submission.payment_amount },
+        const checkoutParams = new URLSearchParams({
+          submission_id: submission._id,
+          form_title: form.title,
+          payment_amount: String(submission.payment_amount || ''),
         });
+        navigate(`/checkout/forms/${form._id}?${checkoutParams.toString()}`);
         return;
       }
 

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { getPackageById, createPackagePaymentSession, verifyPackagePayment } from '../api/packages';
 import { getEbookById, createEbookPaymentSession, verifyEbookPayment } from '../api/ebooks';
 import { getSessionById, createSessionPaymentSession, verifySessionPayment } from '../api/sessions';
-import { getFormById, createFormPaymentSession, verifyFormPayment } from '../api/forms';
+import { getFormById, createFormPaymentSession } from '../api/forms';
 import BillingAddressForm from '../components/BillingAddressForm';
 import { formatPrice } from '../components/PriceDisplay';
 
@@ -11,11 +11,13 @@ export default function Checkout() {
   const { type, id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const tierIndex = location.state?.tierIndex ?? 0;
-  // Form checkout passes submission details via navigation state
-  const submissionId = location.state?.submissionId;
-  const formTitle = location.state?.formTitle;
-  const formPaymentAmount = location.state?.paymentAmount;
+  // Form checkout: read from URL search params (survives page reload / bank redirects)
+  // Falls back to location.state for backward compat
+  const submissionId = searchParams.get('submission_id') || location.state?.submissionId;
+  const formTitle = searchParams.get('form_title') || location.state?.formTitle;
+  const formPaymentAmount = searchParams.get('payment_amount') || location.state?.paymentAmount;
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -124,6 +126,19 @@ export default function Checkout() {
 
       const paymentResult = await launchZohoPayment(paymentSessionId, amount);
 
+      // Forms: webhook is the sole authority for payment confirmation.
+      // Navigate to a processing page that polls for webhook completion.
+      if (type === 'forms') {
+        const processingParams = new URLSearchParams({
+          submission_id: submissionId,
+          form_title: getProductName(),
+          outcome: paymentResult.status === 'success' ? 'success' : paymentResult.status,
+        });
+        navigate(`/forms/payment-processing?${processingParams.toString()}`, { replace: true });
+        return;
+      }
+
+      // Non-form products: frontend verification (existing flow)
       if (paymentResult.status === 'success') {
         let verification;
         if (type === 'packages') {
@@ -132,8 +147,6 @@ export default function Checkout() {
           verification = await verifyEbookPayment(paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature);
         } else if (type === 'sessions') {
           verification = await verifySessionPayment(id, paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature);
-        } else if (type === 'forms') {
-          verification = await verifyFormPayment(paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature);
         }
 
         navigate('/payment/success', {

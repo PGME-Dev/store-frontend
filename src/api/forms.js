@@ -44,3 +44,8 @@ export async function verifyFormPayment(paymentSessionId, paymentId, signature) 
   });
   return data.data;
 }
+
+export async function getFormPaymentStatus(submissionId) {
+  const { data } = await client.get(`/form-payments/status/${submissionId}`);
+  return data.data;
+}
