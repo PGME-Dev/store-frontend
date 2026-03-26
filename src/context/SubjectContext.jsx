@@ -35,7 +35,7 @@ export function SubjectProvider({ children }) {
           const selectionResult = await getUserSubjectSelection();
           const selections = selectionResult.selections || selectionResult || [];
           const primary = selections.find((s) => s.is_primary);
-          if (primary) {
+          if (primary && !urlClaimedRef.current) {
             const match = subjectList.find(
               (s) => (s._id || s.subject_id) === (primary.subject_id?._id || primary.subject_id)
             );
@@ -51,7 +51,7 @@ export function SubjectProvider({ children }) {
       }
 
       // Default to first subject
-      if (subjectList.length > 0 && !selectedSubject) {
+      if (subjectList.length > 0 && !selectedSubject && !urlClaimedRef.current) {
         setSelectedSubject(subjectList[0]);
       }
     } catch (err) {
