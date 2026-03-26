@@ -190,11 +190,13 @@ export default function SessionList() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch all sessions (not subject-filtered)
+  // Fetch sessions filtered by the selected subject
   useEffect(() => {
+    if (!subjectId) return;
+    setLoading(true);
     (async () => {
       try {
-        const result = await getSessions();
+        const result = await getSessions(subjectId);
         setSessions(result.sessions || result || []);
       } catch {
         setError('Failed to load sessions');
@@ -202,7 +204,7 @@ export default function SessionList() {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [subjectId]);
 
   // Fetch forms when subject changes
   useEffect(() => {

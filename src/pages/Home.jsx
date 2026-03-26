@@ -51,6 +51,7 @@ export default function Home() {
     if (!subjectId) return;
     setLoadingPkgs(true);
     setLoadingBooks(true);
+    setLoadingSessions(true);
     getPackages(subjectId)
       .then((r) => setPackages(r.packages || r || []))
       .catch(() => setPackages([]))
@@ -59,14 +60,13 @@ export default function Home() {
       .then((r) => setEbooks(r.books || r || []))
       .catch(() => setEbooks([]))
       .finally(() => setLoadingBooks(false));
-  }, [subjectId]);
-
-  useEffect(() => {
-    setLoadingSessions(true);
-    getSessions()
+    getSessions(subjectId)
       .then((r) => setSessions(r.sessions || r || []))
       .catch(() => setSessions([]))
       .finally(() => setLoadingSessions(false));
+  }, [subjectId]);
+
+  useEffect(() => {
     getBanners()
       .then((b) => {
         const sorted = (Array.isArray(b) ? b : []).sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
