@@ -76,8 +76,8 @@ export function AuthProvider({ children }) {
     // Exchange MSG91 access token for our JWT tokens (no device info sent)
     const result = await verifyWidget(msg91AccessToken);
 
-    // If this is a new user, don't log them in — they need to sign up via the app
-    if (result.user.is_new_user) {
+    // If this is a new user, no account was created on the backend — they must register via the app
+    if (result.registered === false || result.user?.is_new_user) {
       return { isNewUser: true };
     }
 

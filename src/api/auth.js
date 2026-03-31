@@ -11,8 +11,10 @@ export async function verifyWebToken(token) {
 
 export async function verifyWidget(accessToken) {
   // No device_id / device_name / fcm_token — keeps web-store out of device session tracking
+  // register_if_new: false — prevent creating ghost user records from the web store
   const { data } = await axios.post(`${API_BASE_URL}/auth/verify-widget`, {
     access_token: accessToken,
+    register_if_new: false,
   });
   return data.data;
 }

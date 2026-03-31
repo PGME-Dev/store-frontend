@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
 
-// TODO: Replace with actual Play Store link
-const PLAY_STORE_URL = '#';
-// TODO: Replace with actual App Store link
-const APP_STORE_URL = '#';
+const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.pgme.app';
+const APP_STORE_URL = 'https://apps.apple.com/in/app/pgme-medical-education/id6759380549';
 
 export default function Signup() {
   return (

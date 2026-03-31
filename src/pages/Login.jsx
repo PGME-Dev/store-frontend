@@ -2,10 +2,14 @@ import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.pgme.app';
+const APP_STORE_URL = 'https://apps.apple.com/in/app/pgme-medical-education/id6759380549';
+
 export default function Login() {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showNewUserModal, setShowNewUserModal] = useState(false);
 
   const { loginWithOTP } = useAuth();
   const navigate = useNavigate();
@@ -23,7 +27,7 @@ export default function Login() {
     try {
       const result = await loginWithOTP(phone);
       if (result.isNewUser) {
-        navigate('/signup', { replace: true });
+        setShowNewUserModal(true);
       } else {
         navigate(from, { replace: true });
       }
@@ -177,6 +181,68 @@ export default function Login() {
           </div>
         </div>
       </div>
+
+      {/* New User Modal */}
+      {showNewUserModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+            {/* Modal header */}
+            <div className="bg-[#0000C8] px-7 pt-8 pb-6 relative overflow-hidden">
+              <div className="absolute inset-0 opacity-15">
+                <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-white/20" />
+                <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-white/10" />
+              </div>
+              <div className="relative text-center">
+                <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mx-auto mb-4 shadow-sm">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0000C8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <line x1="19" y1="8" x2="19" y2="14" />
+                    <line x1="22" y1="11" x2="16" y2="11" />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-extrabold text-white font-display tracking-tight">Account Not Found</h2>
+                <p className="text-sm text-white/70 mt-1.5">This phone number is not registered yet</p>
+              </div>
+            </div>
+
+            {/* Modal body */}
+            <div className="px-7 py-6">
+              <p className="text-sm text-gray-600 text-center leading-relaxed mb-6">
+                To get started with PGME, please download our app and create your account. Once registered, you can use the web store to browse and purchase courses.
+              </p>
+
+              <div className="flex flex-col gap-3">
+                <a
+                  href={PLAY_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full py-3.5 px-6 text-sm font-semibold text-white bg-[#0000C8] rounded-xl no-underline transition-all duration-300 hover:bg-[#0000a0] hover:shadow-[0_4px_20px_rgba(0,0,200,0.3)]"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.199l2.807 1.626a1 1 0 0 1 0 1.732l-2.807 1.626L15.206 12l2.492-2.492zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+                  Download for Android
+                </a>
+                <a
+                  href={APP_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full py-3.5 px-6 text-sm font-semibold text-gray-900 bg-gray-100 rounded-xl no-underline transition-all duration-300 hover:bg-gray-200"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                  Download for iOS
+                </a>
+              </div>
+
+              <button
+                onClick={() => setShowNewUserModal(false)}
+                className="w-full mt-4 py-3 text-sm font-medium text-gray-500 bg-transparent border border-gray-200 rounded-xl cursor-pointer transition-all hover:bg-gray-50 hover:text-gray-700"
+              >
+                Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
