@@ -145,6 +145,7 @@ export default function SessionDetail() {
           </div>
 
           {/* Sidebar - Desktop sticky CTA */}
+          {/* TEMP HIDDEN: purchased state, price & buy now button
           {!session.is_free && (
             <div className="hidden lg:block">
               <div className="sticky top-24 bg-white rounded-xl border border-border p-6 shadow-md">
@@ -174,10 +175,12 @@ export default function SessionDetail() {
               </div>
             </div>
           )}
+          */}
         </div>
       </div>
 
       {/* Mobile sticky bottom CTA */}
+      {/* TEMP HIDDEN: purchased state, price & buy now button
       {!session.is_free && (
         <>
           {purchased ? (
@@ -203,6 +206,7 @@ export default function SessionDetail() {
           <div className="h-20 sm:h-24 lg:hidden" />
         </>
       )}
+      */}
     </div>
   );
 }

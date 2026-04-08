@@ -141,6 +141,7 @@ export default function EbookDetail() {
           </div>
 
           {/* Sidebar - Desktop sticky CTA */}
+          {/* TEMP HIDDEN: purchased state, price & buy now button
           <div className="hidden lg:block">
             <div className="sticky top-24 bg-white rounded-xl border border-border p-6 shadow-md">
               {purchased ? (
@@ -173,10 +174,12 @@ export default function EbookDetail() {
               )}
             </div>
           </div>
+          */}
         </div>
       </div>
 
       {/* Mobile sticky bottom CTA */}
+      {/* TEMP HIDDEN: purchased state, price & buy now button
       {purchased ? (
         <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
           <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
@@ -202,7 +205,7 @@ export default function EbookDetail() {
           </div>
         </div>
       )}
-      <div className="h-20 sm:h-24 lg:hidden" />
+      */}
     </div>
   );
 }

@@ -168,6 +168,7 @@ export default function Home() {
                   )}
                   <p className="text-white/30 text-sm mt-4 italic max-w-sm leading-relaxed">"The expert in anything was once a beginner."</p>
                 </div>
+                {/* TEMP HIDDEN: My Purchases link
                 <Link
                   to="/my-purchases"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/10 text-sm font-medium text-white no-underline hover:bg-white/15 transition-all mt-1"
@@ -177,6 +178,7 @@ export default function Home() {
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </Link>
+                */}
               </div>
             </div>
           </section>
@@ -612,6 +614,7 @@ export default function Home() {
                             </div>
                           )}
                         </div>
+                        {/* TEMP HIDDEN: purchased badge, free badge & price
                         <div className="shrink-0">
                           {purchased ? (
                             <span className="text-[10px] sm:text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">Purchased</span>
@@ -621,6 +624,7 @@ export default function Home() {
                             <span className="text-sm font-bold text-gray-900">{formatPrice(session.price)}</span>
                           )}
                         </div>
+                        */}
                       </div>
                     </div>
                   </Link>

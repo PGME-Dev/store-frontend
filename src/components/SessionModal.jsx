@@ -281,6 +281,7 @@ export default function SessionModal({ session: listSession, onClose }) {
             </div>
 
             {/* Footer CTA */}
+            {/* TEMP HIDDEN: purchased state, free badge, price & buy now button
             <div className="relative border-t border-border px-5 sm:px-6 md:px-8 py-5 sm:py-6 bg-white shrink-0">
               {purchased ? (
                 <div className="flex items-center gap-3">
@@ -317,6 +318,7 @@ export default function SessionModal({ session: listSession, onClose }) {
                 </div>
               )}
             </div>
+            */}
           </div>
         </div>
       </div>

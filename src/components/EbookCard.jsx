@@ -29,6 +29,7 @@ export default function EbookCard({ book, purchased, illustrationIndex = 0, onCl
           </div>
         )}
         {/* Badges */}
+        {/* TEMP HIDDEN: owned & discount badges
         {purchased && (
           <span className="absolute top-2.5 right-2.5 text-[10px] sm:text-xs font-semibold bg-success text-white px-2 py-0.5 rounded-full shadow-sm">
             Owned
@@ -39,6 +40,7 @@ export default function EbookCard({ book, purchased, illustrationIndex = 0, onCl
             {Math.round(((book.original_price - price) / book.original_price) * 100)}% off
           </span>
         )}
+        */}
       </div>
 
       {/* Content */}
@@ -63,6 +65,7 @@ export default function EbookCard({ book, purchased, illustrationIndex = 0, onCl
         )}
 
         {/* Price — pushed to bottom */}
+        {/* TEMP HIDDEN: price & owned state
         <div className="mt-auto pt-2.5 border-t border-border/40">
           {purchased ? (
             <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-semibold text-success">
@@ -80,6 +83,7 @@ export default function EbookCard({ book, purchased, illustrationIndex = 0, onCl
             </div>
           )}
         </div>
+        */}
       </div>
     </button>
   );

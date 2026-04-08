@@ -130,6 +130,7 @@ function SessionCard({ session, purchased, onClick }) {
             )}
           </div>
           {/* Price */}
+          {/* TEMP HIDDEN: purchased badge, free badge & price
           <div className="shrink-0">
             {purchased ? (
               <span className="text-xs font-semibold text-success bg-success/8 px-2.5 py-1 rounded-full">Purchased</span>
@@ -139,6 +140,7 @@ function SessionCard({ session, purchased, onClick }) {
               <span className="text-sm font-bold text-text">{formatPrice(session.price)}</span>
             )}
           </div>
+          */}
         </div>
       </div>
     </button>
