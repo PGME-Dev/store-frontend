@@ -47,11 +47,9 @@ export default function Careers() {
     if (!form.phone_number.trim()) errors.phone_number = 'Phone number is required';
     if (!form.wished_role) errors.wished_role = 'Please select a role';
     if (!form.subject) errors.subject = 'Please select a subject';
-    if (!form.portfolio_link.trim()) errors.portfolio_link = 'Portfolio link is required';
-    else if (!/^https?:\/\/.+/.test(form.portfolio_link.trim())) errors.portfolio_link = 'Please enter a valid URL';
+    if (form.portfolio_link.trim() && !/^https?:\/\/.+/.test(form.portfolio_link.trim())) errors.portfolio_link = 'Please enter a valid URL';
     else if (/localhost|127\.0\.0\.1|0\.0\.0\.0/.test(form.portfolio_link.trim())) errors.portfolio_link = 'Please enter a publicly accessible URL';
-    if (!form.representative_work.trim()) errors.representative_work = 'Representative work link is required';
-    else if (!/^https?:\/\/.+/.test(form.representative_work.trim())) errors.representative_work = 'Please enter a valid URL';
+    if (form.representative_work.trim() && !/^https?:\/\/.+/.test(form.representative_work.trim())) errors.representative_work = 'Please enter a valid URL';
     else if (/localhost|127\.0\.0\.1|0\.0\.0\.0/.test(form.representative_work.trim())) errors.representative_work = 'Please enter a publicly accessible URL';
     if (!form.message.trim()) errors.message = 'Additional remarks are required';
     setFieldErrors(errors);
@@ -229,7 +227,7 @@ export default function Careers() {
               {/* Portfolio & Representative Work */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-text mb-2">Portfolio Link <span className="text-error">*</span></label>
+                  <label className="block text-sm font-medium text-text mb-2">Portfolio Link <span className="text-text-tertiary font-normal">(Optional)</span></label>
                   <input
                     type="url"
                     name="portfolio_link"
@@ -241,7 +239,7 @@ export default function Careers() {
                   {fieldErrors.portfolio_link && <p className="text-xs text-error mt-1.5">{fieldErrors.portfolio_link}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-text mb-2">Representative Work <span className="text-error">*</span></label>
+                  <label className="block text-sm font-medium text-text mb-2">Representative Work <span className="text-text-tertiary font-normal">(Optional)</span></label>
                   <input
                     type="url"
                     name="representative_work"
