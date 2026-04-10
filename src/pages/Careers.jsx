@@ -49,8 +49,10 @@ export default function Careers() {
     if (!form.subject) errors.subject = 'Please select a subject';
     if (!form.portfolio_link.trim()) errors.portfolio_link = 'Portfolio link is required';
     else if (!/^https?:\/\/.+/.test(form.portfolio_link.trim())) errors.portfolio_link = 'Please enter a valid URL';
+    else if (/localhost|127\.0\.0\.1|0\.0\.0\.0/.test(form.portfolio_link.trim())) errors.portfolio_link = 'Please enter a publicly accessible URL';
     if (!form.representative_work.trim()) errors.representative_work = 'Representative work link is required';
     else if (!/^https?:\/\/.+/.test(form.representative_work.trim())) errors.representative_work = 'Please enter a valid URL';
+    else if (/localhost|127\.0\.0\.1|0\.0\.0\.0/.test(form.representative_work.trim())) errors.representative_work = 'Please enter a publicly accessible URL';
     if (!form.message.trim()) errors.message = 'Additional remarks are required';
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -261,12 +263,22 @@ export default function Careers() {
                   onChange={handleChange}
                   rows={4}
                   placeholder="Share your achievements or skills"
-                  className="w-full px-4 py-2.5 text-sm border border-border rounded-lg bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-y min-h-[100px] placeholder:text-text-secondary/50"
+                  className="w-full px-4 py-2.5 text-sm border border-border rounded-lg bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-y min-h-25 placeholder:text-text-secondary/50"
                 />
                 {fieldErrors.message && <p className="text-xs text-error mt-1.5">{fieldErrors.message}</p>}
               </div>
 
               {/* Submit */}
+              {error && (
+                <div className="flex items-center gap-2 text-sm text-error bg-error/5 px-4 py-2.5 rounded-lg">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="15" y1="9" x2="9" y2="15"/>
+                    <line x1="9" y1="9" x2="15" y2="15"/>
+                  </svg>
+                  {error}
+                </div>
+              )}
               <button
                 type="submit"
                 disabled={submitting}
