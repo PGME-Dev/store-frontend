@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useSubject } from '../context/SubjectContext';
 import { submitCareerApplication } from '../api/careers';
 
 const ROLES = [
   'Lecturer',
+  'Medical Editor',
   'Examiner',
   'Subject Coordinator',
   'Marketing & Growth',
@@ -12,12 +14,14 @@ const ROLES = [
 
 export default function Careers() {
   const { user } = useAuth();
+  const { subjects } = useSubject();
 
   const [form, setForm] = useState({
     name: user?.name || '',
     email: user?.email || '',
     phone_number: user?.phone_number || '',
     wished_role: '',
+    subject: '',
     portfolio_link: '',
     representative_work: '',
     message: '',
@@ -42,8 +46,12 @@ export default function Careers() {
     if (!form.email.trim() || !emailRegex.test(form.email.trim())) errors.email = 'Please enter a valid email';
     if (!form.phone_number.trim()) errors.phone_number = 'Phone number is required';
     if (!form.wished_role) errors.wished_role = 'Please select a role';
-    if (form.portfolio_link.trim() && !/^https?:\/\/.+/.test(form.portfolio_link.trim())) errors.portfolio_link = 'Please enter a valid URL';
-    if (form.representative_work.trim() && !/^https?:\/\/.+/.test(form.representative_work.trim())) errors.representative_work = 'Please enter a valid URL';
+    if (!form.subject) errors.subject = 'Please select a subject';
+    if (!form.portfolio_link.trim()) errors.portfolio_link = 'Portfolio link is required';
+    else if (!/^https?:\/\/.+/.test(form.portfolio_link.trim())) errors.portfolio_link = 'Please enter a valid URL';
+    if (!form.representative_work.trim()) errors.representative_work = 'Representative work link is required';
+    else if (!/^https?:\/\/.+/.test(form.representative_work.trim())) errors.representative_work = 'Please enter a valid URL';
+    if (!form.message.trim()) errors.message = 'Additional remarks are required';
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -61,10 +69,11 @@ export default function Careers() {
         email: form.email.trim(),
         phone_number: form.phone_number.trim(),
         wished_role: form.wished_role,
+        subject: form.subject,
+        portfolio_link: form.portfolio_link.trim(),
+        representative_work: form.representative_work.trim(),
+        message: form.message.trim(),
       };
-      if (form.portfolio_link.trim()) payload.portfolio_link = form.portfolio_link.trim();
-      if (form.representative_work.trim()) payload.representative_work = form.representative_work.trim();
-      if (form.message.trim()) payload.message = form.message.trim();
 
       await submitCareerApplication(payload);
       setSubmitted(true);
@@ -197,10 +206,28 @@ export default function Careers() {
                 </div>
               </div>
 
+              {/* Subject */}
+              <div>
+                <label className="block text-sm font-medium text-text mb-2">Subject <span className="text-error">*</span></label>
+                <select
+                  name="subject"
+                  value={form.subject}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 text-sm border border-border rounded-lg bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all appearance-none cursor-pointer"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2.5' stroke-linecap='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center' }}
+                >
+                  <option value="" disabled>Select a subject</option>
+                  {subjects.map((s) => (
+                    <option key={s._id || s.subject_id} value={s.name}>{s.name}</option>
+                  ))}
+                </select>
+                {fieldErrors.subject && <p className="text-xs text-error mt-1.5">{fieldErrors.subject}</p>}
+              </div>
+
               {/* Portfolio & Representative Work */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-text mb-2">Portfolio Link <span className="text-text-tertiary font-normal">(Optional)</span></label>
+                  <label className="block text-sm font-medium text-text mb-2">Portfolio Link <span className="text-error">*</span></label>
                   <input
                     type="url"
                     name="portfolio_link"
@@ -212,7 +239,7 @@ export default function Careers() {
                   {fieldErrors.portfolio_link && <p className="text-xs text-error mt-1.5">{fieldErrors.portfolio_link}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-text mb-2">Representative Work <span className="text-text-tertiary font-normal">(Optional)</span></label>
+                  <label className="block text-sm font-medium text-text mb-2">Representative Work <span className="text-error">*</span></label>
                   <input
                     type="url"
                     name="representative_work"
@@ -227,7 +254,7 @@ export default function Careers() {
 
               {/* Additional Remarks */}
               <div>
-                <label className="block text-sm font-medium text-text mb-2">Additional Remarks <span className="text-text-tertiary font-normal">(Optional)</span></label>
+                <label className="block text-sm font-medium text-text mb-2">Additional Remarks <span className="text-error">*</span></label>
                 <textarea
                   name="message"
                   value={form.message}
@@ -236,6 +263,7 @@ export default function Careers() {
                   placeholder="Share your achievements or skills"
                   className="w-full px-4 py-2.5 text-sm border border-border rounded-lg bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-y min-h-[100px] placeholder:text-text-secondary/50"
                 />
+                {fieldErrors.message && <p className="text-xs text-error mt-1.5">{fieldErrors.message}</p>}
               </div>
 
               {/* Submit */}
