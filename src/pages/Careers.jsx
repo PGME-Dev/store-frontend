@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useSubject } from '../context/SubjectContext';
-import { submitCareerApplication } from '../api/careers';
+import { submitCareerApplication, submitCareerApplicationGuest } from '../api/careers';
 
 const ROLES = [
   'Lecturer',
@@ -13,7 +13,7 @@ const ROLES = [
 ];
 
 export default function Careers() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { subjects } = useSubject();
 
   const [form, setForm] = useState({
@@ -75,7 +75,7 @@ export default function Careers() {
         message: form.message.trim(),
       };
 
-      await submitCareerApplication(payload);
+      await (isAuthenticated ? submitCareerApplication(payload) : submitCareerApplicationGuest(payload));
       setSubmitted(true);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit application. Please try again.');
