@@ -70,10 +70,10 @@ export default function Careers() {
         phone_number: form.phone_number.trim(),
         wished_role: form.wished_role,
         subject: form.subject,
-        portfolio_link: form.portfolio_link.trim(),
-        representative_work: form.representative_work.trim(),
         message: form.message.trim(),
       };
+      if (form.portfolio_link.trim()) payload.portfolio_link = form.portfolio_link.trim();
+      if (form.representative_work.trim()) payload.representative_work = form.representative_work.trim();
 
       await (isAuthenticated ? submitCareerApplication(payload) : submitCareerApplicationGuest(payload));
       setSubmitted(true);
