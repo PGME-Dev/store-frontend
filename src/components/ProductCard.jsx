@@ -34,7 +34,12 @@ export default function ProductCard({ to, title, subtitle, price, originalPrice,
         {purchased ? (
           <span className="text-xs sm:text-sm font-medium text-success">Owned</span>
         ) : (
-          <PriceDisplay price={price} originalPrice={originalPrice} isOnSale={isOnSale} />
+          <div className="flex items-center justify-between gap-2">
+            <PriceDisplay price={price} originalPrice={originalPrice} isOnSale={isOnSale} />
+            <span className="shrink-0 text-xs sm:text-sm font-semibold text-white bg-primary px-3.5 py-1.5 rounded-lg group-hover:bg-primary/90 transition-colors">
+              Buy
+            </span>
+          </div>
         )}
       </div>
     </Link>

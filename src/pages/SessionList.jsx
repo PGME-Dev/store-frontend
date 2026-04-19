@@ -129,14 +129,19 @@ function SessionCard({ session, purchased, onClick }) {
               </>
             )}
           </div>
-          {/* Price */}
-          <div className="shrink-0">
+          {/* Price + Buy CTA */}
+          <div className="shrink-0 flex items-center gap-2">
             {purchased ? (
               <span className="text-xs font-semibold text-success bg-success/8 px-2.5 py-1 rounded-full">Purchased</span>
             ) : session.is_free ? (
               <span className="text-xs font-semibold text-success bg-success/8 px-2.5 py-1 rounded-full">FREE</span>
             ) : (
-              <span className="text-sm font-bold text-text">{formatPrice(session.price)}</span>
+              <>
+                <span className="text-sm font-bold text-text">{formatPrice(session.price)}</span>
+                <span className="text-xs sm:text-sm font-semibold text-white bg-primary px-3.5 py-1.5 rounded-lg group-hover:bg-primary/90 transition-colors">
+                  Buy
+                </span>
+              </>
             )}
           </div>
         </div>

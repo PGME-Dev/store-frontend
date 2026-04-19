@@ -105,18 +105,20 @@ export default function PackageCard({ pkg, purchased, illustrationIndex = 0, onC
           {purchased ? (
             <span className="text-xs font-semibold text-success bg-success/8 px-2.5 py-1 rounded-full">Purchased</span>
           ) : (
-            <div className="flex items-baseline gap-2">
-              <span className="text-sm sm:text-base font-bold text-text">
-                {hasTiers ? `From ${formatPrice(price)}` : formatPrice(price)}
+            <>
+              <div className="flex items-baseline gap-2">
+                <span className="text-sm sm:text-base font-bold text-text">
+                  {hasTiers ? `From ${formatPrice(price)}` : formatPrice(price)}
+                </span>
+                {isOnSale && originalPrice > price && (
+                  <span className="text-[10px] sm:text-xs text-text-tertiary line-through">{formatPrice(originalPrice)}</span>
+                )}
+              </div>
+              <span className="shrink-0 text-xs sm:text-sm font-semibold text-white bg-primary px-3.5 py-1.5 rounded-lg group-hover:bg-primary/90 transition-colors">
+                Buy
               </span>
-              {isOnSale && originalPrice > price && (
-                <span className="text-[10px] sm:text-xs text-text-tertiary line-through">{formatPrice(originalPrice)}</span>
-              )}
-            </div>
+            </>
           )}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-tertiary group-hover:text-primary transition-colors shrink-0">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
         </div>
       </div>
     </button>

@@ -63,7 +63,7 @@ export default function EbookCard({ book, purchased, illustrationIndex = 0, onCl
         )}
 
         {/* Price — pushed to bottom */}
-        <div className="mt-auto pt-2.5 border-t border-border/40">
+        <div className="mt-auto pt-2.5 border-t border-border/40 flex items-center justify-between gap-2">
           {purchased ? (
             <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-semibold text-success">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -72,12 +72,17 @@ export default function EbookCard({ book, purchased, illustrationIndex = 0, onCl
               Owned
             </span>
           ) : (
-            <div className="flex items-baseline gap-1.5 flex-wrap">
-              <span className="text-xs sm:text-sm font-bold text-text">{formatPrice(price)}</span>
-              {book.is_on_sale && book.original_price && book.original_price > price && (
-                <span className="text-[10px] sm:text-xs text-text-tertiary line-through">{formatPrice(book.original_price)}</span>
-              )}
-            </div>
+            <>
+              <div className="flex items-baseline gap-1.5 flex-wrap">
+                <span className="text-xs sm:text-sm font-bold text-text">{formatPrice(price)}</span>
+                {book.is_on_sale && book.original_price && book.original_price > price && (
+                  <span className="text-[10px] sm:text-xs text-text-tertiary line-through">{formatPrice(book.original_price)}</span>
+                )}
+              </div>
+              <span className="shrink-0 text-xs sm:text-sm font-semibold text-white bg-primary px-3.5 py-1.5 rounded-lg group-hover:bg-primary/90 transition-colors">
+                Buy
+              </span>
+            </>
           )}
         </div>
       </div>
