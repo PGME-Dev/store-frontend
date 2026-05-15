@@ -158,12 +158,56 @@ export default function TermsAndConditions() {
           </section>
 
           <section>
-            <h2 className="text-base sm:text-lg font-bold text-text">14. Modifications</h2>
+            <h2 className="text-base sm:text-lg font-bold text-text">14. Examinee Policy</h2>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Participation is subject to eligibility and compliance with all guidelines shared during registration.</li>
+              <li>Attendance, timely submission of required materials, and professional conduct are mandatory.</li>
+              <li>Any misconduct or violation of guidelines may lead to removal without refund.</li>
+              <li>Access is restricted to the registered examinee only; sharing credentials is strictly prohibited.</li>
+              <li>All session content, including recordings, remains the intellectual property of PGME and must not be shared or reproduced.</li>
+              <li>PGME is not liable for technical or connectivity issues at the participant&rsquo;s end.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-base sm:text-lg font-bold text-text">15. Examiner Policy</h2>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Participation is subject to adherence to all guidelines shared during onboarding and form submission.</li>
+              <li>Examiners are expected to maintain professional conduct throughout all sessions.</li>
+              <li>All session content, including recordings, remains the intellectual property of PGME and must not be shared or reproduced.</li>
+              <li>Access is restricted to the registered examiner only; sharing credentials is strictly prohibited.</li>
+              <li>PGME is not liable for technical or connectivity issues at the participant&rsquo;s end.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-base sm:text-lg font-bold text-text">16. eBook Policy</h2>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>The eBook is available exclusively within the app for reading and in-app download only.</li>
+              <li>No PDF, external soft copy, or hard copy will be provided.</li>
+              <li>Access is strictly limited to the registered user for personal academic use.</li>
+              <li>No refund will be provided if the eBook is already included in a purchased package.</li>
+              <li>Any technical issue must be reported within 72 hours of purchase; no claims will be entertained thereafter.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-base sm:text-lg font-bold text-text">17. Pricing Policy</h2>
+            <p>The pricing of all products and services offered by PGME is an internal matter and is determined solely at the discretion of PGME. PGME reserves the full right to revise, modify, or update the pricing of any product or service at any time without prior notice.</p>
+          </section>
+
+          <section>
+            <h2 className="text-base sm:text-lg font-bold text-text">18. Discount Policy</h2>
+            <p>All discounts, promotional offers, and coupon benefits are subject to the sole discretion of PGME. PGME reserves the right to introduce, modify, or withdraw any discount or promotional offer at any time without prior notice.</p>
+          </section>
+
+          <section>
+            <h2 className="text-base sm:text-lg font-bold text-text">19. Modifications</h2>
             <p>PGME may modify these Terms at any time. Continued use constitutes acceptance of revised Terms.</p>
           </section>
 
           <section>
-            <h2 className="text-base sm:text-lg font-bold text-text">15. Contact</h2>
+            <h2 className="text-base sm:text-lg font-bold text-text">20. Contact</h2>
             <p><strong>Email:</strong> <a href="mailto:support@pgmemedicalteaching.com" className="text-primary no-underline hover:underline">support@pgmemedicalteaching.com</a></p>
           </section>
         </div>

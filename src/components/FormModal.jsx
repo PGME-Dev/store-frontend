@@ -13,6 +13,7 @@ export default function FormModal({ form, onClose }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(true);
   const [examProcessExpanded, setExamProcessExpanded] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
 
@@ -104,6 +105,10 @@ export default function FormModal({ form, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+    if (!agreedToTerms) {
+      setSubmitError('Please agree to the Terms and Conditions to continue');
+      return;
+    }
 
     // All forms require login
     if (!isAuthenticated) {
@@ -383,6 +388,28 @@ export default function FormModal({ form, onClose }) {
                       </p>
                     </div>
                   )}
+
+                  {/* Terms and Conditions checkbox */}
+                  <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={agreedToTerms}
+                      onChange={(e) => setAgreedToTerms(e.target.checked)}
+                      className="mt-0.5 w-4 h-4 accent-primary cursor-pointer"
+                    />
+                    <span className="text-xs text-text-secondary leading-relaxed">
+                      I agree to the{' '}
+                      <a
+                        href="/terms-and-conditions"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-semibold text-primary underline hover:no-underline"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Terms and Conditions
+                      </a>
+                    </span>
+                  </label>
 
                   {submitError && (
                     <div className="bg-red-50 text-red-600 text-sm px-4 py-3 rounded-xl">

@@ -27,3 +27,13 @@ export async function verifySessionPayment(sessionId, paymentSessionId, paymentI
   });
   return data.data;
 }
+
+export async function getSessionEnrollmentStatus(sessionId) {
+  const { data } = await client.get(`/live-sessions/${sessionId}/enrollment-status`);
+  return data.data;
+}
+
+export async function enrollInSession(sessionId) {
+  const { data } = await client.post(`/live-sessions/${sessionId}/enroll`);
+  return data.data;
+}

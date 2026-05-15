@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getSessionById } from '../api/sessions';
+import { getSessionById, getSessionEnrollmentStatus, enrollInSession } from '../api/sessions';
 import { useAuth } from '../context/AuthContext';
 import { usePurchase } from '../context/PurchaseContext';
 import PriceDisplay from '../components/PriceDisplay';
@@ -13,19 +13,31 @@ export default function SessionDetail() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isEnrolling, setIsEnrolling] = useState(false);
+  const [enrollError, setEnrollError] = useState('');
 
   useEffect(() => {
     (async () => {
       try {
         const result = await getSessionById(id);
-        setSession(result.session || result);
+        const loaded = result.session || result;
+        setSession(loaded);
+        if (isAuthenticated && loaded?.enrollment_mode === 'enrollment_required') {
+          try {
+            const status = await getSessionEnrollmentStatus(id);
+            setIsEnrolled(status?.is_enrolled === true);
+          } catch {
+            // ignore — user not enrolled
+          }
+        }
       } catch {
         setError('Failed to load session');
       } finally {
         setLoading(false);
       }
     })();
-  }, [id]);
+  }, [id, isAuthenticated]);
 
   if (loading) {
     return (
@@ -49,6 +61,8 @@ export default function SessionDetail() {
 
   const purchased = isSessionPurchased(session.session_id || session._id);
 
+  const isEnrollmentRequired = session?.enrollment_mode === 'enrollment_required';
+
   const handleBuy = () => {
     if (session.is_free || purchased) return;
     if (!isAuthenticated) {
@@ -56,6 +70,24 @@ export default function SessionDetail() {
       return;
     }
     navigate(`/checkout/sessions/${id}`);
+  };
+
+  const handleEnroll = async () => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: { pathname: `/sessions/${id}` } } });
+      return;
+    }
+    setIsEnrolling(true);
+    setEnrollError('');
+    try {
+      await enrollInSession(id);
+      setIsEnrolled(true);
+    } catch (err) {
+      const msg = err?.response?.data?.message || 'Failed to register. Please try again.';
+      setEnrollError(msg);
+    } finally {
+      setIsEnrolling(false);
+    }
   };
 
   return (
@@ -145,10 +177,41 @@ export default function SessionDetail() {
           </div>
 
           {/* Sidebar - Desktop sticky CTA */}
-          {!session.is_free && (
+          {(!session.is_free || isEnrollmentRequired) && (
             <div className="hidden lg:block">
               <div className="sticky top-24 bg-white rounded-xl border border-border p-6 shadow-md">
-                {purchased ? (
+                {session.is_free && isEnrollmentRequired ? (
+                  isEnrolled ? (
+                    <>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-success">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </div>
+                        <span className="text-sm font-semibold text-success">Registered</span>
+                      </div>
+                      <p className="text-xs text-text-secondary leading-relaxed">You're registered for this free session. Open the PGME app to join when it starts.</p>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="text-base font-semibold text-text mb-4 pb-2 border-b border-border">Register for this Session</h3>
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="text-lg font-bold text-success">FREE</span>
+                      </div>
+                      <button
+                        onClick={handleEnroll}
+                        disabled={isEnrolling}
+                        className="btn-primary w-full py-3.5! disabled:opacity-60 disabled:cursor-not-allowed"
+                      >
+                        {isEnrolling ? 'Registering...' : 'Register for Free'}
+                      </button>
+                      {enrollError && <p className="text-xs text-error mt-2 text-center">{enrollError}</p>}
+                      <p className="text-xs text-text-tertiary mt-3 text-center">Free · No payment required</p>
+                    </>
+                  )
+                ) : purchased ? (
                   <>
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center">
@@ -178,23 +241,49 @@ export default function SessionDetail() {
       </div>
 
       {/* Mobile sticky bottom CTA */}
-      {!session.is_free && (
+      {(!session.is_free || isEnrollmentRequired) && (
         <>
-          {purchased ? (
+          {session.is_free && isEnrollmentRequired ? (
+            isEnrolled ? (
+              <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
+                <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-success">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="text-sm font-semibold text-success">Registered — Open the PGME app to join</span>
+                </div>
+              </div>
+            ) : (
+              <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
+                <div className="max-w-7xl mx-auto flex items-center gap-4">
+                  <span className="text-base font-bold text-success shrink-0">FREE</span>
+                  <button
+                    onClick={handleEnroll}
+                    disabled={isEnrolling}
+                    className="btn-primary flex-1 py-3! disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isEnrolling ? 'Registering...' : 'Register for Free'}
+                  </button>
+                </div>
+                {enrollError && <p className="text-xs text-error mt-1.5 text-center">{enrollError}</p>}
+              </div>
+            )
+          ) : purchased ? (
             <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
               <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-success">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span className="text-sm font-semibold text-success">Purchased -- Open the PGME app to access</span>
+                <span className="text-sm font-semibold text-success">Purchased — Open the PGME app to access</span>
               </div>
             </div>
           ) : (
             <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
               <div className="max-w-7xl mx-auto flex items-center gap-4">
                 <PriceDisplay price={session.price} size="lg" />
-                <button onClick={handleBuy} className="btn-primary flex-1 !py-3">
+                <button onClick={handleBuy} className="btn-primary flex-1 py-3!">
                   Buy Now
                 </button>
               </div>
