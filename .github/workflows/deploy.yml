@@ -18,7 +18,5 @@ jobs:
           script: |
             cd ~/web-frontend
             git pull origin main
-            npm install
-            npm run build
             pm2 restart web-frontend --update-env
             pm2 save
