@@ -12,9 +12,10 @@ export async function getSessionById(sessionId) {
   return data.data;
 }
 
-export async function createSessionPaymentSession(sessionId, billingAddress) {
+export async function createSessionPaymentSession(sessionId, billingAddress, couponCode) {
   const { data } = await client.post(`/live-sessions/${sessionId}/create-order`, {
     billing_address: billingAddress,
+    coupon_code: couponCode || undefined,
   });
   return data.data;
 }

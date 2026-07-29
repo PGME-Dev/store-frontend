@@ -27,11 +27,12 @@ export async function getFormById(formId) {
   return data.data?.form || null;
 }
 
-export async function createFormPaymentSession(formId, submissionId, billingAddress) {
+export async function createFormPaymentSession(formId, submissionId, billingAddress, couponCode) {
   const { data } = await client.post('/form-payments/create-order', {
     form_id: formId,
     submission_id: submissionId,
     billing_address: billingAddress,
+    coupon_code: couponCode || undefined,
   });
   return data.data;
 }

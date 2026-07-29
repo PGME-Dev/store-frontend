@@ -4,8 +4,11 @@ import { getPackageById, createPackagePaymentSession, verifyPackagePayment } fro
 import { getEbookById, createEbookPaymentSession, verifyEbookPayment } from '../api/ebooks';
 import { getSessionById, createSessionPaymentSession, verifySessionPayment } from '../api/sessions';
 import { getFormById, createFormPaymentSession } from '../api/forms';
+import { validateCoupon } from '../api/coupons';
 import BillingAddressForm from '../components/BillingAddressForm';
 import { formatPrice } from '../components/PriceDisplay';
+
+const PURCHASE_TYPE = { packages: 'package', ebooks: 'ebook', sessions: 'session', forms: 'form' };
 
 export default function Checkout() {
   const { type, id } = useParams();
@@ -40,6 +43,12 @@ export default function Checkout() {
   // To rollback: remove paymentSession state, merge handleProceedToPay back into
   // handleAddressSubmit (launch Zoho right after setTaxInfo), remove the "Proceed to Pay" button JSX.
   const [paymentSession, setPaymentSession] = useState(null);
+
+  // Coupon state
+  const [couponInput, setCouponInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, discount, total }
+  const [couponError, setCouponError] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -106,20 +115,53 @@ export default function Checkout() {
   // that launched Zoho immediately, so the breakdown was never visible to the user.
   // To rollback: merge handleProceedToPay back into handleAddressSubmit (remove the
   // paymentSession state, call launchZohoPayment right after setTaxInfo).
+  // Apply a coupon (preview) before create-order. Only sets appliedCoupon when
+  // the coupon is valid AND actually beneficial (beats any existing sale price).
+  const handleApplyCoupon = async () => {
+    const code = couponInput.trim().toUpperCase();
+    if (!code) return;
+    setCouponLoading(true);
+    setCouponError('');
+    try {
+      const payload = { code, purchase_type: PURCHASE_TYPE[type], product_id: id };
+      if (type === 'packages') payload.tier_index = tierIndex;
+      const res = await validateCoupon(payload);
+      if (res.valid && res.beneficial) {
+        setAppliedCoupon({ code: res.code, discount: res.coupon_discount, total: res.estimated_total });
+        setCouponError('');
+      } else {
+        setAppliedCoupon(null);
+        setCouponError(res.reason || 'This coupon cannot be applied');
+      }
+    } catch (err) {
+      setAppliedCoupon(null);
+      setCouponError(err.response?.data?.message || 'Failed to apply coupon');
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput('');
+    setCouponError('');
+  };
+
   const handleAddressSubmit = async (billingAddress) => {
     setPaying(true);
     setError('');
 
     try {
+      const couponCode = appliedCoupon?.code || undefined;
       let sessionData;
       if (type === 'packages') {
-        sessionData = await createPackagePaymentSession(id, billingAddress, tierIndex);
+        sessionData = await createPackagePaymentSession(id, billingAddress, tierIndex, couponCode);
       } else if (type === 'ebooks') {
-        sessionData = await createEbookPaymentSession(id, billingAddress);
+        sessionData = await createEbookPaymentSession(id, billingAddress, couponCode);
       } else if (type === 'sessions') {
-        sessionData = await createSessionPaymentSession(id, billingAddress);
+        sessionData = await createSessionPaymentSession(id, billingAddress, couponCode);
       } else if (type === 'forms') {
-        sessionData = await createFormPaymentSession(id, submissionId, billingAddress);
+        sessionData = await createFormPaymentSession(id, submissionId, billingAddress, couponCode);
       }
 
       if (!sessionData?.payment_session_id) {
@@ -129,12 +171,15 @@ export default function Checkout() {
       // Store session so handleProceedToPay can use it later
       setPaymentSession(sessionData);
 
-      // Show the tax breakdown in Order Summary
+      // Show the tax breakdown in Order Summary (coupon-aware).
+      // GST is charged on the discounted base, so tax = total − (base − discount).
       if (sessionData.base_amount != null && sessionData.amount != null) {
+        const discount = sessionData.coupon_discount || 0;
         setTaxInfo({
           base: sessionData.base_amount,
+          discount,
           total: sessionData.amount,
-          tax: Math.round((sessionData.amount - sessionData.base_amount) * 100) / 100,
+          tax: Math.round((sessionData.amount - (sessionData.base_amount - discount)) * 100) / 100,
         });
       }
       // Don't launch Zoho yet — let the user review the breakdown first
@@ -276,6 +321,12 @@ export default function Checkout() {
                       <span className="text-sm text-text-secondary">Subtotal</span>
                       <span className="text-sm text-text">{formatPrice(taxInfo.base)}</span>
                     </div>
+                    {taxInfo.discount > 0 && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-success">Discount{appliedCoupon ? ` (${appliedCoupon.code})` : ''}</span>
+                        <span className="text-sm text-success">−{formatPrice(taxInfo.discount)}</span>
+                      </div>
+                    )}
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-text-secondary">GST (18%)</span>
                       <span className="text-sm text-text">{formatPrice(taxInfo.tax)}</span>
@@ -343,12 +394,55 @@ export default function Checkout() {
                   <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">{formatPrice(getDisplayPrice())}</span>
                 </div>
 
+                {/* Coupon input (step 1 — before the payment session is created) */}
+                {!paymentSession && (
+                  <div className="py-3 border-b border-border">
+                    {appliedCoupon ? (
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="text-xs font-mono font-semibold text-success truncate">{appliedCoupon.code}</span>
+                          <span className="text-[11px] text-text-tertiary whitespace-nowrap">−{formatPrice(appliedCoupon.discount)}</span>
+                        </div>
+                        <button type="button" onClick={handleRemoveCoupon} className="text-[11px] text-text-tertiary hover:text-error transition-colors shrink-0">
+                          Remove
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={couponInput}
+                          onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleApplyCoupon(); } }}
+                          placeholder="Coupon code"
+                          className="flex-1 min-w-0 px-3 py-2 text-xs uppercase border border-border rounded-lg focus:outline-none focus:border-primary"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleApplyCoupon}
+                          disabled={couponLoading || !couponInput.trim()}
+                          className="px-3.5 py-2 text-xs font-semibold text-primary border border-primary rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/5 transition-colors shrink-0"
+                        >
+                          {couponLoading ? '...' : 'Apply'}
+                        </button>
+                      </div>
+                    )}
+                    {couponError && <p className="text-[11px] text-error mt-1.5">{couponError}</p>}
+                  </div>
+                )}
+
                 {taxInfo ? (
                   <>
                     <div className="flex items-center justify-between py-1.5">
                       <span className="text-xs sm:text-sm text-text-tertiary">Base Price</span>
                       <span className="text-xs sm:text-sm text-text-secondary">{formatPrice(taxInfo.base)}</span>
                     </div>
+                    {taxInfo.discount > 0 && (
+                      <div className="flex items-center justify-between py-1.5">
+                        <span className="text-xs sm:text-sm text-success">Discount{appliedCoupon ? ` (${appliedCoupon.code})` : ''}</span>
+                        <span className="text-xs sm:text-sm text-success">−{formatPrice(taxInfo.discount)}</span>
+                      </div>
+                    )}
                     <div className="flex items-center justify-between py-1.5">
                       <span className="text-xs sm:text-sm text-text-tertiary">GST (18%)</span>
                       <span className="text-xs sm:text-sm text-text-secondary">{formatPrice(taxInfo.tax)}</span>

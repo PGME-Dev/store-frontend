@@ -12,10 +12,11 @@ export async function getEbookById(bookId) {
   return data.data;
 }
 
-export async function createEbookPaymentSession(bookId, billingAddress) {
+export async function createEbookPaymentSession(bookId, billingAddress, couponCode) {
   const { data } = await client.post('/ebook-orders/create-order', {
     book_id: bookId,
     billing_address: billingAddress,
+    coupon_code: couponCode || undefined,
   });
   return data.data;
 }

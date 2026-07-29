@@ -17,11 +17,12 @@ export async function getPackageById(packageId) {
   return data.data;
 }
 
-export async function createPackagePaymentSession(packageId, billingAddress, tierIndex) {
+export async function createPackagePaymentSession(packageId, billingAddress, tierIndex, couponCode) {
   const { data } = await client.post('/payments/create-order', {
     package_id: packageId,
     billing_address: billingAddress,
     tier_index: tierIndex,
+    coupon_code: couponCode || undefined,
   });
   return data.data;
 }
