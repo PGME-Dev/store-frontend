@@ -18,6 +18,16 @@ export default function TermsGateModal({ open, onClose, onAgree }) {
     }
   }, [open, reachedBottom]);
 
+  // Lock background scroll while the modal is open — otherwise the page
+  // behind it scrolls independently, which looks like the whole page is
+  // jumping around underneath a fixed-position modal.
+  useEffect(() => {
+    if (!open) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = original; };
+  }, [open]);
+
   if (!open) return null;
 
   const handleScroll = (e) => {

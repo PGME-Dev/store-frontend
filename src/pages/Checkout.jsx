@@ -478,13 +478,33 @@ export default function Checkout() {
                       </div>
                     )}
                     {appliedCoupon ? (
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-xs font-mono font-semibold text-success truncate">{appliedCoupon.code}</span>
-                          <span className="text-[11px] text-text-tertiary whitespace-nowrap">−{formatPrice(appliedCoupon.discount)}</span>
+                      <div className="relative flex items-center gap-3 rounded-lg border border-success/30 bg-success/5 px-3 py-2.5 overflow-hidden">
+                        <span className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border border-success/30" />
+                        <span className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border border-success/30" />
+
+                        <div className="w-7 h-7 rounded-full bg-success/15 flex items-center justify-center shrink-0">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-success">
+                            <polyline points="20 6 9 17 4 12"/>
+                          </svg>
                         </div>
-                        <button type="button" onClick={handleRemoveCoupon} className="text-[11px] text-text-tertiary hover:text-error transition-colors shrink-0">
-                          Remove
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-xs font-mono font-bold text-success tracking-wide">{appliedCoupon.code}</span>
+                            <span className="text-[11px] font-semibold text-success/80">applied</span>
+                          </div>
+                          <p className="text-[11px] text-text-tertiary">You saved {formatPrice(appliedCoupon.discount)}</p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={handleRemoveCoupon}
+                          aria-label="Remove coupon"
+                          className="w-6 h-6 rounded-full flex items-center justify-center text-text-tertiary hover:text-error hover:bg-error/10 transition-colors shrink-0"
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                          </svg>
                         </button>
                       </div>
                     ) : (
