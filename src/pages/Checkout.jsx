@@ -4,7 +4,7 @@ import { getPackageById, createPackagePaymentSession, verifyPackagePayment } fro
 import { getEbookById, createEbookPaymentSession, verifyEbookPayment } from '../api/ebooks';
 import { getSessionById, createSessionPaymentSession, verifySessionPayment } from '../api/sessions';
 import { getFormById, createFormPaymentSession } from '../api/forms';
-import { validateCoupon } from '../api/coupons';
+import { validateCoupon, listVisibleCoupons } from '../api/coupons';
 import BillingAddressForm from '../components/BillingAddressForm';
 import { formatPrice } from '../components/PriceDisplay';
 
@@ -49,6 +49,7 @@ export default function Checkout() {
   const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, discount, total }
   const [couponError, setCouponError] = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
+  const [visibleCoupons, setVisibleCoupons] = useState([]);
 
   // Terms & Conditions acceptance (required before "Proceed to Pay")
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -93,6 +94,29 @@ export default function Checkout() {
     })();
   }, [type, id]);
 
+  // Fetch admin-marked-visible coupons for this product, shown as suggestion
+  // chips so customers don't need to already know a code.
+  useEffect(() => {
+    const purchaseType = PURCHASE_TYPE[type];
+    if (!purchaseType || (type === 'forms' && !submissionId)) return;
+    (async () => {
+      try {
+        const payload = { purchase_type: purchaseType, product_id: id };
+        if (type === 'packages') payload.tier_index = tierIndex;
+        const coupons = await listVisibleCoupons(payload);
+        setVisibleCoupons(coupons);
+      } catch {
+        setVisibleCoupons([]);
+      }
+    })();
+  }, [type, id, tierIndex, submissionId]);
+
+  const applyVisibleCoupon = (code) => {
+    setCouponInput(code);
+    setCouponError('');
+    handleApplyCoupon(code);
+  };
+
   const getDisplayPrice = () => {
     if (!product) return 0;
     if (product._type === 'packages') {
@@ -120,8 +144,8 @@ export default function Checkout() {
   // paymentSession state, call launchZohoPayment right after setTaxInfo).
   // Apply a coupon (preview) before create-order. Only sets appliedCoupon when
   // the coupon is valid AND actually beneficial (beats any existing sale price).
-  const handleApplyCoupon = async () => {
-    const code = couponInput.trim().toUpperCase();
+  const handleApplyCoupon = async (explicitCode) => {
+    const code = (typeof explicitCode === 'string' ? explicitCode : couponInput).trim().toUpperCase();
     if (!code) return;
     setCouponLoading(true);
     setCouponError('');
@@ -416,6 +440,22 @@ export default function Checkout() {
                 {/* Coupon input (step 1 — before the payment session is created) */}
                 {!paymentSession && (
                   <div className="py-3 border-b border-border">
+                    {!appliedCoupon && visibleCoupons.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {visibleCoupons.map((c) => (
+                          <button
+                            key={c.code}
+                            type="button"
+                            onClick={() => applyVisibleCoupon(c.code)}
+                            disabled={couponLoading}
+                            title={c.description || undefined}
+                            className="px-2.5 py-1 text-[11px] font-mono font-semibold text-primary bg-primary/5 border border-primary/30 rounded-full hover:bg-primary/10 transition-colors disabled:opacity-50"
+                          >
+                            {c.code} · {c.discount_type === 'percentage' ? `${c.discount_value}% off` : `₹${c.discount_value} off`}
+                          </button>
+                        ))}
+                      </div>
+                    )}
                     {appliedCoupon ? (
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 min-w-0">
