@@ -39,7 +39,7 @@ export default function TermsGateModal({ open, onClose, onAgree }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4" data-lenis-prevent>
+    <div className="fixed inset-0 z-999 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4" data-lenis-prevent>
       <div className="bg-white w-full sm:max-w-2xl sm:rounded-xl shadow-xl flex flex-col max-h-[90vh] sm:max-h-[85vh]">
         <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-border shrink-0">
           <h2 className="text-base sm:text-lg font-bold text-text">Terms &amp; Conditions</h2>
