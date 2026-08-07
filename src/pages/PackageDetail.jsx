@@ -4,6 +4,7 @@ import { getPackageById } from '../api/packages';
 import { useAuth } from '../context/AuthContext';
 import { usePurchase } from '../context/PurchaseContext';
 import PriceDisplay from '../components/PriceDisplay';
+import RecommendationRail from '../components/RecommendationRail';
 
 export default function PackageDetail() {
   const { id } = useParams();
@@ -178,6 +179,13 @@ export default function PackageDetail() {
             </div>
           </div>
         </div>
+
+        <RecommendationRail
+          context="product_detail"
+          productType="package"
+          productId={id}
+          className="mt-5 sm:mt-6"
+        />
       </div>
 
       {/* Mobile sticky bottom CTA */}

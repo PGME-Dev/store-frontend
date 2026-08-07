@@ -71,7 +71,10 @@ export default function TermsGateModal({ open, onClose, onAgree }) {
           <TermsAndConditionsContent />
         </div>
 
-        <div className="px-5 sm:px-6 py-4 border-t border-border shrink-0 space-y-2.5 safe-area-inset-bottom">
+        {/* Bottom padding folds the iOS safe-area inset into the base padding —
+            the .safe-area-inset-bottom utility would otherwise replace py-4's
+            padding-bottom outright, leaving the button flush on desktop. */}
+        <div className="px-5 sm:px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] border-t border-border shrink-0 space-y-2.5">
           {!reachedBottom && (
             <p className="text-[11px] sm:text-xs text-text-tertiary text-center">
               Scroll to the bottom to continue

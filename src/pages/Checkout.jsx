@@ -260,6 +260,10 @@ export default function Checkout() {
             purchaseId: verification.purchase_id,
             productName: getProductName(),
             type,
+            // Singular type + product id let the success page ask for
+            // recommendations related to what was actually just bought.
+            productType: PURCHASE_TYPE[type],
+            productId: id,
           },
           replace: true,
         });

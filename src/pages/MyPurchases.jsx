@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getAllPurchases, downloadInvoicePdf } from '../api/purchases';
 import { formatPrice } from '../components/PriceDisplay';
+import RecommendationRail from '../components/RecommendationRail';
 
 function InvoiceButton({ invoiceId, invoiceNumber }) {
   const [downloading, setDownloading] = useState(false);
@@ -173,6 +174,16 @@ export default function MyPurchases() {
                             <InvoiceButton invoiceId={inv.invoice_id} invoiceNumber={inv.invoice_number} />
                           )}
                         </div>
+                        {/* Expired packages were previously a dead end with no
+                            way to buy access again. */}
+                        {!p.is_active && p.package_id && (
+                          <Link
+                            to={`/packages/${p.package_id}`}
+                            className="mt-3 btn-primary w-full !py-2.5 justify-center no-underline text-xs sm:text-sm"
+                          >
+                            Renew Access
+                          </Link>
+                        )}
                       </div>
                     );
                   })}
@@ -326,6 +337,12 @@ export default function MyPurchases() {
                 </div>
               </section>
             )}
+
+            <RecommendationRail
+              context="my_purchases"
+              title="Complete your set"
+              limit={4}
+            />
           </div>
         )}
       </div>

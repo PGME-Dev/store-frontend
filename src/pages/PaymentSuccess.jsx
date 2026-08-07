@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { usePurchase } from '../context/PurchaseContext';
+import RecommendationRail from '../components/RecommendationRail';
 
 // Detect if the user is on a mobile device (iOS or Android)
 function isMobileDevice() {
@@ -14,7 +15,7 @@ const APP_DEEP_LINK = 'pgme://app/success';
 export default function PaymentSuccess() {
   const location = useLocation();
   const { refreshPurchases } = usePurchase();
-  const { purchaseId, productName, type } = location.state || {};
+  const { purchaseId, productName, type, productType, productId } = location.state || {};
   const onMobile = isMobileDevice();
 
   useEffect(() => {
@@ -90,6 +91,17 @@ export default function PaymentSuccess() {
             </Link>
           </div>
         </div>
+
+        {/* Cross-sell — the strongest moment to suggest the complementary
+            half, since purchases were just refreshed above so anything the
+            customer now owns is already filtered out. */}
+        <RecommendationRail
+          context="post_purchase"
+          productType={productType}
+          productId={productId}
+          title="Complete your preparation"
+          className="mt-5 sm:mt-6 text-left"
+        />
       </div>
     </div>
   );
