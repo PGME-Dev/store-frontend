@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getAllPurchases, downloadInvoicePdf } from '../api/purchases';
 import { formatPrice } from '../components/PriceDisplay';
 import RecommendationRail from '../components/RecommendationRail';
+import TierUpgradeModal from '../components/TierUpgradeModal';
 
 function InvoiceButton({ invoiceId, invoiceNumber }) {
   const [downloading, setDownloading] = useState(false);
@@ -47,6 +48,7 @@ export default function MyPurchases() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [upgradeTarget, setUpgradeTarget] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -183,6 +185,17 @@ export default function MyPurchases() {
                           >
                             Renew Access
                           </Link>
+                        )}
+                        {/* Web customers previously had no way to upgrade at
+                            all — the flow existed only in the mobile app. */}
+                        {p.is_active && p.package_id && (
+                          <button
+                            type="button"
+                            onClick={() => setUpgradeTarget(p)}
+                            className="mt-3 btn-outline w-full !py-2.5 justify-center text-xs sm:text-sm"
+                          >
+                            Upgrade Plan
+                          </button>
                         )}
                       </div>
                     );
@@ -346,6 +359,12 @@ export default function MyPurchases() {
           </div>
         )}
       </div>
+
+      <TierUpgradeModal
+        open={!!upgradeTarget}
+        purchase={upgradeTarget}
+        onClose={() => setUpgradeTarget(null)}
+      />
     </div>
   );
 }

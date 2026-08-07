@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import { getPackageById, createPackagePaymentSession, verifyPackagePayment } from '../api/packages';
+import {
+  getPackageById,
+  createPackagePaymentSession,
+  verifyPackagePayment,
+  createComboUpgradeOrder,
+  createTierUpgradeOrder,
+} from '../api/packages';
 import { getEbookById, createEbookPaymentSession, verifyEbookPayment } from '../api/ebooks';
 import { getSessionById, createSessionPaymentSession, verifySessionPayment } from '../api/sessions';
 import { getFormById, createFormPaymentSession } from '../api/forms';
@@ -17,6 +23,10 @@ export default function Checkout() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const tierIndex = location.state?.tierIndex ?? 0;
+  // 'combo' = complete-your-set upgrade, 'tier' = longer tier of a package
+  // already owned. Both credit the customer's existing purchase(s).
+  const upgradeMode = location.state?.upgradeMode || null;
+  const upgradeQuote = location.state?.upgradeQuote || null;
   // Form checkout: read from URL search params (survives page reload / bank redirects)
   // Falls back to location.state for backward compat
   const submissionId = searchParams.get('submission_id') || location.state?.submissionId;
@@ -183,7 +193,29 @@ export default function Checkout() {
     try {
       const couponCode = appliedCoupon?.code || undefined;
       let sessionData;
-      if (type === 'packages') {
+      if (upgradeMode) {
+        // Upgrade flows credit what the customer already paid, so they can
+        // come out free — in which case there is no Zoho session at all and
+        // the purchase is already complete server-side.
+        sessionData =
+          upgradeMode === 'combo'
+            ? await createComboUpgradeOrder(id, billingAddress, tierIndex, couponCode, termsAccepted)
+            : await createTierUpgradeOrder(id, billingAddress, tierIndex, couponCode, termsAccepted);
+
+        if (sessionData?.free_upgrade) {
+          navigate('/payment/success', {
+            state: {
+              purchaseId: sessionData.purchase_id,
+              productName: getProductName(),
+              type,
+              productType: PURCHASE_TYPE[type],
+              productId: id,
+            },
+            replace: true,
+          });
+          return;
+        }
+      } else if (type === 'packages') {
         sessionData = await createPackagePaymentSession(id, billingAddress, tierIndex, couponCode);
       } else if (type === 'ebooks') {
         sessionData = await createEbookPaymentSession(id, billingAddress, couponCode);
@@ -435,8 +467,31 @@ export default function Checkout() {
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3 py-3 sm:py-3.5 border-b border-border">
                   <span className="text-xs sm:text-sm text-text-secondary leading-snug">{getProductName()}</span>
-                  <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">{formatPrice(getDisplayPrice())}</span>
+                  <span className="text-sm sm:text-base font-bold text-primary whitespace-nowrap">
+                    {formatPrice(upgradeQuote ? upgradeQuote.combo?.price ?? getDisplayPrice() : getDisplayPrice())}
+                  </span>
                 </div>
+
+                {/* Upgrade credit — make it obvious why the price dropped */}
+                {upgradeQuote && !taxInfo && (
+                  <div className="py-2 border-b border-border space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs sm:text-sm text-success">Credit for what you own</span>
+                      <span className="text-xs sm:text-sm text-success">−{formatPrice(upgradeQuote.credit)}</span>
+                    </div>
+                    {(upgradeQuote.credit_breakdown || []).map((c) => (
+                      <p key={c.purchase_id} className="text-[11px] text-text-tertiary pl-1">
+                        {c.package_name} · {formatPrice(c.credit)}
+                      </p>
+                    ))}
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-xs sm:text-sm font-semibold text-text">You pay</span>
+                      <span className="text-xs sm:text-sm font-bold text-primary">
+                        {formatPrice(upgradeQuote.upgrade_base_price)}
+                      </span>
+                    </div>
+                  </div>
+                )}
 
                 {/* Coupon input (step 1 — before the payment session is created) */}
                 {!paymentSession && (

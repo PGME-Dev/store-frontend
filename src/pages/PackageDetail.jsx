@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getPackageById } from '../api/packages';
+import { getPackageById, calculateComboUpgrade } from '../api/packages';
 import { useAuth } from '../context/AuthContext';
 import { usePurchase } from '../context/PurchaseContext';
-import PriceDisplay from '../components/PriceDisplay';
+import PriceDisplay, { formatPrice } from '../components/PriceDisplay';
 import RecommendationRail from '../components/RecommendationRail';
 
 export default function PackageDetail() {
@@ -15,6 +15,8 @@ export default function PackageDetail() {
   const [selectedTier, setSelectedTier] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const [upgradeQuote, setUpgradeQuote] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -28,6 +30,28 @@ export default function PackageDetail() {
       }
     })();
   }, [id]);
+
+  // If this is a combo and the customer already owns part of it, they can pay
+  // just the difference. The endpoint itself enforces every eligibility rule
+  // (owns none / owns all / already owns the combo), so a rejection here
+  // simply means the offer doesn't apply — not an error worth showing.
+  useEffect(() => {
+    // Only combos can be upgraded into, so skip the lookup entirely for
+    // ordinary packages rather than firing a request that always fails.
+    if (!isAuthenticated || !pkg?.is_combo) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const quote = await calculateComboUpgrade(id, null);
+        if (!cancelled) setUpgradeQuote(quote);
+      } catch {
+        if (!cancelled) setUpgradeQuote(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [id, isAuthenticated, pkg?.is_combo]);
 
   if (loading) {
     return (
@@ -55,6 +79,16 @@ export default function PackageDetail() {
       return;
     }
     navigate(`/checkout/packages/${id}`, { state: { tierIndex: selectedTier } });
+  };
+
+  const handleUpgrade = () => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: { pathname: `/packages/${id}` } } });
+      return;
+    }
+    navigate(`/checkout/packages/${id}`, {
+      state: { tierIndex: selectedTier, upgradeMode: 'combo', upgradeQuote },
+    });
   };
 
   return (
@@ -167,12 +201,42 @@ export default function PackageDetail() {
                   {durationDays && (
                     <p className="text-xs text-text-secondary mt-2">{durationDays} days access</p>
                   )}
-                  <button
-                    onClick={handleBuy}
-                    className="btn-primary w-full mt-5 !py-3.5"
-                  >
-                    Buy Now
-                  </button>
+
+                  {/* Combo upgrade: they already own part of this bundle, so
+                      charge only the difference. */}
+                  {upgradeQuote ? (
+                    <>
+                      <div className="mt-4 rounded-lg bg-success/8 border border-success/25 p-3">
+                        <p className="text-xs font-semibold text-success mb-1.5">
+                          You already own part of this combo
+                        </p>
+                        <div className="flex items-center justify-between text-xs text-text-secondary">
+                          <span>Credit applied</span>
+                          <span className="text-success font-semibold">
+                            −{formatPrice(upgradeQuote.credit)}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between mt-1.5 pt-1.5 border-t border-success/20">
+                          <span className="text-xs font-semibold text-text">You pay</span>
+                          <span className="text-sm font-bold text-primary">
+                            {formatPrice(upgradeQuote.upgrade_base_price)}
+                          </span>
+                        </div>
+                      </div>
+                      <button onClick={handleUpgrade} className="btn-primary w-full mt-4 !py-3.5">
+                        {upgradeQuote.is_free_upgrade
+                          ? 'Unlock Combo — Free'
+                          : `Upgrade for ${formatPrice(upgradeQuote.upgrade_base_price)}`}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={handleBuy}
+                      className="btn-primary w-full mt-5 !py-3.5"
+                    >
+                      Buy Now
+                    </button>
+                  )}
                   <p className="text-xs text-text-tertiary mt-3 text-center">Secure payment via Zoho</p>
                 </>
               )}
