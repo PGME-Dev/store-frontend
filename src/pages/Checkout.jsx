@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { getPackageById, createPackagePaymentSession, verifyPackagePayment } from '../api/packages';
 import { getEbookById, createEbookPaymentSession, verifyEbookPayment } from '../api/ebooks';
 import { getSessionById, createSessionPaymentSession, verifySessionPayment } from '../api/sessions';
 import { getFormById, createFormPaymentSession } from '../api/forms';
 import { validateCoupon, listVisibleCoupons } from '../api/coupons';
 import BillingAddressForm from '../components/BillingAddressForm';
+import TermsGateModal from '../components/TermsGateModal';
 import { formatPrice } from '../components/PriceDisplay';
 
 const PURCHASE_TYPE = { packages: 'package', ebooks: 'ebook', sessions: 'session', forms: 'form' };
@@ -51,8 +52,9 @@ export default function Checkout() {
   const [couponLoading, setCouponLoading] = useState(false);
   const [visibleCoupons, setVisibleCoupons] = useState([]);
 
-  // Terms & Conditions acceptance (required before "Proceed to Pay")
+  // Terms & Conditions acceptance (required before "Proceed to Payment", Step 1)
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -365,27 +367,11 @@ export default function Checkout() {
                   </div>
                 )}
 
-                {/* Terms & Conditions acceptance */}
-                <label className="flex items-start gap-2.5 mt-6 sm:mt-8 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={termsAccepted}
-                    onChange={(e) => setTermsAccepted(e.target.checked)}
-                    className="mt-0.5 w-4 h-4 rounded border-border text-primary focus:ring-primary shrink-0"
-                  />
-                  <span className="text-xs sm:text-sm text-text-secondary">
-                    I agree to the{' '}
-                    <Link to="/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                      Terms &amp; Conditions
-                    </Link>
-                  </span>
-                </label>
-
-                {/* Proceed to Pay button */}
+                {/* Proceed to Pay button — Terms already accepted on Step 1 */}
                 <button
                   onClick={handleProceedToPay}
-                  disabled={paying || !termsAccepted}
-                  className="w-full mt-3 btn-primary py-3 sm:py-3.5 text-sm sm:text-base font-semibold rounded-xl disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  disabled={paying}
+                  className="w-full mt-6 sm:mt-8 btn-primary py-3 sm:py-3.5 text-sm sm:text-base font-semibold rounded-xl disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {paying ? (
                     <>
@@ -415,10 +401,21 @@ export default function Checkout() {
             ) : (
               /* Step 1: Billing address form */
               <div className="bg-white rounded-xl shadow-sm border border-border p-5 sm:p-6 lg:p-8">
-                <BillingAddressForm onSubmit={handleAddressSubmit} loading={paying} />
+                <BillingAddressForm
+                  onSubmit={handleAddressSubmit}
+                  loading={paying}
+                  termsAccepted={termsAccepted}
+                  onOpenTerms={() => setShowTermsModal(true)}
+                />
               </div>
             )}
           </div>
+
+          <TermsGateModal
+            open={showTermsModal}
+            onClose={() => setShowTermsModal(false)}
+            onAgree={() => { setTermsAccepted(true); setShowTermsModal(false); }}
+          />
 
           {/* Order summary sidebar */}
           <div className="lg:col-span-2">
@@ -441,18 +438,42 @@ export default function Checkout() {
                 {!paymentSession && (
                   <div className="py-3 border-b border-border">
                     {!appliedCoupon && visibleCoupons.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-2">
+                      <div className="space-y-2 mb-3">
                         {visibleCoupons.map((c) => (
-                          <button
+                          <div
                             key={c.code}
-                            type="button"
-                            onClick={() => applyVisibleCoupon(c.code)}
-                            disabled={couponLoading}
-                            title={c.description || undefined}
-                            className="px-2.5 py-1 text-[11px] font-mono font-semibold text-primary bg-primary/5 border border-primary/30 rounded-full hover:bg-primary/10 transition-colors disabled:opacity-50"
+                            className="relative flex items-center gap-3 rounded-lg border border-dashed border-primary/40 bg-primary/5 px-3 py-2.5 overflow-hidden"
                           >
-                            {c.code} · {c.discount_type === 'percentage' ? `${c.discount_value}% off` : `₹${c.discount_value} off`}
-                          </button>
+                            {/* Ticket notches */}
+                            <span className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border border-dashed border-primary/40" />
+                            <span className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border border-dashed border-primary/40" />
+
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary shrink-0">
+                              <path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2.59 12.58V2.58h10z"/>
+                              <line x1="7" y1="7" x2="7.01" y2="7"/>
+                            </svg>
+
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-baseline gap-1.5">
+                                <span className="text-xs font-mono font-bold text-primary tracking-wide">{c.code}</span>
+                                <span className="text-[11px] font-semibold text-success">
+                                  {c.discount_type === 'percentage' ? `${c.discount_value}% off` : `₹${c.discount_value} off`}
+                                </span>
+                              </div>
+                              {c.description && (
+                                <p className="text-[11px] text-text-tertiary truncate">{c.description}</p>
+                              )}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => applyVisibleCoupon(c.code)}
+                              disabled={couponLoading}
+                              className="text-xs font-semibold text-primary border border-primary rounded-full px-3 py-1.5 hover:bg-primary hover:text-white transition-colors disabled:opacity-50 shrink-0"
+                            >
+                              {couponLoading ? '...' : 'Apply'}
+                            </button>
+                          </div>
                         ))}
                       </div>
                     )}

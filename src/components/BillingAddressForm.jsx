@@ -50,7 +50,7 @@ function matchStateName(apiState) {
   return STATE_NAMES.find((s) => s.toLowerCase() === lower) || null;
 }
 
-export default function BillingAddressForm({ onSubmit, loading }) {
+export default function BillingAddressForm({ onSubmit, loading, termsAccepted, onOpenTerms }) {
   const [address, setAddress] = useState({
     street: '',
     street2: '',
@@ -250,9 +250,40 @@ export default function BillingAddressForm({ onSubmit, loading }) {
         </div>
       </div>
 
+      {/* Terms & Conditions gate — "agreed" only comes from actually reading
+          the forced-read modal (see TermsGateModal), never a bare checkbox. */}
+      <div className="rounded-lg border border-border p-3.5 sm:p-4">
+        {termsAccepted ? (
+          <div className="flex items-center justify-between gap-2">
+            <span className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-success">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              You've agreed to the Terms &amp; Conditions
+            </span>
+            <button type="button" onClick={onOpenTerms} className="text-xs text-text-tertiary hover:text-primary underline shrink-0">
+              View
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs sm:text-sm text-text-secondary">
+              Please read and accept our Terms &amp; Conditions to continue
+            </span>
+            <button
+              type="button"
+              onClick={onOpenTerms}
+              className="text-xs sm:text-sm font-semibold text-primary hover:underline shrink-0"
+            >
+              Read &amp; Agree
+            </button>
+          </div>
+        )}
+      </div>
+
       <button
         type="submit"
-        disabled={!isValid || loading}
+        disabled={!isValid || loading || !termsAccepted}
         className="btn-primary w-full !py-3.5 sm:!py-4 disabled:opacity-50 disabled:cursor-not-allowed mt-3 sm:mt-4 text-sm sm:text-base font-semibold"
       >
         {loading ? (
@@ -260,6 +291,8 @@ export default function BillingAddressForm({ onSubmit, loading }) {
             <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             Processing...
           </span>
+        ) : !termsAccepted ? (
+          'Accept Terms to Continue'
         ) : (
           'Proceed to Payment'
         )}
