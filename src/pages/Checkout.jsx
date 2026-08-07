@@ -454,9 +454,9 @@ export default function Checkout() {
                             </svg>
 
                             <div className="min-w-0 flex-1">
-                              <div className="flex items-baseline gap-1.5">
-                                <span className="text-xs font-mono font-bold text-primary tracking-wide">{c.code}</span>
-                                <span className="text-[11px] font-semibold text-success">
+                              <div className="flex flex-wrap items-baseline gap-x-1.5">
+                                <span className="text-xs font-mono font-bold text-primary tracking-wide break-all">{c.code}</span>
+                                <span className="text-[11px] font-semibold text-success whitespace-nowrap">
                                   {c.discount_type === 'percentage' ? `${c.discount_value}% off` : `₹${c.discount_value} off`}
                                 </span>
                               </div>
@@ -489,8 +489,8 @@ export default function Checkout() {
                         </div>
 
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-xs font-mono font-bold text-success tracking-wide">{appliedCoupon.code}</span>
+                          <div className="flex flex-wrap items-baseline gap-x-1.5">
+                            <span className="text-xs font-mono font-bold text-success tracking-wide break-all">{appliedCoupon.code}</span>
                             <span className="text-[11px] font-semibold text-success/80">applied</span>
                           </div>
                           <p className="text-[11px] text-text-tertiary">You saved {formatPrice(appliedCoupon.discount)}</p>

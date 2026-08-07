@@ -266,14 +266,14 @@ export default function BillingAddressForm({ onSubmit, loading, termsAccepted, o
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
             <span className="text-xs sm:text-sm text-text-secondary">
               Please read and accept our Terms &amp; Conditions to continue
             </span>
             <button
               type="button"
               onClick={onOpenTerms}
-              className="text-xs sm:text-sm font-semibold text-primary hover:underline shrink-0"
+              className="w-full sm:w-auto text-xs sm:text-sm font-semibold text-primary border border-primary rounded-lg px-3.5 py-2 sm:py-1.5 hover:bg-primary/5 transition-colors shrink-0"
             >
               Read &amp; Agree
             </button>

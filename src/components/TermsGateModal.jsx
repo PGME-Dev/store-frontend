@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import TermsAndConditionsContent from './TermsAndConditionsContent';
 
 // Forced-read gate: "I Agree" stays disabled until the user has scrolled the
@@ -38,9 +39,15 @@ export default function TermsGateModal({ open, onClose, onAgree }) {
     }
   };
 
-  return (
+  // Rendered through a portal to document.body: the checkout page is wrapped
+  // in .animate-fade-in-up, whose transform-based animation creates a stacking
+  // context that would otherwise trap this overlay below the sticky header
+  // regardless of z-index. Same approach as FormModal.jsx.
+  const modal = (
     <div className="fixed inset-0 z-999 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4" data-lenis-prevent>
-      <div className="bg-white w-full sm:max-w-2xl sm:rounded-xl shadow-xl flex flex-col max-h-[90vh] sm:max-h-[85vh]">
+      {/* dvh, not vh: on mobile Safari the collapsing URL bar makes vh taller
+          than the visible viewport, which would push the action button off-screen. */}
+      <div className="bg-white w-full sm:max-w-2xl rounded-t-2xl sm:rounded-xl shadow-xl flex flex-col max-h-[92dvh] sm:max-h-[85dvh]">
         <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-border shrink-0">
           <h2 className="text-base sm:text-lg font-bold text-text">Terms &amp; Conditions</h2>
           <button
@@ -58,13 +65,13 @@ export default function TermsGateModal({ open, onClose, onAgree }) {
         <div
           ref={scrollRef}
           onScroll={handleScroll}
-          className="overflow-y-auto px-5 sm:px-6 py-5 flex-1"
+          className="overflow-y-auto overscroll-contain px-5 sm:px-6 py-5 flex-1"
           data-lenis-prevent
         >
           <TermsAndConditionsContent />
         </div>
 
-        <div className="px-5 sm:px-6 py-4 border-t border-border shrink-0 space-y-2.5">
+        <div className="px-5 sm:px-6 py-4 border-t border-border shrink-0 space-y-2.5 safe-area-inset-bottom">
           {!reachedBottom && (
             <p className="text-[11px] sm:text-xs text-text-tertiary text-center">
               Scroll to the bottom to continue
@@ -82,4 +89,6 @@ export default function TermsGateModal({ open, onClose, onAgree }) {
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }
