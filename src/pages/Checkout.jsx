@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { getPackageById, createPackagePaymentSession, verifyPackagePayment } from '../api/packages';
 import { getEbookById, createEbookPaymentSession, verifyEbookPayment } from '../api/ebooks';
 import { getSessionById, createSessionPaymentSession, verifySessionPayment } from '../api/sessions';
@@ -49,6 +49,9 @@ export default function Checkout() {
   const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, discount, total }
   const [couponError, setCouponError] = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
+
+  // Terms & Conditions acceptance (required before "Proceed to Pay")
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -219,11 +222,11 @@ export default function Checkout() {
       if (paymentResult.status === 'success') {
         let verification;
         if (type === 'packages') {
-          verification = await verifyPackagePayment(paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature);
+          verification = await verifyPackagePayment(paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature, termsAccepted);
         } else if (type === 'ebooks') {
-          verification = await verifyEbookPayment(paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature);
+          verification = await verifyEbookPayment(paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature, termsAccepted);
         } else if (type === 'sessions') {
-          verification = await verifySessionPayment(id, paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature);
+          verification = await verifySessionPayment(id, paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature, termsAccepted);
         }
 
         navigate('/payment/success', {
@@ -338,11 +341,27 @@ export default function Checkout() {
                   </div>
                 )}
 
+                {/* Terms & Conditions acceptance */}
+                <label className="flex items-start gap-2.5 mt-6 sm:mt-8 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 rounded border-border text-primary focus:ring-primary shrink-0"
+                  />
+                  <span className="text-xs sm:text-sm text-text-secondary">
+                    I agree to the{' '}
+                    <Link to="/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                      Terms &amp; Conditions
+                    </Link>
+                  </span>
+                </label>
+
                 {/* Proceed to Pay button */}
                 <button
                   onClick={handleProceedToPay}
-                  disabled={paying}
-                  className="w-full mt-6 sm:mt-8 btn-primary py-3 sm:py-3.5 text-sm sm:text-base font-semibold rounded-xl disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  disabled={paying || !termsAccepted}
+                  className="w-full mt-3 btn-primary py-3 sm:py-3.5 text-sm sm:text-base font-semibold rounded-xl disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {paying ? (
                     <>

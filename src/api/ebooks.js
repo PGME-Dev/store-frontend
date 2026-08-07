@@ -21,11 +21,12 @@ export async function createEbookPaymentSession(bookId, billingAddress, couponCo
   return data.data;
 }
 
-export async function verifyEbookPayment(paymentSessionId, paymentId, signature) {
+export async function verifyEbookPayment(paymentSessionId, paymentId, signature, termsAccepted) {
   const { data } = await client.post('/ebook-orders/verify-payment', {
     payment_session_id: paymentSessionId,
     payment_id: paymentId,
     signature,
+    terms_accepted: termsAccepted,
   });
   return data.data;
 }

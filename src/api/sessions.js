@@ -20,11 +20,12 @@ export async function createSessionPaymentSession(sessionId, billingAddress, cou
   return data.data;
 }
 
-export async function verifySessionPayment(sessionId, paymentSessionId, paymentId, signature) {
+export async function verifySessionPayment(sessionId, paymentSessionId, paymentId, signature, termsAccepted) {
   const { data } = await client.post(`/live-sessions/${sessionId}/verify-payment`, {
     payment_session_id: paymentSessionId,
     payment_id: paymentId,
     signature,
+    terms_accepted: termsAccepted,
   });
   return data.data;
 }

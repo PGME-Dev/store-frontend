@@ -27,11 +27,12 @@ export async function createPackagePaymentSession(packageId, billingAddress, tie
   return data.data;
 }
 
-export async function verifyPackagePayment(paymentSessionId, paymentId, signature) {
+export async function verifyPackagePayment(paymentSessionId, paymentId, signature, termsAccepted) {
   const { data } = await client.post('/payments/verify', {
     payment_session_id: paymentSessionId,
     payment_id: paymentId,
     signature,
+    terms_accepted: termsAccepted,
   });
   return data.data;
 }
