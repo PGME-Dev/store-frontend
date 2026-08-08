@@ -13,6 +13,7 @@ import { getFormById, createFormPaymentSession } from '../api/forms';
 import { validateCoupon, listVisibleCoupons } from '../api/coupons';
 import BillingAddressForm from '../components/BillingAddressForm';
 import TermsGateModal from '../components/TermsGateModal';
+import RecommendationRail from '../components/RecommendationRail';
 import { formatPrice } from '../components/PriceDisplay';
 
 const PURCHASE_TYPE = { packages: 'package', ebooks: 'ebook', sessions: 'session', forms: 'form' };
@@ -628,6 +629,15 @@ export default function Checkout() {
             </div>
           </div>
         </div>
+
+        {/* Placed below the fold, after the pay action — a rail here navigates
+            away, so it must not compete with completing the purchase. */}
+        <RecommendationRail
+          context="product_detail"
+          productType={PURCHASE_TYPE[type]}
+          productId={id}
+          className="mt-5 sm:mt-6"
+        />
       </div>
     </div>
   );
