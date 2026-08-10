@@ -9,6 +9,7 @@ import {
 } from '../api/packages';
 import { getEbookById, createEbookPaymentSession, verifyEbookPayment } from '../api/ebooks';
 import { getSessionById, createSessionPaymentSession, verifySessionPayment } from '../api/sessions';
+import { getWorkshopById, createWorkshopPaymentSession, verifyWorkshopPayment } from '../api/workshops';
 import { getFormById, createFormPaymentSession } from '../api/forms';
 import { validateCoupon, listVisibleCoupons } from '../api/coupons';
 import BillingAddressForm from '../components/BillingAddressForm';
@@ -16,7 +17,7 @@ import TermsGateModal from '../components/TermsGateModal';
 import RecommendationRail from '../components/RecommendationRail';
 import { formatPrice } from '../components/PriceDisplay';
 
-const PURCHASE_TYPE = { packages: 'package', ebooks: 'ebook', sessions: 'session', forms: 'form' };
+const PURCHASE_TYPE = { packages: 'package', ebooks: 'ebook', sessions: 'session', workshops: 'workshop', forms: 'form' };
 
 export default function Checkout() {
   const { type, id } = useParams();
@@ -80,6 +81,9 @@ export default function Checkout() {
         } else if (type === 'sessions') {
           result = await getSessionById(id);
           setProduct({ ...(result.session || result), _type: 'sessions' });
+        } else if (type === 'workshops') {
+          result = await getWorkshopById(id);
+          setProduct({ ...(result.workshop || result), _type: 'workshops' });
         } else if (type === 'forms') {
           // Form checkout requires submissionId (passed via navigation state from FormModal)
           if (!submissionId) {
@@ -222,6 +226,8 @@ export default function Checkout() {
         sessionData = await createEbookPaymentSession(id, billingAddress, couponCode);
       } else if (type === 'sessions') {
         sessionData = await createSessionPaymentSession(id, billingAddress, couponCode);
+      } else if (type === 'workshops') {
+        sessionData = await createWorkshopPaymentSession(id, billingAddress, couponCode);
       } else if (type === 'forms') {
         sessionData = await createFormPaymentSession(id, submissionId, billingAddress, couponCode);
       }
@@ -286,6 +292,8 @@ export default function Checkout() {
           verification = await verifyEbookPayment(paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature, termsAccepted);
         } else if (type === 'sessions') {
           verification = await verifySessionPayment(id, paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature, termsAccepted);
+        } else if (type === 'workshops') {
+          verification = await verifyWorkshopPayment(id, paymentResult.payment_session_id, paymentResult.payment_id, paymentResult.signature, termsAccepted);
         }
 
         navigate('/payment/success', {
@@ -367,7 +375,7 @@ export default function Checkout() {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary sm:w-6 sm:h-6">
                       {type === 'ebooks' ? (
                         <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></>
-                      ) : type === 'sessions' ? (
+                      ) : type === 'sessions' || type === 'workshops' ? (
                         <><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></>
                       ) : (
                         <><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></>
@@ -376,7 +384,17 @@ export default function Checkout() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm sm:text-base font-semibold text-text truncate">{getProductName()}</p>
-                    <p className="text-xs sm:text-sm text-text-tertiary mt-0.5 capitalize">{type === 'ebooks' ? 'E-Book' : type === 'sessions' ? 'Live Session' : type === 'forms' ? 'Registration' : 'Package'}</p>
+                    <p className="text-xs sm:text-sm text-text-tertiary mt-0.5 capitalize">
+                      {type === 'ebooks'
+                        ? 'E-Book'
+                        : type === 'sessions'
+                          ? 'Live Session'
+                          : type === 'workshops'
+                            ? `Workshop · ${product?.day_count || 0} days`
+                            : type === 'forms'
+                              ? 'Registration'
+                              : 'Package'}
+                    </p>
                   </div>
                 </div>
 

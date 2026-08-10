@@ -12,6 +12,8 @@ import EbookList from './pages/EbookList';
 import EbookDetail from './pages/EbookDetail';
 import SessionList from './pages/SessionList';
 import SessionDetail from './pages/SessionDetail';
+import WorkshopList from './pages/WorkshopList';
+import WorkshopDetail from './pages/WorkshopDetail';
 import Checkout from './pages/Checkout';
 import PaymentSuccess from './pages/PaymentSuccess';
 import FormPaymentSuccess from './pages/FormPaymentSuccess';
@@ -52,6 +54,8 @@ export default function App() {
         <Route path="ebooks/:id" element={<EbookDetail />} />
         <Route path="sessions" element={<SessionList />} />
         <Route path="sessions/:id" element={<SessionDetail />} />
+        <Route path="workshops" element={<WorkshopList />} />
+        <Route path="workshops/:id" element={<WorkshopDetail />} />
         <Route path="checkout/:type/:id" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
         <Route path="payment/success" element={<PaymentSuccess />} />
         <Route path="payment-success" element={<FormPaymentSuccess />} />

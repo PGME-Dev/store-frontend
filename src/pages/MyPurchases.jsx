@@ -88,10 +88,16 @@ export default function MyPurchases() {
 
   const packages = data?.packages || [];
   const sessions = data?.live_sessions || [];
+  const workshops = data?.workshops || [];
   const ebooks = data?.ebook_purchases || [];
   const formRegistrations = data?.form_registrations || [];
 
-  const isEmpty = packages.length === 0 && sessions.length === 0 && ebooks.length === 0 && formRegistrations.length === 0;
+  const isEmpty =
+    packages.length === 0 &&
+    sessions.length === 0 &&
+    workshops.length === 0 &&
+    ebooks.length === 0 &&
+    formRegistrations.length === 0;
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -294,6 +300,74 @@ export default function MyPurchases() {
                             <InvoiceButton invoiceId={inv.invoice_id} invoiceNumber={inv.invoice_number} />
                           )}
                         </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {/* Workshops */}
+            {workshops.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2.5 mb-3 sm:mb-4">
+                  <div className="w-1 h-5 bg-primary rounded-full" />
+                  <h2 className="text-xs sm:text-sm font-bold text-text uppercase tracking-wide flex items-center gap-2">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                      <line x1="16" y1="2" x2="16" y2="6"/>
+                      <line x1="8" y1="2" x2="8" y2="6"/>
+                      <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    Workshops
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 sm:gap-4 2xl:gap-5">
+                  {workshops.map((w) => {
+                    const inv = invoiceMap[w.purchase_id];
+                    const ended = w.workshop_status === 'completed';
+                    return (
+                      <div key={w.purchase_id} className="bg-white rounded-xl shadow-sm border border-border p-4 sm:p-5 lg:p-6 hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <h3 className="text-sm sm:text-base font-semibold text-text truncate">
+                              {w.name || 'Workshop'}
+                            </h3>
+                            <span className="text-[11px] sm:text-xs text-text-secondary mt-0.5 block">
+                              {w.day_count} day{w.day_count === 1 ? '' : 's'}
+                            </span>
+                          </div>
+                          <span className={`text-[11px] sm:text-xs font-semibold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full shrink-0 ${
+                            w.workshop_status === 'cancelled'
+                              ? 'bg-error/10 text-error'
+                              : ended
+                                ? 'bg-text-secondary/10 text-text-secondary'
+                                : 'bg-success/10 text-success'
+                          }`}>
+                            {w.workshop_status === 'cancelled' ? 'Cancelled' : ended ? 'Completed' : 'Enrolled'}
+                          </span>
+                        </div>
+                        <div className="mt-3 sm:mt-4 pt-3 border-t border-border/60 flex items-center justify-between">
+                          <div className="text-[11px] sm:text-xs text-text-secondary flex flex-wrap gap-3 sm:gap-4">
+                            <span className="font-medium text-text">{formatPrice(w.amount_paid)}</span>
+                            {w.start_date && <span>{formatDate(w.start_date)}</span>}
+                          </div>
+                          {inv && (
+                            <InvoiceButton invoiceId={inv.invoice_id} invoiceNumber={inv.invoice_number} />
+                          )}
+                        </div>
+                        {w.workshop_id && (
+                          <Link
+                            to={`/workshops/${w.workshop_id}`}
+                            className="mt-3 btn-outline w-full !py-2.5 justify-center no-underline text-xs sm:text-sm"
+                          >
+                            {ended
+                              ? w.certificate_enabled
+                                ? 'View recordings & certificate'
+                                : 'View recordings'
+                              : 'Open agenda & join'}
+                          </Link>
+                        )}
                       </div>
                     );
                   })}

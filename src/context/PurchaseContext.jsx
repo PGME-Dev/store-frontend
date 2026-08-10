@@ -74,9 +74,22 @@ export function PurchaseProvider({ children }) {
     [purchasedEbookIds]
   );
 
+  const purchasedWorkshopIds = useMemo(() => {
+    const set = new Set();
+    (purchaseData?.workshops || []).forEach((p) => {
+      if (p.is_active && p.workshop_id) set.add(p.workshop_id.toString());
+    });
+    return set;
+  }, [purchaseData]);
+
   const isSessionPurchased = useCallback(
     (id) => purchasedSessionIds.has(id?.toString()),
     [purchasedSessionIds]
+  );
+
+  const isWorkshopPurchased = useCallback(
+    (id) => purchasedWorkshopIds.has(id?.toString()),
+    [purchasedWorkshopIds]
   );
 
   const value = {
@@ -84,9 +97,11 @@ export function PurchaseProvider({ children }) {
     purchasedPackageIds,
     purchasedEbookIds,
     purchasedSessionIds,
+    purchasedWorkshopIds,
     isPackagePurchased,
     isEbookPurchased,
     isSessionPurchased,
+    isWorkshopPurchased,
     refreshPurchases: fetchPurchases,
     loading,
   };

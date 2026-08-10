@@ -131,6 +131,7 @@ export default function Header() {
     { to: '/packages', label: 'Packages' },
     { to: '/ebooks', label: 'eBooks' },
     { to: '/sessions', label: 'Live Sessions' },
+    { to: '/workshops', label: 'Workshops' },
     ...(isAuthenticated
       ? [{ to: '/my-purchases', label: 'My Purchases' }]
       : [{ to: '/contact', label: 'Contact' }]),
