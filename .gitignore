@@ -8,7 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-# dist
+# Built by CI on every push to main and shipped straight to EC2 — never
+# commit it, or a source-only push silently deploys a stale bundle.
+dist
 dist-ssr
 *.local
 
