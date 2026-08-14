@@ -36,7 +36,7 @@ export default function TermsAndConditionsContent() {
         <p>By purchasing a subscription:</p>
         <ul className="list-disc pl-5 space-y-1">
           <li>You agree to pay the listed fee</li>
-          <li>All prices are inclusive of applicable GST unless stated otherwise</li>
+          <li>All prices are exclusive of applicable GST unless stated otherwise</li>
           <li>Payments are non-refundable as per Refund Policy</li>
           <li>Subscriptions are non-transferable and non-resalable</li>
         </ul>
