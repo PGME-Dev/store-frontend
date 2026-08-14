@@ -491,8 +491,12 @@ export default function Checkout() {
                   </span>
                 </div>
 
-                {/* Upgrade credit — make it obvious why the price dropped */}
-                {upgradeQuote && !taxInfo && (
+                {/* Upgrade credit — make it obvious why the price dropped.
+                    This stays visible after the payment session exists too:
+                    once taxInfo lands, "Base Price" IS the already-credited
+                    amount, so hiding these rows left the customer staring at a
+                    reduced price with nothing explaining where the credit went. */}
+                {upgradeQuote && (
                   <div className="py-2 border-b border-border space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="text-xs sm:text-sm text-success">Credit for what you own</span>
@@ -503,12 +507,16 @@ export default function Checkout() {
                         {c.package_name} · {formatPrice(c.credit)}
                       </p>
                     ))}
-                    <div className="flex items-center justify-between pt-1">
-                      <span className="text-xs sm:text-sm font-semibold text-text">You pay</span>
-                      <span className="text-xs sm:text-sm font-bold text-primary">
-                        {formatPrice(upgradeQuote.upgrade_base_price)}
-                      </span>
-                    </div>
+                    {/* Once the tax rows render, the "Base Price" line below is
+                        this same figure — don't state it twice. */}
+                    {!taxInfo && (
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="text-xs sm:text-sm font-semibold text-text">You pay</span>
+                        <span className="text-xs sm:text-sm font-bold text-primary">
+                          {formatPrice(upgradeQuote.upgrade_base_price)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )}
 
