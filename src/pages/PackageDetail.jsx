@@ -277,6 +277,7 @@ export default function PackageDetail() {
         onClose={() => setUpsellOpen(false)}
         onContinue={handleBuy}
         packageId={id}
+        isCombo={!!pkg.is_combo}
         productName={pkg.name}
         productType={pkg.type}
         description={pkg.description}

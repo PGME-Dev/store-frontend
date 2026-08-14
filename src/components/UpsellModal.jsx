@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { formatPrice } from './PriceDisplay';
-import { getComboOffer } from '../api/packages';
+import { getComboOffer, calculateComboUpgrade } from '../api/packages';
 import { useAuth } from '../context/AuthContext';
 
 /**
@@ -37,6 +37,11 @@ export default function UpsellModal({
   // Set for packages: enables the credited combo offer for customers who
   // already own something this package is bundled with.
   packageId,
+  // True when the package on screen IS a combo. The question flips: instead of
+  // "which combo bundles this?", price THIS combo against what the customer
+  // owns. Without it, a combo's own page offers nothing — and on mobile that
+  // page has no other upgrade path, since the credited panel is desktop-only.
+  isCombo = false,
 }) {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -68,7 +73,12 @@ export default function UpsellModal({
     let cancelled = false;
     (async () => {
       try {
-        const offer = await getComboOffer(packageId);
+        // calculateComboUpgrade throws when the customer owns none of this
+        // combo (or already owns it all) — that's the ordinary case, not an
+        // error, and the catch below turns it into "no offer".
+        const offer = isCombo
+          ? await calculateComboUpgrade(packageId)
+          : await getComboOffer(packageId);
         if (!cancelled) setFetched({ packageId, offer });
       } catch {
         if (!cancelled) setFetched({ packageId, offer: null });
@@ -77,7 +87,7 @@ export default function UpsellModal({
     return () => {
       cancelled = true;
     };
-  }, [open, packageId, isAuthenticated]);
+  }, [open, packageId, isAuthenticated, isCombo]);
 
   if (!open) return null;
 
@@ -107,6 +117,9 @@ export default function UpsellModal({
   // without scrolling; keep the same cap here.
   const shownFeatures = features.slice(0, 3);
   const discounted = isOnSale && originalPrice && originalPrice > price;
+  // The offer prices the package already on screen, so "continue" must go
+  // through the credited checkout rather than buying it again at full price.
+  const creditsThisPurchase = !!comboOffer && isCombo;
 
   // Portalled to document.body: the detail pages are wrapped in
   // .animate-fade-in-up, whose transform creates a stacking context that
@@ -182,9 +195,14 @@ export default function UpsellModal({
                   </div>
                 </div>
 
-                <button onClick={handleTakeCombo} className="btn-primary w-full mt-3 py-2.5!">
-                  {comboOffer.is_free_upgrade ? 'Get the Combo — Free' : 'Get the Combo'}
-                </button>
+                {/* On a combo's own page the credit applies to this very
+                    purchase, so the footer button carries it — a second CTA
+                    here would just be the same action twice. */}
+                {!creditsThisPurchase && (
+                  <button onClick={handleTakeCombo} className="btn-primary w-full mt-3 py-2.5!">
+                    {comboOffer.is_free_upgrade ? 'Get the Combo — Free' : 'Get the Combo'}
+                  </button>
+                )}
 
                 <p className="text-[11px] text-text-tertiary mt-2 text-center">
                   Credit is the unused value of what you own. Your current access is replaced
@@ -193,7 +211,7 @@ export default function UpsellModal({
               </div>
             )}
 
-            {comboOffer && (
+            {comboOffer && !creditsThisPurchase && (
               <p className="text-[11px] sm:text-xs text-text-tertiary mb-2 text-center">
                 or continue with just this package
               </p>
@@ -247,8 +265,15 @@ export default function UpsellModal({
 
           {/* Footer — the app's two-button split: commit, or go look around. */}
           <div className="border-t border-border px-5 sm:px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] shrink-0 space-y-2.5 bg-white">
-            <button onClick={onContinue} className="btn-primary w-full py-3!">
-              {continueLabel}
+            <button
+              onClick={creditsThisPurchase ? handleTakeCombo : onContinue}
+              className="btn-primary w-full py-3!"
+            >
+              {creditsThisPurchase
+                ? (comboOffer.is_free_upgrade
+                    ? 'Continue — Free'
+                    : `Continue — pay ${formatPrice(comboOffer.upgrade_base_price)}`)
+                : continueLabel}
             </button>
             <button
               onClick={handleBrowse}

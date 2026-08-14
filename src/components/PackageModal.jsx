@@ -310,6 +310,7 @@ export default function PackageModal({ package: listPkg, onClose }) {
           navigate('/packages');
         }}
         packageId={packageId}
+        isCombo={!!p?.is_combo}
         productName={p?.name}
         productType={pkgType}
         description={p?.description}
