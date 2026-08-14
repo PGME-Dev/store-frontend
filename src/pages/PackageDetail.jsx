@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { usePurchase } from '../context/PurchaseContext';
 import PriceDisplay, { formatPrice } from '../components/PriceDisplay';
 import RecommendationRail from '../components/RecommendationRail';
+import UpsellModal from '../components/UpsellModal';
 
 export default function PackageDetail() {
   const { id } = useParams();
@@ -17,6 +18,9 @@ export default function PackageDetail() {
   const [error, setError] = useState('');
 
   const [upgradeQuote, setUpgradeQuote] = useState(null);
+  // "Buy Now" opens the upsell step first, mirroring the app's enrollment
+  // dialog, rather than dropping straight into checkout.
+  const [upsellOpen, setUpsellOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -231,7 +235,7 @@ export default function PackageDetail() {
                     </>
                   ) : (
                     <button
-                      onClick={handleBuy}
+                      onClick={() => setUpsellOpen(true)}
                       className="btn-primary w-full mt-5 !py-3.5"
                     >
                       Buy Now
@@ -267,13 +271,27 @@ export default function PackageDetail() {
         <div className="fixed bottom-0 left-0 right-0 glass-strong border-t border-border p-4 safe-area-inset-bottom lg:hidden z-40">
           <div className="max-w-7xl mx-auto flex items-center gap-4">
             <PriceDisplay price={price} originalPrice={originalPrice} isOnSale={isOnSale} size="lg" />
-            <button onClick={handleBuy} className="btn-primary flex-1 !py-3">
+            <button onClick={() => setUpsellOpen(true)} className="btn-primary flex-1 !py-3">
               Buy Now
             </button>
           </div>
         </div>
       )}
       <div className="h-20 sm:h-24 lg:hidden" />
+
+      <UpsellModal
+        open={upsellOpen}
+        onClose={() => setUpsellOpen(false)}
+        onContinue={handleBuy}
+        productName={pkg.name}
+        productType={pkg.type}
+        description={pkg.description}
+        features={pkg.features || []}
+        price={price}
+        originalPrice={originalPrice}
+        isOnSale={isOnSale}
+        durationDays={durationDays}
+      />
     </div>
   );
 }
