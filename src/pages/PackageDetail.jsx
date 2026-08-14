@@ -4,7 +4,6 @@ import { getPackageById, calculateComboUpgrade } from '../api/packages';
 import { useAuth } from '../context/AuthContext';
 import { usePurchase } from '../context/PurchaseContext';
 import PriceDisplay, { formatPrice } from '../components/PriceDisplay';
-import RecommendationRail from '../components/RecommendationRail';
 import UpsellModal from '../components/UpsellModal';
 
 export default function PackageDetail() {
@@ -248,12 +247,6 @@ export default function PackageDetail() {
           </div>
         </div>
 
-        <RecommendationRail
-          context="product_detail"
-          productType="package"
-          productId={id}
-          className="mt-5 sm:mt-6"
-        />
       </div>
 
       {/* Mobile sticky bottom CTA */}
