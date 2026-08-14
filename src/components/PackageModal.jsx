@@ -5,6 +5,7 @@ import { getPackageById } from '../api/packages';
 import { useAuth } from '../context/AuthContext';
 import { usePurchase } from '../context/PurchaseContext';
 import { formatPrice } from './PriceDisplay';
+import UpsellModal from './UpsellModal';
 
 export default function PackageModal({ package: listPkg, onClose }) {
   const navigate = useNavigate();
@@ -14,6 +15,9 @@ export default function PackageModal({ package: listPkg, onClose }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedTier, setSelectedTier] = useState(0);
+  // Buy Now opens the upsell step first — including for signed-out visitors,
+  // who should see the offer before being bounced to /login.
+  const [upsellOpen, setUpsellOpen] = useState(false);
   const bodyRef = useRef(null);
 
   const packageId = listPkg?.package_id || listPkg?._id;
@@ -33,8 +37,14 @@ export default function PackageModal({ package: listPkg, onClose }) {
     })();
   }, [packageId]);
 
-  // Lock body scroll & close on Escape
+  // Lock body scroll & close on Escape. While the upsell sits on top, both
+  // handlers stand down: Escape belongs to the topmost modal, and the
+  // document-level wheel block would otherwise make the upsell unscrollable.
   useEffect(() => {
+    if (upsellOpen) {
+      document.body.style.overflow = 'hidden';
+      return;
+    }
     const handleKey = (e) => {
       if (e.key === 'Escape') onClose();
     };
@@ -47,9 +57,10 @@ export default function PackageModal({ package: listPkg, onClose }) {
       document.removeEventListener('wheel', blockAllScroll);
       document.body.style.overflow = '';
     };
-  }, [onClose]);
+  }, [onClose, upsellOpen]);
 
   const handleModalWheel = (e) => {
+    if (upsellOpen) return;
     e.stopPropagation();
     if (bodyRef.current) {
       bodyRef.current.scrollTop += e.deltaY;
@@ -272,7 +283,7 @@ export default function PackageModal({ package: listPkg, onClose }) {
                     )}
                   </div>
                   <button
-                    onClick={handleBuy}
+                    onClick={() => setUpsellOpen(true)}
                     className="btn-primary py-2.5! sm:py-3! min-w-35 sm:min-w-40"
                   >
                     Buy Now
@@ -286,5 +297,28 @@ export default function PackageModal({ package: listPkg, onClose }) {
     </div>
   );
 
-  return createPortal(modal, document.body);
+  return createPortal(
+    <>
+      {modal}
+      <UpsellModal
+        open={upsellOpen}
+        onClose={() => setUpsellOpen(false)}
+        onContinue={handleBuy}
+        onBrowse={() => {
+          setUpsellOpen(false);
+          onClose();
+          navigate('/packages');
+        }}
+        productName={p?.name}
+        productType={pkgType}
+        description={p?.description}
+        features={p?.features || []}
+        price={price}
+        originalPrice={originalPrice}
+        isOnSale={isOnSale}
+        durationDays={durationDays}
+      />
+    </>,
+    document.body,
+  );
 }

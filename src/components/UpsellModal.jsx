@@ -29,6 +29,9 @@ export default function UpsellModal({
   continueLabel = 'Continue Purchase',
   browseLabel = 'See All Packages',
   browseTo = '/packages',
+  // Callers that sit inside another modal pass this to tear their own layer
+  // down as well, so browsing doesn't leave a stale sheet over the catalogue.
+  onBrowse,
 }) {
   const navigate = useNavigate();
 
@@ -50,6 +53,10 @@ export default function UpsellModal({
   if (!open) return null;
 
   const handleBrowse = () => {
+    if (onBrowse) {
+      onBrowse();
+      return;
+    }
     onClose();
     navigate(browseTo);
   };
