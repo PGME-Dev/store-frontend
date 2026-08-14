@@ -309,6 +309,7 @@ export default function PackageModal({ package: listPkg, onClose }) {
           onClose();
           navigate('/packages');
         }}
+        packageId={packageId}
         productName={p?.name}
         productType={pkgType}
         description={p?.description}

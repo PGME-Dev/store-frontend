@@ -1,7 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { formatPrice } from './PriceDisplay';
+import { getComboOffer } from '../api/packages';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * Pre-checkout upsell step, mirroring the app's enrollment dialog
@@ -32,8 +34,16 @@ export default function UpsellModal({
   // Callers that sit inside another modal pass this to tear their own layer
   // down as well, so browsing doesn't leave a stale sheet over the catalogue.
   onBrowse,
+  // Set for packages: enables the credited combo offer for customers who
+  // already own something this package is bundled with.
+  packageId,
 }) {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  // Stamped with the package it was fetched for, so a result arriving late
+  // can never be shown against a different package.
+  const [fetched, setFetched] = useState(null);
+  const comboOffer = fetched?.packageId === packageId ? fetched.offer : null;
 
   // Escape to dismiss + background scroll lock, same as PackageModal.
   useEffect(() => {
@@ -50,7 +60,39 @@ export default function UpsellModal({
     };
   }, [open, onClose]);
 
+  // Ask for the credited combo the moment the modal opens. The offer is a
+  // bonus, never a gate: any failure just leaves the ordinary purchase in
+  // place rather than blocking or warning.
+  useEffect(() => {
+    if (!open || !packageId || !isAuthenticated) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const offer = await getComboOffer(packageId);
+        if (!cancelled) setFetched({ packageId, offer });
+      } catch {
+        if (!cancelled) setFetched({ packageId, offer: null });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [open, packageId, isAuthenticated]);
+
   if (!open) return null;
+
+  const handleTakeCombo = () => {
+    onClose();
+    // Same shape Checkout already consumes for a combo upgrade, so the credit
+    // rows and the combo create-order path work with no changes there.
+    navigate(`/checkout/packages/${comboOffer.combo.package_id}`, {
+      state: {
+        upgradeMode: 'combo',
+        upgradeQuote: comboOffer,
+        tierIndex: comboOffer.combo.tier_index ?? 0,
+      },
+    });
+  };
 
   const handleBrowse = () => {
     if (onBrowse) {
@@ -108,6 +150,55 @@ export default function UpsellModal({
 
           {/* Body */}
           <div className="overflow-y-auto overscroll-contain px-5 sm:px-6 py-5 flex-1" data-lenis-prevent>
+            {/* Credited combo offer — leads, because it's the better deal and
+                this is the only moment the customer is deciding. */}
+            {comboOffer && (
+              <div className="mb-4 rounded-xl border border-primary/30 bg-primary/5 p-4 sm:p-5">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary shrink-0">
+                    <path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8-5-3.6-5 3.6 1.9-5.8L4 8.8h6.1z" />
+                  </svg>
+                  <span className="text-[11px] sm:text-xs font-semibold text-primary">
+                    You already own {comboOffer.credit_breakdown.map((c) => c.package_name).join(', ')}
+                  </span>
+                </div>
+
+                <h3 className="text-sm sm:text-base font-semibold text-text mb-2.5">
+                  {comboOffer.combo.name}
+                </h3>
+
+                <div className="space-y-1 text-xs sm:text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-text-secondary">Combo price</span>
+                    <span className="text-text-secondary">{formatPrice(comboOffer.combo.price)}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-success">Your credit</span>
+                    <span className="text-success">−{formatPrice(comboOffer.credit)}</span>
+                  </div>
+                  <div className="flex items-center justify-between pt-1 border-t border-primary/20">
+                    <span className="font-semibold text-text">You pay</span>
+                    <span className="font-bold text-primary">{formatPrice(comboOffer.upgrade_base_price)}</span>
+                  </div>
+                </div>
+
+                <button onClick={handleTakeCombo} className="btn-primary w-full mt-3 py-2.5!">
+                  {comboOffer.is_free_upgrade ? 'Get the Combo — Free' : 'Get the Combo'}
+                </button>
+
+                <p className="text-[11px] text-text-tertiary mt-2 text-center">
+                  Credit is the unused value of what you own. Your current access is replaced
+                  by the combo{comboOffer.granted_days ? `, valid ${comboOffer.granted_days} more days` : ''}.
+                </p>
+              </div>
+            )}
+
+            {comboOffer && (
+              <p className="text-[11px] sm:text-xs text-text-tertiary mb-2 text-center">
+                or continue with just this package
+              </p>
+            )}
+
             <div className="rounded-xl border border-border p-4 sm:p-5">
               {productName && (
                 <h3 className="text-sm sm:text-base font-semibold text-text mb-3">{productName}</h3>

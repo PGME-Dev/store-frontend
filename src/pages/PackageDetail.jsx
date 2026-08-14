@@ -276,6 +276,7 @@ export default function PackageDetail() {
         open={upsellOpen}
         onClose={() => setUpsellOpen(false)}
         onContinue={handleBuy}
+        packageId={id}
         productName={pkg.name}
         productType={pkg.type}
         description={pkg.description}

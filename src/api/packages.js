@@ -28,6 +28,17 @@ export async function createPackagePaymentSession(packageId, billingAddress, tie
 }
 
 /**
+ * The best credited combo offer for a package the customer is looking at —
+ * the combo bundling it that costs least to top up, already priced. Returns
+ * null when nothing applies (owns nothing bundled, owns the combo already,
+ * no combo contains this package), so callers just render nothing.
+ */
+export async function getComboOffer(packageId) {
+  const { data } = await client.get(`/packages/${packageId}/combo-offer`);
+  return data.data?.offer || null;
+}
+
+/**
  * Preview a "complete your set" combo upgrade — how much credit the packages
  * already owned are worth, and the remaining amount to pay.
  */
