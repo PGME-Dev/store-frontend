@@ -1,6 +1,6 @@
 import { formatPrice } from './PriceDisplay';
 
-export default function PackageCard({ pkg, purchased, illustrationIndex = 0, onClick }) {
+export default function PackageCard({ pkg, purchased, illustrationIndex = 0, onClick, onUpgrade }) {
   const hasTiers = pkg.has_tiers && pkg.tiers?.length > 0;
   const price = hasTiers ? pkg.tiers[0].effective_price || pkg.tiers[0].price : (pkg.sale_price || pkg.price);
   const originalPrice = hasTiers ? pkg.tiers[0].original_price : pkg.original_price;
@@ -103,7 +103,23 @@ export default function PackageCard({ pkg, purchased, illustrationIndex = 0, onC
         {/* Price footer — pushed to bottom */}
         <div className="mt-auto pt-3 border-t border-border/40 flex items-center justify-between gap-2">
           {purchased ? (
-            <span className="text-xs font-semibold text-success bg-success/8 px-2.5 py-1 rounded-full">Purchased</span>
+            <>
+              <span className="text-xs font-semibold text-success bg-success/8 px-2.5 py-1 rounded-full">Purchased</span>
+              {/* Owning a package used to be a dead end here. stopPropagation
+                  so this doesn't also open the card's detail modal. */}
+              {onUpgrade && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onUpgrade();
+                  }}
+                  className="shrink-0 text-xs sm:text-sm font-semibold text-primary border border-primary px-3 py-1.5 rounded-lg hover:bg-primary/5 transition-colors"
+                >
+                  Upgrade
+                </button>
+              )}
+            </>
           ) : (
             <>
               <div className="flex items-baseline gap-2">

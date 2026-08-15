@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { usePurchase } from '../context/PurchaseContext';
 import PriceDisplay, { formatPrice } from '../components/PriceDisplay';
 import UpsellModal from '../components/UpsellModal';
+import TierUpgradeModal from '../components/TierUpgradeModal';
 
 export default function PackageDetail() {
   const { id } = useParams();
@@ -20,6 +21,7 @@ export default function PackageDetail() {
   // "Buy Now" opens the upsell step first, mirroring the app's enrollment
   // dialog, rather than dropping straight into checkout.
   const [upsellOpen, setUpsellOpen] = useState(false);
+  const [upgradeTarget, setUpgradeTarget] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -196,6 +198,14 @@ export default function PackageDetail() {
                     <span className="text-sm font-semibold text-success">Purchased</span>
                   </div>
                   <p className="text-xs text-text-secondary leading-relaxed">You already own this package. Open the PGME app to access it.</p>
+                  {/* Owning it isn't the end of the road: a longer tier or the
+                      combo that bundles it may still be worth showing. */}
+                  <button
+                    onClick={() => setUpgradeTarget({ package_id: id, name: pkg.name })}
+                    className="btn-outline w-full mt-4 !py-2.5 justify-center text-xs sm:text-sm"
+                  >
+                    Upgrade Plan
+                  </button>
                 </>
               ) : (
                 <>
@@ -258,6 +268,14 @@ export default function PackageDetail() {
               <polyline points="22 4 12 14.01 9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <span className="text-sm font-semibold text-success">Purchased -- Open the PGME app to access</span>
+            {/* The desktop sidebar carries this too; on mobile the sticky bar
+                is the only control, so it must offer the upgrade as well. */}
+            <button
+              onClick={() => setUpgradeTarget({ package_id: id, name: pkg.name })}
+              className="btn-outline shrink-0 !py-2 !px-3 text-xs"
+            >
+              Upgrade
+            </button>
           </div>
         </div>
       ) : (
@@ -271,6 +289,12 @@ export default function PackageDetail() {
         </div>
       )}
       <div className="h-20 sm:h-24 lg:hidden" />
+
+      <TierUpgradeModal
+        open={!!upgradeTarget}
+        purchase={upgradeTarget}
+        onClose={() => setUpgradeTarget(null)}
+      />
 
       <UpsellModal
         open={upsellOpen}

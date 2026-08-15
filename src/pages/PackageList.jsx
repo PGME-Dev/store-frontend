@@ -7,6 +7,7 @@ import { usePurchase } from '../context/PurchaseContext';
 import { slugify } from '../utils/slugify';
 import PackageCard from '../components/PackageCard';
 import PackageModal from '../components/PackageModal';
+import TierUpgradeModal from '../components/TierUpgradeModal';
 import FormCard from '../components/FormCard';
 import FormModal from '../components/FormModal';
 
@@ -18,6 +19,7 @@ export default function PackageList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedPackage, setSelectedPackage] = useState(null);
+  const [upgradeTarget, setUpgradeTarget] = useState(null);
   const [specialtyOpen, setSpecialtyOpen] = useState(false);
   const specialtyRef = useRef(null);
   const formsSectionRef = useRef(null);
@@ -220,6 +222,9 @@ export default function PackageList() {
                   purchased={pkg.is_purchased || isPackagePurchased(pkg.package_id)}
                   illustrationIndex={index}
                   onClick={() => setSelectedPackage(pkg)}
+                  onUpgrade={() =>
+                    setUpgradeTarget({ package_id: pkg.package_id, name: pkg.name })
+                  }
                 />
               ))}
             </div>
@@ -258,6 +263,13 @@ export default function PackageList() {
           onClose={() => setSelectedPackage(null)}
         />
       )}
+
+      {/* Upgrade options for a package already owned */}
+      <TierUpgradeModal
+        open={!!upgradeTarget}
+        purchase={upgradeTarget}
+        onClose={() => setUpgradeTarget(null)}
+      />
 
       {/* Form modal */}
       {selectedForm && (
