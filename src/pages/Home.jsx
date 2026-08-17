@@ -12,6 +12,7 @@ import EbookCard from '../components/EbookCard';
 import EbookModal from '../components/EbookModal';
 import { formatPrice } from '../components/PriceDisplay';
 import { getBanners } from '../api/banners';
+import BannerSlide from '../components/BannerSlide';
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -255,9 +256,7 @@ export default function Home() {
                         className="absolute inset-0 transition-opacity duration-500"
                         style={{ opacity: activeBannerSlide === i ? 1 : 0, pointerEvents: activeBannerSlide === i ? 'auto' : 'none' }}
                       >
-                        <Link to="/sessions" className="block w-full h-full">
-                          <img src={b.imageUrl || b.image_url} alt={b.title || 'Banner'} className="w-full h-full object-cover rounded-3xl" />
-                        </Link>
+                        <BannerSlide banner={b} />
                       </div>
                     ))}
                   </div>
@@ -352,19 +351,7 @@ export default function Home() {
                     className="absolute inset-0 transition-opacity duration-500"
                     style={{ opacity: activeBannerSlide === i ? 1 : 0, pointerEvents: activeBannerSlide === i ? 'auto' : 'none' }}
                   >
-                    {b.linkUrl && b.linkType !== 'none' ? (
-                      b.linkType === 'external' ? (
-                        <a href={b.linkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-                          <img src={b.imageUrl || b.image_url} alt={b.title || 'Banner'} className="w-full h-full object-cover rounded-3xl" />
-                        </a>
-                      ) : (
-                        <Link to={b.linkUrl || b.link_url} className="block w-full h-full">
-                          <img src={b.imageUrl || b.image_url} alt={b.title || 'Banner'} className="w-full h-full object-cover rounded-3xl" />
-                        </Link>
-                      )
-                    ) : (
-                      <img src={b.imageUrl || b.image_url} alt={b.title || 'Banner'} className="w-full h-full object-cover rounded-3xl" />
-                    )}
+                    <BannerSlide banner={b} />
                   </div>
                 ))}
               </div>
