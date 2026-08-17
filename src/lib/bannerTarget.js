@@ -15,6 +15,7 @@
 const ROUTE_BY_TYPE = {
   theory_package: (id) => `/packages/${id}`,
   practical_package: (id) => `/packages/${id}`,
+  combo_package: (id) => `/packages/${id}`,
   ebook: (id) => `/ebooks/${id}`,
   live_session: (id) => `/sessions/${id}`,
   workshop: (id) => `/workshops/${id}`,
